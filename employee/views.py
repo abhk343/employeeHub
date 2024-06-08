@@ -1,3 +1,6 @@
+from django.shortcuts import render
+from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required 
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .models import Department, Employee, Attendance, Overtime
@@ -7,6 +10,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from .forms import EmployeeCreateForm, AttendanceForm, DepartmentForm, OvertimeForm, OvertimeFilterForm
 from collections import defaultdict
+
+
+@login_required
+def home(request):
+    return render(request,'emp/home.html')
+
 
 # Department Views
 class DepartmentListView(ListView):
