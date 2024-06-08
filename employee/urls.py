@@ -23,4 +23,5 @@ urlpatterns = [
     # Overtime URLs
     path('otcrte/', OvertimeCreateView.as_view(), name='overtime_add'),
     path('otlist/', OvertimeListView.as_view(), name='overtime_list'),
+    fyftf
 ]

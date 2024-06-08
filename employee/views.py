@@ -12,6 +12,7 @@ from .forms import EmployeeCreateForm, AttendanceForm, DepartmentForm, OvertimeF
 from collections import defaultdict
 
 
+
 @login_required
 def home(request):
     return render(request,'emp/home.html')
