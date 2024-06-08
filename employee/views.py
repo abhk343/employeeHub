@@ -18,6 +18,7 @@ def home(request):
 
 
 # Department Views
+@login_required
 class DepartmentListView(ListView):
     """
     View to list all departments.
@@ -26,6 +27,7 @@ class DepartmentListView(ListView):
     template_name = 'emp/dept_view.html'
     context_object_name = 'object_list'
 
+@login_required
 class DepartmentCreateView(CreateView):
     """
     View to create a new department.
@@ -43,6 +45,7 @@ class DepartmentCreateView(CreateView):
         context['title'] = 'Create Department'
         return context
 
+@login_required
 class DepartmentUpdateView(UpdateView):
     """
     View to update an existing department.
@@ -59,7 +62,10 @@ class DepartmentUpdateView(UpdateView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Update Department'
         return context
+    
 
+
+@login_required
 class DepartmentDeleteView(DeleteView):
     """
     View to delete a department.
@@ -75,7 +81,10 @@ class DepartmentDeleteView(DeleteView):
         self.object.delete()
         return JsonResponse({'message': 'Department deleted successfully'}, status=200)
 
+
+
 # Employee Views
+@login_required
 class EmployeeListView(ListView):
     """
     View to list all employees.
@@ -98,6 +107,7 @@ class EmployeeListView(ListView):
             )
         return queryset
 
+@login_required
 class EmployeeCreateView(View):
     """
     View to create a new employee.
@@ -113,6 +123,7 @@ class EmployeeCreateView(View):
             return redirect('employee_list')
         return render(request, 'emp/emp_create.html', {'title': 'Create Employee', 'form': form})
 
+@login_required
 class EmployeeUpdateView(View):
     """
     View to update an existing employee.
@@ -130,6 +141,7 @@ class EmployeeUpdateView(View):
             return redirect('employee_list')
         return render(request, 'emp/emp_create.html', {'title': 'Update Employee', 'form': form})
 
+@login_required
 class EmployeeDeleteView(DeleteView):
     """
     View to delete an employee.
@@ -146,6 +158,7 @@ class EmployeeDeleteView(DeleteView):
         return JsonResponse({'message': 'Employee deleted successfully'}, status=200)
 
 # Attendance Views
+@login_required
 class AttendanceCreateView(View):
     """
     View to create attendance records.
@@ -174,6 +187,7 @@ class AttendanceCreateView(View):
 
         return render(request, self.template_name, {'form': form})
 
+@login_required
 def monthly_absence_count(request):
     """
     View to count monthly absences.
@@ -218,6 +232,7 @@ def monthly_absence_count(request):
     return render(request, 'emp/att_view.html', context)
 
 # Overtime Views
+@login_required
 class OvertimeCreateView(View):
     """
     View to create overtime records.
@@ -263,6 +278,7 @@ class OvertimeCreateView(View):
             'employees': employees
         })
 
+@login_required
 class OvertimeListView(View):
     """
     View to list overtime records.
