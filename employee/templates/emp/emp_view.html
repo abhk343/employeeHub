@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee List</title>
+</head>
+<body>
+    <h1>Employee List</h1>
+    
+    <!-- Link to create a new employee -->
+    <a href="{% url 'employee_create' %}">Create New Employee</a>
+
+    <!-- Form for searching employees -->
+    <form method="get" action="{% url 'employee_list' %}">
+        <input type="text" name="q" placeholder="Search employees" value="{{ request.GET.q }}">
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Container for displaying employee list -->
+    <div id="employeeList">
+        <!-- Check if there are employees to display -->
+        {% if employees %}
+            <!-- Table for displaying employee details -->
+            <table border="solid">
+                <thead>
+                    <!-- Table header with column names -->
+                    <tr>
+                        <th>Name</th>
+                        <th>Designation</th>
+                        <th>Location</th>
+                        <th>Date of Birth</th>
+                        <th>Date of Joining</th>
+                        <th>Date of Leaving</th>
+                        <th>Parent's Name</th>
+                        <th>Marital Status</th>
+                        <th>Permanent Address</th>
+                        <th>Present Address</th>
+                        <th>Blood Group</th>
+                        <th>UAN Number</th>
+                        <th>PF PW</th>
+                        <th>ESI Number</th>
+                        <th>Mobile Number</th>
+                        <th>Email</th>
+                        <th>Aadhar Number</th>
+                        <th>PAN</th>
+                        <th>Bank Account Number</th>
+                        <th>IFSC Code</th>
+                        <th>Bank Name</th>
+                        <th>Emergency Contact Number</th>
+                        <th>Contact Number</th>
+                        <th>Surname</th>
+                        <th>Qualification</th>
+                        <th>Experience</th>
+                        <th>Remarks</th>
+                        <th>Salary</th>
+                        <!-- Add more column headers for each field -->
+                        <!-- Repeat the <th> tag for each field -->
+                        <!-- Example: <th>Date of Birth</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Iterate over each employee -->
+                    {% for employee in employees %}
+                        <!-- Table row for each employee -->
+                        <tr>
+                            <!-- Display employee details in each column -->
+                            <!-- Use {{ employee.field_name }} to access each field -->
+                            <td>{{ employee.Name }}</td>
+                            <td>{{ employee.Designation }}</td>
+                            <td>{{ employee.Location }}</td>
+                            <td>{{ employee.DOB }}</td>
+                            <td>{{ employee.DOJ }}</td>
+                            <td>{{ employee.DOL }}</td>
+                            <td>{{ employee.Parents_Name }}</td>
+                            <td>{{ employee.Martial_Status }}</td>
+                            <td>{{ employee.Permanent_Address }}</td>
+                            <td>{{ employee.Present_Address }}</td>
+                            <td>{{ employee.Blood_Group }}</td>
+                            <td>{{ employee.UAN_Number }}</td>
+                            <td>{{ employee.PF_PW }}</td>
+                            <td>{{ employee.ESI_Number }}</td>
+                            <td>{{ employee.Mobile_No }}</td>
+                            <td>{{ employee.Email }}</td>
+                            <td>{{ employee.Aadhar_No }}</td>
+                            <td>{{ employee.PAN }}</td>
+                            <td>{{ employee.Bank_Acc_NO }}</td>
+                            <td>{{ employee.IFSC_Code }}</td>
+                            <td>{{ employee.Bank_Name }}</td>
+                            <td>{{ employee.Emergency_Contact_No }}</td>
+                            <td>{{ employee.Contact_No }}</td>
+                            <td>{{ employee.Sur_name }}</td>
+                            <td>{{ employee.Qualification }}</td>
+                            <td>{{ employee.Experience }}</td>
+                            <td>{{ employee.Remarks }}</td>
+                            <td>{{ employee.Salary }}</td>
+                            <!-- Add more <td> tags for each field -->
+                            
+                            <!-- Actions column for editing and deleting employees -->
+                            <td>
+                                <!-- Edit button to update employee details -->
+                                <button onclick="location.href='{% url 'employee_update' employee.pk %}'">Edit</button>
+                                
+                                <!-- Form for deleting the employee -->
+                                <form method="post" action="{% url 'employee_delete' employee.pk %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <!-- Button to delete the employee -->
+                                    <button type="button" onclick="confirmDelete(this)">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        <!-- If no employees are found, display a message -->
+        {% else %}
+            <p>No employees found.</p>
+        {% endif %}
+    </div>
+    
+    <!-- JavaScript function to confirm employee deletion -->
+    <script>
+        function confirmDelete(button) {
+            // Ask for confirmation before deleting
+            if (confirm("Are you sure you want to delete this employee?")) {
+                // Get the form containing the delete button
+                const form = button.parentElement;
+                // Get the CSRF token value from the form
+                const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                // Send a DELETE request to delete the employee
+                fetch(form.action, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRFToken': csrfToken
+                    }
+                }).then(response => {
+                    // Reload the page if deletion is successful
+                    if (response.ok) {
+                        alert("Employee deleted successfully");
+                        location.reload();
+                    } else {
+                        // Display an error message if deletion fails
+                        alert("An error occurred while trying to delete the employee.");
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

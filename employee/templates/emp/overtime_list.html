@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Overtime List</title>
+</head>
+<body>
+    <h1>Overtime List</h1>
+
+    <!-- Form for filtering overtime records -->
+    <form method="post">
+        {% csrf_token %}
+        {{ filter_form.as_p }}
+        <button type="submit">Filter</button>
+    </form>
+
+    <!-- If department, month, and year are provided -->
+    {% if department and month and year %}
+        <!-- Display filtered results -->
+        <h2>Department: {{ department.Department_Name }} | Month: {{ month }} | Year: {{ year }}</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Employee</th>
+                    <th>Total Overtime (Hours:Minutes)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for overtime in overtimes %}
+                    <tr>
+                        <td>{{ overtime.Employee__Name }}</td>
+                        <td>{{ overtime.total_hours }}:{{ overtime.remaining_minutes }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</body>
+</html>

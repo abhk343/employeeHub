@@ -1,0 +1,61 @@
+<!-- myapp/templates/myapp/department_list.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Department List</title>
+    <script>
+        // Function to confirm and delete a department
+        function confirmDelete(departmentId) {
+            if (confirm("Are you sure you want to delete this department?")) {
+                // Send a DELETE request to delete the department
+                fetch(`/emp/department/${departmentId}/delete/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}' // Include CSRF token for security
+                    },
+                })
+                .then(response => {
+                    // Handle the response
+                    if (response.ok) {
+                        alert("Department deleted successfully");
+                        window.location.reload(); // Refresh the page or update the UI as needed
+                    } else {
+                        alert("Failed to delete department");
+                    }
+                })
+                .catch(error => console.error('Error:', error)); // Handle errors
+            }
+        }
+
+        // Function to edit a department
+        function editDepartment(departmentId) {
+            window.location.href = `/emp/update/${departmentId}/`; // Redirect to the edit department page
+        }
+    </script>
+</head>
+<body>
+    <!-- Check if there are departments available -->
+    {% if object_list %}
+    <ul>
+        <!-- Iterate over each department and display its name -->
+        {% for department in object_list %}
+            <li>
+                {{ department.Department_Name }} 
+                <!-- Button to delete the department -->
+                <button onclick="confirmDelete('{{ department.pk }}')">Delete</button>
+                <!-- Button to edit the department -->
+                <button class="button" onclick="editDepartment('{{ department.pk }}')">Edit</button>
+            </li>
+        {% endfor %}
+    </ul>
+    <!-- Link to create a new department -->
+    <a href="{% url 'department_create' %}">Create New Department</a>
+    {% else %}
+    <!-- If no departments available, display a message -->
+    <p>No departments available.</p>
+    <!-- Link to create a new department -->
+    <a href="{% url 'department_create' %}">Create New Department</a>
+    {% endif %}
+</body>
+</html>

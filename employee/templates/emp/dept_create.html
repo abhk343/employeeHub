@@ -1,0 +1,27 @@
+<!-- myapp/templates/myapp/department_form.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Title of the HTML page -->
+    <title>{{ view.title }}</title>
+</head>
+<body>
+    <!-- Heading displaying the title of the form -->
+    <h1>{{ view.title }}</h1>
+    
+    <!-- Form for adding or updating department details -->
+    <form method="post">
+        {% csrf_token %} <!-- CSRF token for security -->
+        
+        <!-- Display form fields as paragraphs -->
+        {{ form.as_p }}
+        
+        <!-- Button to submit the form -->
+        <button type="submit">Save</button>
+    </form>
+    
+    <!-- Link to navigate back to the department list -->
+    <a href="{% url 'department_list' %}">Back to list</a>
+</body>
+</html>

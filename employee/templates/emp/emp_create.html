@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title> <!-- Title of the HTML page, rendered dynamically -->
+</head>
+<body>
+    <h1>{{ title }}</h1> <!-- Heading displaying the same title as the page -->
+    
+    <!-- Form for submitting data -->
+    <form method="post">
+        {% csrf_token %} <!-- CSRF (Cross-Site Request Forgery) token for security -->
+        
+        <!-- Render the form fields as paragraphs (p elements) -->
+        {{ form.as_p }}
+        
+        <!-- Button to submit the form data -->
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
