@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .models import Department, Employee, Attendance, Overtime
@@ -19,8 +20,8 @@ def home(request):
 
 
 # Department Views
-@login_required
-class DepartmentListView(ListView):
+
+class DepartmentListView(LoginRequiredMixin,ListView):
     """
     View to list all departments.
     """
@@ -28,8 +29,8 @@ class DepartmentListView(ListView):
     template_name = 'emp/dept_view.html'
     context_object_name = 'object_list'
 
-@login_required
-class DepartmentCreateView(CreateView):
+
+class DepartmentCreateView(LoginRequiredMixin,CreateView):
     """
     View to create a new department.
     """
@@ -46,8 +47,8 @@ class DepartmentCreateView(CreateView):
         context['title'] = 'Create Department'
         return context
 
-@login_required
-class DepartmentUpdateView(UpdateView):
+
+class DepartmentUpdateView(LoginRequiredMixin,UpdateView):
     """
     View to update an existing department.
     """
@@ -66,8 +67,7 @@ class DepartmentUpdateView(UpdateView):
     
 
 
-@login_required
-class DepartmentDeleteView(DeleteView):
+class DepartmentDeleteView(LoginRequiredMixin,DeleteView):
     """
     View to delete a department.
     """
@@ -85,8 +85,8 @@ class DepartmentDeleteView(DeleteView):
 
 
 # Employee Views
-@login_required
-class EmployeeListView(ListView):
+
+class EmployeeListView(LoginRequiredMixin,ListView):
     """
     View to list all employees.
     """
@@ -108,8 +108,8 @@ class EmployeeListView(ListView):
             )
         return queryset
 
-@login_required
-class EmployeeCreateView(View):
+
+class EmployeeCreateView(LoginRequiredMixin,View):
     """
     View to create a new employee.
     """
@@ -124,8 +124,8 @@ class EmployeeCreateView(View):
             return redirect('employee_list')
         return render(request, 'emp/emp_create.html', {'title': 'Create Employee', 'form': form})
 
-@login_required
-class EmployeeUpdateView(View):
+
+class EmployeeUpdateView(LoginRequiredMixin,View):
     """
     View to update an existing employee.
     """
@@ -142,8 +142,8 @@ class EmployeeUpdateView(View):
             return redirect('employee_list')
         return render(request, 'emp/emp_create.html', {'title': 'Update Employee', 'form': form})
 
-@login_required
-class EmployeeDeleteView(DeleteView):
+
+class EmployeeDeleteView(LoginRequiredMixin,DeleteView):
     """
     View to delete an employee.
     """
@@ -159,8 +159,8 @@ class EmployeeDeleteView(DeleteView):
         return JsonResponse({'message': 'Employee deleted successfully'}, status=200)
 
 # Attendance Views
-@login_required
-class AttendanceCreateView(View):
+
+class AttendanceCreateView(LoginRequiredMixin,View):
     """
     View to create attendance records.
     """
@@ -233,8 +233,8 @@ def monthly_absence_count(request):
     return render(request, 'emp/att_view.html', context)
 
 # Overtime Views
-@login_required
-class OvertimeCreateView(View):
+
+class OvertimeCreateView(LoginRequiredMixin,View):
     """
     View to create overtime records.
     """
@@ -279,8 +279,8 @@ class OvertimeCreateView(View):
             'employees': employees
         })
 
-@login_required
-class OvertimeListView(View):
+
+class OvertimeListView(LoginRequiredMixin,View):
     """
     View to list overtime records.
     """
