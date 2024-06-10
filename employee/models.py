@@ -27,7 +27,7 @@ class Employee(models.Model):
     Location = models.CharField(max_length=30)
     DOB = models.DateField()
     DOJ = models.DateField()
-    DOL = models.DateField(null=True)
+    DOL = models.DateField(null=True,blank=True)
     Parents_Name = models.CharField(max_length=25)
     Martial_Status = models.CharField(max_length=25)
     Permanent_Address = models.TextField()

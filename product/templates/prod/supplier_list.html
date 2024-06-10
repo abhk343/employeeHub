@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supplier List</title>
+</head>
+<body>
+    <h1>Supplier List</h1>
+    <ul>
+        {% for supplier in suppliers %}
+            <li>{{ supplier.Supplier_Name }}</li>
+            <!-- Add any other supplier details here -->
+        {% endfor %}
+    </ul>
+    <a href="{% url 'add_supplier' %}">Add New Supplier</a>
+</body>
+</html>

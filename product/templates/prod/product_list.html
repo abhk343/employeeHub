@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product List</title>
+    <script>
+        // Function to confirm and delete a product
+        function deleteProduct(productId) {
+            fetch(`/prd/delete/${productId}/`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}' // Include CSRF token for security
+                },
+            })
+            .then(response => {
+                // Handle the response
+                if (response.ok) {
+                    return response.json(); // Parse response JSON
+                } else {
+                    throw new Error('Failed to delete product');
+                }
+            })
+            .then(data => {
+                alert(data.message); // Show success message
+                window.location.reload(); // Refresh the page or update the UI as needed
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to delete product');
+            });
+        }
+        // Function to edit a product
+        function editProduct(productId) {
+            window.location.href = `/prd/edit/${productId}/`; // Redirect to the edit product page
+        }
+    </script>
+</head>
+<body>
+    <h1>Product List</h1>
+    <form method="get">
+        <input type="text" name="q" placeholder="Search..." value="{{ request.GET.q }}">
+        <button type="submit">Search</button>
+    </form>
+    <!-- Check if there are products available -->
+    {% if products %}
+    <ul>
+        <!-- Iterate over each product and display its details -->
+        {% for product in products %}
+            <li>
+                {{ product.Item.Item_Name }} - {{ product.Supplier.Supplier_Name }} - {{ product.Quantity }} - {{ product.Price }} - {{ product.Purchase_Date }} - {{ product.Invoice_Number }}
+                <!-- Button to delete the product -->
+                <button onclick="confirmDelete('{{ product.pk }}')">Delete</button>
+                <!-- Button to edit the product -->
+                <button class="button" onclick="editProduct('{{ product.pk }}')">Edit</button>
+            </li>
+        {% endfor %}
+    </ul>
+    <!-- Link to create a new product -->
+    <a href="{% url 'prd_add' %}">Add Product</a>
+    {% else %}
+    <!-- If no products available, display a message -->
+    <p>No products available.</p>
+    <!-- Link to create a new product -->
+    <a href="{% url 'prd_add' %}">Add Product</a>
+    {% endif %}
+</body>
+</html>

@@ -9,8 +9,7 @@
         function confirmDelete(departmentId) {
             if (confirm("Are you sure you want to delete this department?")) {
                 // Send a DELETE request to delete the department
-                fetch(`/emp/department/${departmentId}/delete/`, {
-                    method: 'DELETE',
+                fetch(`/emp/department/${departmentId}/delete/`, {                    method: 'DELETE',
                     headers: {
                         'X-CSRFToken': '{{ csrf_token }}' // Include CSRF token for security
                     },
@@ -30,7 +29,7 @@
 
         // Function to edit a department
         function editDepartment(departmentId) {
-            window.location.href = `/emp/update/${departmentId}/`; // Redirect to the edit department page
+            window.location.href = `/departments/update/${departmentId}/`; // Redirect to the edit department page
         }
     </script>
 </head>

@@ -115,35 +115,48 @@
             <p>No employees found.</p>
         {% endif %}
     </div>
+    <a href="{% url 'export_employee_data' %}" class="btn btn-primary">Export Employee Data</a>
     
-    <!-- JavaScript function to confirm employee deletion -->
-    <script>
-        function confirmDelete(button) {
-            // Ask for confirmation before deleting
-            if (confirm("Are you sure you want to delete this employee?")) {
-                // Get the form containing the delete button
-                const form = button.parentElement;
-                // Get the CSRF token value from the form
-                const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+<!-- JavaScript function to confirm employee deletion -->
+<script>
+    function confirmDelete(button) {
+        // Ask for confirmation before deleting
+        if (confirm("Are you sure you want to delete this employee?")) {
+            // Get the form containing the delete button
+            const form = button.parentElement;
+            // Get the CSRF token value from the form
+            const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
 
-                // Send a DELETE request to delete the employee
-                fetch(form.action, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRFToken': csrfToken
-                    }
-                }).then(response => {
-                    // Reload the page if deletion is successful
-                    if (response.ok) {
-                        alert("Employee deleted successfully");
-                        location.reload();
-                    } else {
-                        // Display an error message if deletion fails
-                        alert("An error occurred while trying to delete the employee.");
-                    }
-                });
-            }
+            // Send a DELETE request to delete the employee
+            fetch(form.action, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': csrfToken
+                }
+            }).then(response => {
+                // Check if deletion is successful
+                if (response.ok) {
+                    alert("Employee deleted successfully");
+                    // Remove the row from the table
+                    const row = button.closest('tr');
+                    row.remove();
+                } else if (response.status === 404) {
+                    // Display a specific error message for 404 Not Found
+                    alert("Employee not found. Please refresh the page.");
+                } else if (response.status === 403) {
+                    // Display a specific error message for 403 Forbidden
+                    alert("You are not authorized to delete this employee.");
+                } else {
+                    // Display a generic error message for other errors
+                    alert("An error occurred while trying to delete the employee.");
+                }
+            }).catch(error => {
+                console.error('Error deleting employee:', error);
+                alert("An error occurred while trying to delete the employee.");
+            });
         }
-    </script>
+    }
+</script>
+
 </body>
 </html>
