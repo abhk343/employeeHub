@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Remaining Stock</title>
+</head>
+<body>
+    <h1>Remaining Stock for Items</h1>
+
+    <!-- Container for displaying remaining stock -->
+    <div id="remainingStockList">
+        <!-- Check if there are items to display -->
+        {% if item_data %}
+            <!-- Table for displaying item details -->
+            <table border="1">
+                <thead>
+                    <!-- Table header with column names -->
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Total Purchased</th>
+                        <th>Total Issued</th>
+                        <th>Remaining Stock</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Iterate over each item -->
+                    {% for data in item_data %}
+                        <!-- Table row for each item -->
+                        <tr>
+                            <!-- Display item details in each column -->
+                            <td>{{ data.item.Item_Name }}</td>
+                            <td>{{ data.total_purchased }}</td>
+                            <td>{{ data.total_issued }}</td>
+                            <td>{{ data.remaining_stock }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        <!-- If no items are found, display a message -->
+        {% else %}
+            <p>No items found.</p>
+        {% endif %}
+    </div>
+    
+</body>
+</html>

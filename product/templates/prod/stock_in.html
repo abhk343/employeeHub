@@ -1,0 +1,109 @@
+<!-- stock_in.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock In List</title>
+</head>
+<body>
+    <h1>Stock In List</h1>
+
+    <!-- Link to add a new stock entry -->
+    <a href="{% url 'stock_in_add' %}">Add Stock Entry</a>
+
+    <!-- Form for searching stock entries -->
+    <form method="get" action="{% url 'stock_in_list' %}">
+        <input type="text" name="q" placeholder="Search stock entries" value="{{ request.GET.q }}">
+        <button type="submit">Search</button>
+    </form>
+    <a href="{% url 'remaining_stock' %}">View Remaining Stock</a>
+    <!-- Container for displaying stock entries -->
+    <div id="stockList">
+        <!-- Check if there are stock entries to display -->
+        {% if stock_entries %}
+            <!-- Table for displaying stock entry details -->
+            <table border="1">
+                <thead>
+                    <!-- Table header with column names -->
+                    <tr>
+                        <th>Employee</th>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Issue Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Iterate over each stock entry -->
+                    {% for stock in stock_entries %}
+                        <!-- Table row for each stock entry -->
+                        <tr>
+                            <!-- Display stock entry details in each column -->
+                            <td>{{ stock.employee }}</td>
+                            <td>{{ stock.item }}</td>
+                            <td>{{ stock.Quantity }}</td>
+                            <td>{{ stock.issue_date }}</td>
+                            <!-- Actions column for editing and deleting stock entries -->
+                            <td>
+                                <!-- Edit button to update stock entry details -->
+                                <button onclick="location.href='{% url 'stock_in_edit' stock.pk %}'">Edit</button>
+                                
+                                <!-- Form for deleting the stock entry -->
+                                <form method="post" action="{% url 'stock_in_delete' stock.pk %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <!-- Button to delete the stock entry -->
+                                    <button type="button" onclick="confirmDelete(this)">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        <!-- If no stock entries are found, display a message -->
+        {% else %}
+            <p>No stock entries found.</p>
+        {% endif %}
+    </div>
+    
+    <!-- JavaScript function to confirm stock entry deletion -->
+    <script>
+        function confirmDelete(button) {
+            // Ask for confirmation before deleting
+            if (confirm("Are you sure you want to delete this stock entry?")) {
+                // Get the form containing the delete button
+                const form = button.parentElement;
+                // Get the CSRF token value from the form
+                const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                // Send a DELETE request to delete the stock entry
+                fetch(form.action, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRFToken': csrfToken
+                    }
+                }).then(response => {
+                    // Check if deletion is successful
+                    if (response.ok) {
+                        alert("Stock entry deleted successfully");
+                        // Remove the row from the table
+                        const row = button.closest('tr');
+                        row.remove();
+                    } else if (response.status === 404) {
+                        // Display a specific error message for 404 Not Found
+                        alert("Stock entry not found. Please refresh the page.");
+                    } else if (response.status === 403) {
+                        // Display a specific error message for 403 Forbidden
+                        alert("You are not authorized to delete this stock entry.");
+                    } else {
+                        // Display a generic error message for other errors
+                        alert("An error occurred while trying to delete the stock entry.");
+                    }
+                }).catch(error => {
+                    console.error('Error deleting stock entry:', error);
+                    alert("An error occurred while trying to delete the stock entry.");
+                });
+            }
+        }
+    </script>
+    
+</body>
+</html>

@@ -4,7 +4,7 @@ from .models import *
 class ItemForm(forms.ModelForm):
     class Meta:
         model = Item
-        fields = ['Item_Name', 'available_quantity']
+        fields = ['Item_Name']
 
 class SupplierForm(forms.ModelForm):
     class Meta:
@@ -23,9 +23,17 @@ class ProductForm(forms.ModelForm):
         }
 
         
-
-class ProductForm(forms.ModelForm):
+class StockInForm(forms.ModelForm):
     class Meta:
-        model = Product
-        fields = ['Item', 'Supplier', 'Quantity', 'Price', 'Purchase_Date', 'Invoice_Number']
+        model = Stock_in
+        fields = "__all__"
+        widgets = {
+            'issue_date': forms.DateInput(attrs={'type': 'date'}),
+        }
 
+from employee.models import Department
+
+class DepartmentForm(forms.ModelForm):
+    class Meta:
+        model = Department
+        fields = ['Department_Name'] 

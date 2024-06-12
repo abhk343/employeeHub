@@ -177,36 +177,45 @@ class AttendanceCreateView(LoginRequiredMixin, View):
             return redirect('monthly_absence_count')
         return render(request, self.template_name, {'form': form})
 
+
 @login_required
 def monthly_absence_count(request):
     selected_department = request.GET.get('department')
     selected_year = request.GET.get('year')
+    
     if selected_year:
         try:
             selected_year = int(selected_year)
         except ValueError:
             selected_year = None
+            
     absences = Attendance.objects.all()
+    
     if selected_department:
         absences = absences.filter(employee__Department_id=selected_department)
+        
     if selected_year:
         absences = absences.filter(date__year=selected_year)
-    absence_data = absences.values('employee__Name', 'employee__Department__Department_Name', 'date__month').annotate(count=Count('id'))
+        
+    absence_data = absences.values('employee__Name', 'employee__Department__Department_Name', 'date__month').annotate(count=Count('attendance_id'))
+    
     table_data = defaultdict(lambda: {'department': '', 'months': [0] * 12})
+    
     for data in absence_data:
         employee_name = data['employee__Name']
         department_name = data['employee__Department__Department_Name']
         month = data['date__month'] - 1
         table_data[employee_name]['department'] = department_name
         table_data[employee_name]['months'][month] = data['count']
+        
     context = {
         'departments': Department.objects.all(),
         'selected_department': selected_department,
         'selected_year': selected_year,
         'table_data': dict(table_data),
     }
+    
     return render(request, 'emp/att_view.html', context)
-
 # Overtime Views
 class OvertimeCreateView(LoginRequiredMixin, View):
     def get(self, request):

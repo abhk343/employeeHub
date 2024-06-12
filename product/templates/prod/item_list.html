@@ -8,7 +8,7 @@
     <ul>
         {% for item in items %}
         <li>
-            {{ item.Item_Name }} - Quantity: {{ item.available_quantity }}
+            {{ item.Item_Name }} 
             <a href="{% url 'edit_item' item.pk %}">Edit</a>
         </li>
         {% endfor %}
