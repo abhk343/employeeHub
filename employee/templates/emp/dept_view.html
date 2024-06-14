@@ -38,7 +38,7 @@
         }
 
         th {
-            background-color: #007bff;
+            background-color: #004d00; /* Dark green background */
             color: white;
         }
 
@@ -47,7 +47,7 @@
         }
 
         button {
-            background: #007bff;
+            background: #004d00; /* Dark green background */
             color: #fff;
             padding: 0.5em 1em;
             border: none;
@@ -58,13 +58,13 @@
         }
 
         button:hover {
-            background: #0056b3;
+            background: #003300; /* Darker green on hover */
         }
 
         a {
             display: inline-block;
             margin-top: 1em;
-            color: #007bff;
+            color: #004d00; /* Dark green color */
             text-decoration: none;
             font-size: 1em;
         }
@@ -85,7 +85,7 @@
             }
 
             th {
-                background-color: #007bff;
+                background-color: #004d00; /* Dark green background */
                 color: white;
                 text-align: center;
             }
@@ -152,12 +152,12 @@
         </tbody>
     </table>
     <!-- Link to create a new department -->
-    <a href="{% url 'department_create' %}">Create New Department</a>
+    <a href="{% url 'employee:department_create' %}">Create New Department</a>
     {% else %}
     <!-- If no departments available, display a message -->
     <p>No departments available.</p>
     <!-- Link to create a new department -->
-    <a href="{% url 'department_create' %}">Create New Department</a>
+    <a href="{% url 'employee:department_create' %}">Create New Department</a>
     {% endif %}
 </body>
 </html>

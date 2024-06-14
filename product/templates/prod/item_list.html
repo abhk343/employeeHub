@@ -9,10 +9,10 @@
         {% for item in items %}
         <li>
             {{ item.Item_Name }} 
-            <a href="{% url 'edit_item' item.pk %}">Edit</a>
+            <a href="{% url 'products:edit_item' item.pk %}">Edit</a>
         </li>
         {% endfor %}
     </ul>
-    <a href="{% url 'add_item' %}">Add a new item</a>
+    <a href="{% url 'products:add_item' %}">Add a new item</a>
 </body>
 </html>

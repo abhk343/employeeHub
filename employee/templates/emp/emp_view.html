@@ -7,10 +7,10 @@
     <h1>Employee List</h1>
     
     <!-- Link to create a new employee -->
-    <a href="{% url 'employee_create' %}">Create New Employee</a>
+    <a href="{% url 'employee:employee_create' %}">Create New Employee</a>
 
     <!-- Form for searching employees -->
-    <form method="get" action="{% url 'employee_list' %}">
+    <form method="get" action="{% url 'employee:employee_list' %}">
         <input type="text" name="q" placeholder="Search employees" value="{{ request.GET.q }}">
         <button type="submit">Search</button>
     </form>
@@ -97,10 +97,10 @@
                             <!-- Actions column for editing and deleting employees -->
                             <td>
                                 <!-- Edit button to update employee details -->
-                                <button onclick="location.href='{% url 'employee_update' employee.pk %}'">Edit</button>
+                                <button onclick="location.href='{% url 'employee:employee_update' employee.pk %}'">Edit</button>
                                 
                                 <!-- Form for deleting the employee -->
-                                <form method="post" action="{% url 'employee_delete' employee.pk %}" style="display: inline;">
+                                <form method="post" action="{% url 'employee:employee_delete' employee.pk %}" style="display: inline;">
                                     {% csrf_token %}
                                     <!-- Button to delete the employee -->
                                     <button type="button" onclick="confirmDelete(this)">Delete</button>
@@ -115,7 +115,7 @@
             <p>No employees found.</p>
         {% endif %}
     </div>
-    <a href="{% url 'export_employee_data' %}" class="btn btn-primary">Export Employee Data</a>
+    <a href="{% url 'employee:export_employee_data' %}" class="btn btn-primary">Export Employee Data</a>
     
 <!-- JavaScript function to confirm employee deletion -->
 <script>

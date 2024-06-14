@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
 from django.urls import reverse_lazy
 from django.db.models import Q, Count, Sum, F
 from collections import defaultdict
+import csv
 from .models import Department, Employee, Attendance, Overtime
 from .forms import EmployeeCreateForm, AttendanceForm, DepartmentForm, OvertimeForm, OvertimeFilterForm
 
@@ -23,7 +24,7 @@ class DepartmentCreateView(LoginRequiredMixin, CreateView):
     model = Department
     fields = ['Department_Name']
     template_name = 'emp/dept_create.html'
-    success_url = reverse_lazy('department_list')
+    success_url = reverse_lazy('employee:department_list')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -34,7 +35,7 @@ class DepartmentUpdateView(LoginRequiredMixin, UpdateView):
     model = Department
     fields = ['Department_Name']
     template_name = 'emp/dept_create.html'
-    success_url = reverse_lazy('department_list')
+    success_url = reverse_lazy('employee:department_list')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -52,7 +53,7 @@ class DepartmentDeleteView(LoginRequiredMixin, DeleteView):
         self.object = self.get_object()
         self.object.delete()
         return JsonResponse({'message': 'Department deleted successfully'}, status=200)
-    
+
 # Employee Views
 class EmployeeListView(LoginRequiredMixin, ListView):
     model = Employee
@@ -79,7 +80,7 @@ class EmployeeCreateView(LoginRequiredMixin, View):
         form = EmployeeCreateForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('employee_list')
+            return redirect('employee:employee_list')
         return render(request, 'emp/emp_create.html', {'title': 'Create Employee', 'form': form})
 
 class EmployeeUpdateView(LoginRequiredMixin, View):
@@ -93,12 +94,12 @@ class EmployeeUpdateView(LoginRequiredMixin, View):
         form = EmployeeCreateForm(request.POST, instance=employee)
         if form.is_valid():
             form.save()
-            return redirect('employee_list')
+            return redirect('employee:employee_list')
         return render(request, 'emp/emp_create.html', {'title': 'Update Employee', 'form': form})
 
 class EmployeeDeleteView(LoginRequiredMixin, DeleteView):
     model = Employee
-    success_url = reverse_lazy('employee_list')
+    success_url = reverse_lazy('employee:employee_list')
 
     def delete(self, request, *args, **kwargs):
         """
@@ -107,10 +108,6 @@ class EmployeeDeleteView(LoginRequiredMixin, DeleteView):
         self.object = self.get_object()
         self.object.delete()
         return JsonResponse({'message': 'Employee deleted successfully'}, status=200)
-
-from django.http import HttpResponse
-import csv
-from .models import Employee
 
 class ExportEmployeeDataView(View):
     def get(self, request):
@@ -128,12 +125,10 @@ class ExportEmployeeDataView(View):
 
         # Define the fields to include in the CSV
         field_names = [
-             'Punch_Card_NO', 'Name', 'Designation', 'Location',
-            'DOB', 'DOJ', 'DOL', 'Parents_Name', 'Martial_Status', 'Permanent_Address',
-            'Present_Address', 'Blood_Group', 'UAN_Number', 'PF_PW', 'ESI_Number',
-            'Mobile_No', 'Email', 'Aadhar_No', 'PAN', 'Bank_Acc_NO', 'IFSC_Code',
-            'Bank_Name', 'Emergency_Contact_No', 'Contact_No', 'Sur_name', 'Qualification',
-            'Experience', 'Remarks', 'Salary',
+            'Punch_Card_NO', 'Name', 'Designation', 'Location', 'DOB', 'DOJ', 'DOL', 'Parents_Name', 'Martial_Status', 
+            'Permanent_Address', 'Present_Address', 'Blood_Group', 'UAN_Number', 'PF_PW', 'ESI_Number', 'Mobile_No', 
+            'Email', 'Aadhar_No', 'PAN', 'Bank_Acc_NO', 'IFSC_Code', 'Bank_Name', 'Emergency_Contact_No', 'Contact_No', 
+            'Sur_name', 'Qualification', 'Experience', 'Remarks', 'Salary',
         ]
 
         # Write header row
@@ -144,15 +139,10 @@ class ExportEmployeeDataView(View):
 
         # Write data rows
         for employee in employees:
-            # Get employee data
             row_data = [getattr(employee, field) for field in field_names]
-
-            # Write the row
             writer.writerow(row_data)
 
         return response
-
-
 
 # Attendance Views
 class AttendanceCreateView(LoginRequiredMixin, View):
@@ -174,9 +164,8 @@ class AttendanceCreateView(LoginRequiredMixin, View):
                     employee=employee,
                     date=date,
                 )
-            return redirect('monthly_absence_count')
+            return redirect('employee:monthly_absence_count')
         return render(request, self.template_name, {'form': form})
-
 
 @login_required
 def monthly_absence_count(request):
@@ -216,6 +205,7 @@ def monthly_absence_count(request):
     }
     
     return render(request, 'emp/att_view.html', context)
+
 # Overtime Views
 class OvertimeCreateView(LoginRequiredMixin, View):
     def get(self, request):

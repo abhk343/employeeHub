@@ -14,7 +14,7 @@
         <input type="text" name="q" placeholder="Search products" value="{{ request.GET.q }}">
         <button type="submit">Search</button>
     </form>
-    <a href="{% url 'remaining_stock' %}">View Remaining Stock</a>
+    <a href="{% url 'products:remaining_stock' %}">View Remaining Stock</a>
 
     <!-- Container for displaying product list -->
     <div id="productList">

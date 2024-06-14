@@ -8,14 +8,14 @@
     <h1>Stock In List</h1>
 
     <!-- Link to add a new stock entry -->
-    <a href="{% url 'stock_in_add' %}">Add Stock Entry</a>
+    <a href="{% url 'products:stock_in_add' %}">Add Stock Entry</a>
 
     <!-- Form for searching stock entries -->
-    <form method="get" action="{% url 'stock_in_list' %}">
+    <form method="get" action="{% url 'products:stock_in_list' %}">
         <input type="text" name="q" placeholder="Search stock entries" value="{{ request.GET.q }}">
         <button type="submit">Search</button>
     </form>
-    <a href="{% url 'remaining_stock' %}">View Remaining Stock</a>
+    <a href="{% url 'products:remaining_stock' %}">View Remaining Stock</a>
     <!-- Container for displaying stock entries -->
     <div id="stockList">
         <!-- Check if there are stock entries to display -->
