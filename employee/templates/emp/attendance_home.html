@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff8dc; /* Light yellowish background */
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .header {
+            color: #c2185b;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            margin-bottom: auto; /* Pushes the nav to the top */
+        }
+
+        .nav-container a {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            margin: 0 20px;
+            text-align: center;
+            border: 2px solid #c2185b;
+            background-color: #c2185b;
+            border-radius: 5px;
+        }
+
+        .nav-container a:hover {
+            color: #45a049;
+            background-color: #8e0038;
+            border-color: #8e0038;
+        }
+
+        .back-link {
+            position: absolute;
+            bottom: 20px; /* Adjust as needed */
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: auto; /* Pushes the back link to the bottom */
+        }
+
+        .back-link a {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #c2185b; /* Matching heading color */
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.3s;
+            border: 2px solid #c2185b;
+            background-color: transparent;
+            border-radius: 5px;
+        }
+
+        .back-link a:hover {
+            color: #8e0038;
+            border-color: #8e0038;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="header">Attendance</h1>
+    <div class="nav-container">
+        <a href="{% url 'employee:attendance_create' %}">Add Attendance</a>
+        <a href="{% url 'employee:monthly_absence_count' %}">Attendance Summary</a>
+    </div>
+    <div class="back-link">
+        <a href="{% url 'employee:home' %}">Back</a>
+    </div>
+</body>
+</html>

@@ -10,6 +10,16 @@
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            position: relative;
+        }
+        
+        .container {
+            text-align: center;
         }
         
         .logout-container {
@@ -37,48 +47,76 @@
         }
         
         .nav-container {
-            position: absolute;
-            top: 10px;
-            left: 10px;
+            margin-bottom: 20px;
         }
         
         .nav-container a {
+            display: inline-block;
             padding: 10px 20px;
             font-size: 16px;
-            background-color: #4CAF50;
-            color: white;
+            color: black;
             text-decoration: none;
-            border: none;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: color 0.3s;
+            margin: 0 20px; /* Increased margin for more space */
+            text-align: center;
         }
 
         .nav-container a:hover {
-            background-color: #45a049;
+            color: #45a049;
         }
-        
+
+        /* .nav-container a .icon {
+            display: block;
+            margin-bottom: 8px;
+        } */
+
+        .nav-container a .caption {
+            display: block;
+        }
+
         @media (max-width: 600px) {
             .logout-container input[type="submit"], .nav-container a {
                 padding: 8px 16px;
                 font-size: 14px;
+            }
+
+            /* .nav-container a .icon {
+                width: 16px;
+                height: 16px;
+                margin-bottom: 4px;
+            } */
+
+            .nav-container a {
+                margin: 0 10px; /* Adjusted margin for smaller screens */
             }
         }
     </style>
 </head>
 <body>
     {% if user.is_authenticated %}
-        <div class="nav-container">
-            <a href="{% url 'employee:department_list' %}">Department And Employees</a>
-            <a href="{% url 'employee:attendance_create' %}">Attendance</a>
-            <a href="{% url 'products:add_item' %}">Product</a>
-
-        </div>
-
         <div class="logout-container">
             <form action="{% url 'logout' %}" method="post">
                 {% csrf_token %}
                 <input type="submit" value="Logout">
             </form>
+        </div>
+
+        <div class="container">
+            <div class="nav-container">
+                <a href="{% url 'employee:depemp_home' %}">
+                    <!-- <img class="icon" src="path/to/department.png" alt="Department Icon" width="48" height="48"> -->
+                    <span class="caption">Department And Employees</span>
+                </a>
+                <a href="{% url 'employee:attendance_home' %}">
+                    <!-- <img class="icon" src="path/to/attendance_icon.png" alt="Attendance Icon" width="48" height="48"> -->
+                    <span class="caption">Attendance</span>
+                </a>
+                <a href="{% url 'products:add_item' %}">
+                    <!-- <img class="icon" src="path/to/product_icon.png" alt="Product Icon" width="48" height="48"> -->
+                    <span class="caption">Product</span>
+                </a>
+            </div>
         </div>
     {% endif %}
 </body>

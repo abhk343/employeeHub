@@ -14,6 +14,19 @@ from .forms import EmployeeCreateForm, AttendanceForm, DepartmentForm, OvertimeF
 def home(request):
     return render(request, 'emp/home.html')
 
+@login_required
+def depemp_home(request):
+    return render(request, 'emp/depemp_home.html')
+
+@login_required
+def attendance_home(request):
+    return render(request, 'emp/attendance_home.html')
+
+@login_required
+def products_home(request):
+    return render(request, 'emp/products_home.html')
+
+
 # Department Views
 class DepartmentListView(LoginRequiredMixin, ListView):
     model = Department
