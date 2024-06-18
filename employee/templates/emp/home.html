@@ -66,13 +66,14 @@
             color: #45a049;
         }
 
-        /* .nav-container a .icon {
+        .nav-container a .icon {
             display: block;
-            margin-bottom: 8px;
-        } */
+            margin: 0 auto 8px auto; /* Center the icon and add margin below */
+        }
 
         .nav-container a .caption {
             display: block;
+            text-align: center; /* Center the caption text */
         }
 
         @media (max-width: 600px) {
@@ -81,11 +82,11 @@
                 font-size: 14px;
             }
 
-            /* .nav-container a .icon {
-                width: 16px;
-                height: 16px;
+            .nav-container a .icon {
+                width: 32px;  /* Adjusted width for smaller screens */
+                height: 32px; /* Adjusted height for smaller screens */
                 margin-bottom: 4px;
-            } */
+            }
 
             .nav-container a {
                 margin: 0 10px; /* Adjusted margin for smaller screens */
@@ -95,6 +96,7 @@
 </head>
 <body>
     {% if user.is_authenticated %}
+        {% load static %}
         <div class="logout-container">
             <form action="{% url 'logout' %}" method="post">
                 {% csrf_token %}
@@ -105,15 +107,15 @@
         <div class="container">
             <div class="nav-container">
                 <a href="{% url 'employee:depemp_home' %}">
-                    <!-- <img class="icon" src="path/to/department.png" alt="Department Icon" width="48" height="48"> -->
+                    <img class="icon" src="{% static 'images/depemp1.jpg' %}" alt="Department Icon" width="96" height="96">
                     <span class="caption">Department And Employees</span>
                 </a>
                 <a href="{% url 'employee:attendance_home' %}">
-                    <!-- <img class="icon" src="path/to/attendance_icon.png" alt="Attendance Icon" width="48" height="48"> -->
+                    <img class="icon" src="{% static 'images/attendance.jpg' %}" alt="Attendance Icon" width="96" height="96">
                     <span class="caption">Attendance</span>
                 </a>
                 <a href="{% url 'products:add_item' %}">
-                    <!-- <img class="icon" src="path/to/product_icon.png" alt="Product Icon" width="48" height="48"> -->
+                    <img class="icon" src="{% static 'images/product.jpg' %}" alt="Product Icon" width="96" height="96">
                     <span class="caption">Product</span>
                 </a>
             </div>
