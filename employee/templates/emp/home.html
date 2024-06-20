@@ -6,16 +6,29 @@
     <title>Document</title>
     
     <style>
+        /* Your existing CSS styles */
         body {
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
             display: flex;
+            flex-direction: column; /* Adjusted to stack elements vertically */
             justify-content: center;
             align-items: center;
             height: 100vh;
             background-color: #f0f0f0;
             position: relative;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin: 0;
+            padding: 0;
         }
         
         .container {
@@ -76,6 +89,7 @@
             text-align: center; /* Center the caption text */
         }
 
+        /* Responsive styles */
         @media (max-width: 600px) {
             .logout-container input[type="submit"], .nav-container a {
                 padding: 8px 16px;
@@ -92,12 +106,40 @@
                 margin: 0 10px; /* Adjusted margin for smaller screens */
             }
         }
+
+        /* Styling for Create User button */
+        .create-user-button {
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-right: 20px; /* Adjust spacing */
+            transition: background-color 0.3s;
+        }
+
+        .create-user-button:hover {
+            background-color: #004E6E;
+        }
     </style>
 </head>
 <body>
     {% if user.is_authenticated %}
+        <div class="header">
+            <h1>Hello, {{ user.username }}!</h1>
+        </div>
         {% load static %}
+        {% load group_filters %}
         <div class="logout-container">
+            <!-- Create User Button -->
+            {% if user.is_superuser %}
+                <a href="{% url 'employee:create_user' %}" class="create-user-button">Create User</a>
+            {% endif %}
+            
+            <!-- Logout Form -->
             <form action="{% url 'logout' %}" method="post">
                 {% csrf_token %}
                 <input type="submit" value="Logout">
@@ -106,20 +148,45 @@
 
         <div class="container">
             <div class="nav-container">
-                <a href="{% url 'employee:depemp_home' %}">
-                    <img class="icon" src="{% static 'images/depemp1.jpg' %}" alt="Department Icon" width="96" height="96">
-                    <span class="caption">Department And Employees</span>
-                </a>
-                <a href="{% url 'employee:attendance_home' %}">
-                    <img class="icon" src="{% static 'images/attendance.jpg' %}" alt="Attendance Icon" width="96" height="96">
-                    <span class="caption">Attendance</span>
-                </a>
-                <a href="{% url 'products:add_item' %}">
-                    <img class="icon" src="{% static 'images/product.jpg' %}" alt="Product Icon" width="96" height="96">
-                    <span class="caption">Product</span>
-                </a>
+                {% if user.is_superuser %}
+                    <!-- Superuser can see all links -->
+                    <a href="{% url 'employee:depemp_home' %}">
+                        <img class="icon" src="{% static 'images/depemp1.jpg' %}" alt="Department Icon" width="96" height="96">
+                        <span class="caption">Department And Employees</span>
+                    </a>
+                    <a href="{% url 'employee:attendance_home' %}">
+                        <img class="icon" src="{% static 'images/attendance.jpg' %}" alt="Attendance Icon" width="96" height="96">
+                        <span class="caption">Attendance</span>
+                    </a>
+                    <a href="{% url 'products:add_item' %}">
+                        <img class="icon" src="{% static 'images/product.jpg' %}" alt="Product Icon" width="96" height="96">
+                        <span class="caption">Product</span>
+                    </a>
+                {% elif user|has_group:"Supervisor" %}
+                    <!-- Supervisor-specific links -->
+                    <a href="{% url 'employee:depemp_home' %}">
+                        <img class="icon" src="{% static 'images/depemp1.jpg' %}" alt="Department Icon" width="96" height="96">
+                        <span class="caption">Department And Employees</span>
+                    </a>
+                    <a href="{% url 'employee:attendance_home' %}">
+                        <img class="icon" src="{% static 'images/attendance.jpg' %}" alt="Attendance Icon" width="96" height="96">
+                        <span class="caption">Attendance</span>
+                    </a>
+                {% elif user|has_group:"HR" %}
+                    <!-- HR-specific links -->
+                    <a href="{% url 'employee:depemp_home' %}">
+                        <img class="icon" src="{% static 'images/depemp1.jpg' %}" alt="Department Icon" width="96" height="96">
+                        <span class="caption">Department And Employees</span>
+                    </a>
+                    <a href="{% url 'products:add_item' %}">
+                        <img class="icon" src="{% static 'images/product.jpg' %}" alt="Product Icon" width="96" height="96">
+                        <span class="caption">Product</span>
+                    </a>
+                {% endif %}
             </div>
         </div>
+    {% elif not user.is_authenticated %}
+        <a href="{% url 'login' %}">Log in</a>
     {% endif %}
 </body>
 </html>

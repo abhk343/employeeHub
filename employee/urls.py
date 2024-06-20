@@ -5,6 +5,9 @@ app_name = "employee"
 urlpatterns = [
     # Home
     path('', home, name='home'),
+    path('create_user/', create_user, name='create_user'),
+    path('user1/', user1_view, name='HR'),
+    path('user2/', user2_view, name='Supervisor'),
     path('depemp_home/', depemp_home, name='depemp_home'),
     path('attendance_home/', attendance_home, name='attendance_home'),
     path('products_home/', products_home, name='products_home'),

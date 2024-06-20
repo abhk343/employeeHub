@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse, HttpResponse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required,user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
 from django.urls import reverse_lazy
@@ -8,11 +8,45 @@ from django.db.models import Q, Count, Sum, F
 from collections import defaultdict
 import csv
 from .models import Department, Employee, Attendance, Overtime
-from .forms import EmployeeCreateForm, AttendanceForm, DepartmentForm, OvertimeForm, OvertimeFilterForm
+from .forms import EmployeeCreateForm, AttendanceForm, DepartmentForm, OvertimeForm, OvertimeFilterForm,CustomUserCreationForm
+
+
+def is_superuser(user):
+    return user.is_authenticated and user.is_superuser
+
+@login_required
+@user_passes_test(is_superuser)
+def create_user(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('employee:home')  # Redirect to a success page
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'emp/create_user.html', {'form': form})
+
+def is_user1(user):
+    return user.groups.filter(name='HR').exists()
+
+def is_user2(user):
+    return user.groups.filter(name='Supervisor').exists()
+
+@login_required
+@user_passes_test(is_user1)
+def user1_view(request):
+    return render(request, 'user1_view.html')
+
+@login_required
+@user_passes_test(is_user2)
+def user2_view(request):
+    return render(request, 'user2_view.html')
 
 @login_required
 def home(request):
     return render(request, 'emp/home.html')
+
+
 
 @login_required
 def depemp_home(request):
