@@ -2,6 +2,11 @@ from django import forms
 from .models import Employee, Overtime, Department
 from datetime import datetime
 from django.forms.widgets import SelectDateWidget
+from django.contrib.auth.forms import UserCreationForm
+
+class UserCreationFormExtended(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        fields = UserCreationForm.Meta.fields + ('email','first_name','last_name')
 
 class AttendanceForm(forms.Form):
     """

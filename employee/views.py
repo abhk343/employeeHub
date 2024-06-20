@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse, HttpResponse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required,user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
 from django.urls import reverse_lazy
@@ -8,11 +8,17 @@ from django.db.models import Q, Count, Sum, F
 from collections import defaultdict
 import csv
 from .models import Department, Employee, Attendance, Overtime
-from .forms import EmployeeCreateForm, AttendanceForm, DepartmentForm, OvertimeForm, OvertimeFilterForm
+from .forms import EmployeeCreateForm, AttendanceForm, DepartmentForm, OvertimeForm, OvertimeFilterForm,UserCreationFormExtended
 
 @login_required
 def home(request):
     return render(request, 'emp/home.html')
+    context = {
+        'user_groups': user_groups,
+    }
+
+    # Render the template with the context
+    return render(request, 'emp/home.html', context)
 
 @login_required
 def depemp_home(request):
@@ -25,6 +31,27 @@ def attendance_home(request):
 @login_required
 def products_home(request):
     return render(request, 'emp/products_home.html')
+
+def admin_check(user):
+    return user.is_superuser
+
+
+@login_required
+@user_passes_test(admin_check)
+def add_user(request):
+    if not request.user.is_superuser:
+
+        return redirect('employee:add_user')
+    
+    if request.method == 'POST':
+        form = UserCreationFormExtended(request.POST)
+        if form.is_valid():
+            form.save()
+            return render(request,'emp/home.html')
+    else:
+        form = UserCreationFormExtended()
+    return render(request,'emp/add_user.html',{'form':form})
+    
 
 
 # Department Views

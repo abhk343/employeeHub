@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import *
 
-app_name = 'products'
+app_name = 'product'
 
 urlpatterns = [
     path('itin/', ItemCreateView.as_view(), name='add_item'),
@@ -18,4 +18,5 @@ urlpatterns = [
     path('stock/add/', StockInCreateView.as_view(), name='stock_in_add'),
     path('stock/<int:pk>/edit/', StockInUpdateView.as_view(), name='stock_in_edit'),
     path('stock/<int:pk>/delete/', StockInDeleteView.as_view(), name='stock_in_delete'),
-path('remaining_stock/', RemainingStockView.as_view(), name='remaining_stock'),]
+    path('remaining_stock/', RemainingStockView.as_view(), name='remaining_stock'),
+    ]
