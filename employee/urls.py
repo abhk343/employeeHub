@@ -5,9 +5,13 @@ app_name = "employee"
 urlpatterns = [
     # Home
     path('', home, name='home'),
+<<<<<<< HEAD
     path('create_user/', create_user, name='create_user'),
     path('user1/', user1_view, name='HR'),
     path('user2/', user2_view, name='Supervisor'),
+=======
+    path('add_user/',add_user,name="add_user"),
+>>>>>>> 3dc30a2683a3c169cc39668a98bcb5f4f9e0bef3
     path('depemp_home/', depemp_home, name='depemp_home'),
     path('attendance_home/', attendance_home, name='attendance_home'),
     path('products_home/', products_home, name='products_home'),

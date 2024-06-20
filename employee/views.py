@@ -8,6 +8,7 @@ from django.db.models import Q, Count, Sum, F
 from collections import defaultdict
 import csv
 from .models import Department, Employee, Attendance, Overtime
+<<<<<<< HEAD
 from .forms import EmployeeCreateForm, AttendanceForm, DepartmentForm, OvertimeForm, OvertimeFilterForm,CustomUserCreationForm
 
 
@@ -41,10 +42,19 @@ def user1_view(request):
 @user_passes_test(is_user2)
 def user2_view(request):
     return render(request, 'user2_view.html')
+=======
+from .forms import EmployeeCreateForm, AttendanceForm, DepartmentForm, OvertimeForm, OvertimeFilterForm,UserCreationFormExtended
+>>>>>>> 3dc30a2683a3c169cc39668a98bcb5f4f9e0bef3
 
 @login_required
 def home(request):
     return render(request, 'emp/home.html')
+    context = {
+        'user_groups': user_groups,
+    }
+
+    # Render the template with the context
+    return render(request, 'emp/home.html', context)
 
 
 
@@ -59,6 +69,27 @@ def attendance_home(request):
 @login_required
 def products_home(request):
     return render(request, 'emp/products_home.html')
+
+def admin_check(user):
+    return user.is_superuser
+
+
+@login_required
+@user_passes_test(admin_check)
+def add_user(request):
+    if not request.user.is_superuser:
+
+        return redirect('employee:add_user')
+    
+    if request.method == 'POST':
+        form = UserCreationFormExtended(request.POST)
+        if form.is_valid():
+            form.save()
+            return render(request,'emp/home.html')
+    else:
+        form = UserCreationFormExtended()
+    return render(request,'emp/add_user.html',{'form':form})
+    
 
 
 # Department Views

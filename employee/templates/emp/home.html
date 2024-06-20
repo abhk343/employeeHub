@@ -148,8 +148,13 @@
 
         <div class="container">
             <div class="nav-container">
+<<<<<<< HEAD
                 {% if user.is_superuser %}
                     <!-- Superuser can see all links -->
+=======
+                 
+                {% if user.is_superuser %}
+>>>>>>> 3dc30a2683a3c169cc39668a98bcb5f4f9e0bef3
                     <a href="{% url 'employee:depemp_home' %}">
                         <img class="icon" src="{% static 'images/depemp1.jpg' %}" alt="Department Icon" width="96" height="96">
                         <span class="caption">Department And Employees</span>
@@ -158,27 +163,50 @@
                         <img class="icon" src="{% static 'images/attendance.jpg' %}" alt="Attendance Icon" width="96" height="96">
                         <span class="caption">Attendance</span>
                     </a>
+<<<<<<< HEAD
                     <a href="{% url 'products:add_item' %}">
                         <img class="icon" src="{% static 'images/product.jpg' %}" alt="Product Icon" width="96" height="96">
                         <span class="caption">Product</span>
                     </a>
                 {% elif user|has_group:"Supervisor" %}
                     <!-- Supervisor-specific links -->
+=======
+                    <a href="{% url 'product:add_item' %}">
+                        <img class="icon" src="{% static 'images/product.jpg' %}" alt="Product Icon" width="96" height="96">
+                        <span class="caption">Product</span>
+                    </a>
+                {% elif user.groups.filter(name='supervisor').exists %}
+>>>>>>> 3dc30a2683a3c169cc39668a98bcb5f4f9e0bef3
                     <a href="{% url 'employee:depemp_home' %}">
                         <img class="icon" src="{% static 'images/depemp1.jpg' %}" alt="Department Icon" width="96" height="96">
                         <span class="caption">Department And Employees</span>
                     </a>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3dc30a2683a3c169cc39668a98bcb5f4f9e0bef3
                     <a href="{% url 'employee:attendance_home' %}">
                         <img class="icon" src="{% static 'images/attendance.jpg' %}" alt="Attendance Icon" width="96" height="96">
                         <span class="caption">Attendance</span>
                     </a>
+<<<<<<< HEAD
                 {% elif user|has_group:"HR" %}
                     <!-- HR-specific links -->
+=======
+                
+
+
+                {% elif user.groups.filter(name='HR').exists %}
+>>>>>>> 3dc30a2683a3c169cc39668a98bcb5f4f9e0bef3
                     <a href="{% url 'employee:depemp_home' %}">
                         <img class="icon" src="{% static 'images/depemp1.jpg' %}" alt="Department Icon" width="96" height="96">
                         <span class="caption">Department And Employees</span>
                     </a>
+<<<<<<< HEAD
                     <a href="{% url 'products:add_item' %}">
+=======
+                    <a href="{% url 'product:add_item' %}">
+>>>>>>> 3dc30a2683a3c169cc39668a98bcb5f4f9e0bef3
                         <img class="icon" src="{% static 'images/product.jpg' %}" alt="Product Icon" width="96" height="96">
                         <span class="caption">Product</span>
                     </a>
