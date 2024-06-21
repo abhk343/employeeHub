@@ -2,7 +2,7 @@ from django import forms
 from .models import Employee, Overtime, Department
 from datetime import datetime
 from django.forms.widgets import SelectDateWidget
-<<<<<<< HEAD
+
 from django.contrib.auth.models import User, Group
 
 class CustomUserCreationForm(forms.ModelForm):
@@ -21,13 +21,7 @@ class CustomUserCreationForm(forms.ModelForm):
             user.groups.add(self.cleaned_data['group'])
         return user
 
-=======
-from django.contrib.auth.forms import UserCreationForm
 
-class UserCreationFormExtended(UserCreationForm):
-    class Meta(UserCreationForm.Meta):
-        fields = UserCreationForm.Meta.fields + ('email','first_name','last_name')
->>>>>>> 3dc30a2683a3c169cc39668a98bcb5f4f9e0bef3
 
 class AttendanceForm(forms.Form):
     """
