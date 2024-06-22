@@ -6,17 +6,12 @@ from django.views.generic import ListView,DetailView, CreateView, UpdateView, De
 from django.urls import reverse_lazy
 from django.db.models import Q, Count, Sum, F
 from collections import defaultdict
-<<<<<<< HEAD
 from django.contrib import messages
 import csv
 import logging
 from .models import Department, Employee, Attendance, Overtime
 from django_filters.views import FilterView
 from .filters import *
-=======
-import csv
-from .models import Department, Employee, Attendance, Overtime
->>>>>>> origin/main
 
 from .forms import EmployeeCreateForm, AttendanceForm, DepartmentForm, OvertimeForm, OvertimeFilterForm,CustomUserCreationForm
 
@@ -211,7 +206,6 @@ class EmployeeCreateView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         form = EmployeeCreateForm(request.POST)
         if form.is_valid():
-<<<<<<< HEAD
             try:
                 form.save()
                 messages.success(request, 'Employee created successfully!')
@@ -222,10 +216,6 @@ class EmployeeCreateView(LoginRequiredMixin, View):
         else:
             logger.error(f"Form errors: {form.errors}")
             messages.error(request, 'Please correct the errors below.')
-=======
-            form.save()
-            return redirect('employee:employee_list')
->>>>>>> origin/main
         return render(request, 'emp/emp_create.html', {'title': 'Create Employee', 'form': form})
 
 class EmployeeUpdateView(LoginRequiredMixin, View):
