@@ -1,42 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+    {%load static %}
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Overtime</title>
+    <!-- Link to your external CSS file -->
+    <link rel="stylesheet" href="{% static 'css/over_add.css' %}">
 </head>
 <body>
-    <h1>Add Overtime</h1>
+    <div class="container">
+        <h1>Add Overtime</h1>
 
-    <!-- Form for selecting department -->
-    <form method="post">
-        {% csrf_token %}
-        <h2>Select Department</h2>
-        {{ department_form.as_p }}
-        <button type="submit" name="filter">Filter Employees</button>
-    </form>
-
-    <!-- If employees are available after filtering -->
-    {% if employees %}
-        <!-- Form for adding overtime -->
+        <!-- Form for selecting department -->
         <form method="post">
             {% csrf_token %}
-            <h2>Add Overtime</h2>
-            <label for="id_Employee">Employee:</label>
-            <select name="Employee" id="id_Employee">
-                {% for employee in employees %}
-                    <option value="{{ employee.Employee_id }}">{{ employee.Name }}</option>
-                {% endfor %}
-            </select>
-            <label for="id_Overtime_hours">Overtime Hours:</label>
-            {{ overtime_form.Overtime_hours }}
-            <label for="id_Overtime_minutes">Overtime Minutes:</label>
-            {{ overtime_form.Overtime_minutes }}
-            <label for="id_Date">Date:</label>
-            {{ overtime_form.Date }}
-            <button type="submit" name="save">Save</button>
+            <h2>Select Department</h2>
+            {{ department_form.as_p }}
+            <button type="submit" name="filter" class="btn-primary">Filter Employees</button>
         </form>
-    {% endif %}
 
-    <!-- Link to navigate back to the overtime list -->
-    <a href="{% url 'employee:overtime_list' %}">Back to Overtime List</a>
+        <!-- If employees are available after filtering -->
+        {% if employees %}
+            <!-- Form for adding overtime -->
+            <form method="post">
+                {% csrf_token %}
+                <h2>Add Overtime</h2>
+                <label for="id_Employee">Employee:</label>
+                <select name="Employee" id="id_Employee" class="form-control">
+                    {% for employee in employees %}
+                        <option value="{{ employee.Employee_id }}">{{ employee.Name }}</option>
+                    {% endfor %}
+                </select>
+                <label for="id_Overtime_hours">Overtime Hours:</label>
+                {{ overtime_form.Overtime_hours }}
+                <label for="id_Overtime_minutes">Overtime Minutes:</label>
+                {{ overtime_form.Overtime_minutes }}
+                <label for="id_Date">Date:</label>
+                {{ overtime_form.Date }}
+                <button type="submit" name="save" class="btn-primary">Save</button>
+            </form>
+        {% endif %}
+
+        <!-- Link to navigate back to the overtime list -->
+        <a href="{% url 'employee:overtime_list' %}" class="btn-secondary">Back to Overtime List</a>
+    </div>
 </body>
 </html>

@@ -3,131 +3,254 @@
 <head>
     <title>Employee Details</title>
 </head>
+<head>
+    <title>Employee Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        
+        h1 {
+            text-align:center;
+            font-size: 1.5em;
+            color: #006400; /* Dark green */
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1em;
+        }
+        
+        th, td {
+            padding: 0.5em;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            font-size: 0.9em;
+        }
+        
+        th {
+            background-color: #e0ffe0; /* Light green background */
+            color: #006400; /* Dark green text */
+        }
+        
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .action-buttons {
+            text-align:center;
+            display: flex;
+            gap: 0.5em;
+        }
+        
+        .action-buttons button, .action-buttons form {
+            display: inline-block;
+            margin: 0;
+        }
+        
+        .action-buttons button, .action-buttons form button {
+            padding: 0.5em 1em;
+            border: none;
+            background-color: #e0ffe0; /* Light green */
+            color: #006400; /* Dark green text */
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        .action-buttons button:hover, .action-buttons form button:hover {
+            background-color: #ccffcc;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 1em;
+            color: #006400; /* Dark green */
+            text-decoration: none;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            table {
+                font-size: 0.8em;
+            }
+        
+            th, td {
+                padding: 0.4em;
+            }
+        
+            .action-buttons button, .action-buttons form button {
+                padding: 0.4em 0.8em;
+                font-size: 0.8em;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            table, th, td {
+                display: block;
+                width: 100%;
+            }
+        
+            th, td {
+                text-align: right;
+                position: relative;
+                padding-left: 50%;
+                border-bottom: 1px solid #ddd;
+            }
+        
+            th::before, td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 0;
+                width: 50%;
+                padding-left: 0.5em;
+                font-weight: bold;
+                text-align: left;
+                background: #f0f0f0;
+            }
+        
+            th {
+                background: #e0ffe0;
+                color: #006400;
+            }
+        }
+        
+    </style>
+</head>
 <body>
     <h1>Employee Details: {{ employee.Name }}</h1>
 
     <!-- Table for displaying employee details -->
     <table border="solid">
         <tr>
-            <th>Name</th>
-            <td>{{ employee.Name }}</td>
+            <th data-label="Name">Name</th>
+            <td data-label="Name">{{ employee.Name }}</td>
         </tr>
         <tr>
-            <th>Department</th>
-            <td>{{ employee.Department.Department_Name }}</td>
+            <th data-label="Department">Department</th>
+            <td data-label="Department">{{ employee.Department.Department_Name }}</td>
         </tr>
         <tr>
-            <th>Designation</th>
-            <td>{{ employee.Designation }}</td>
+            <th data-label="Designation">Designation</th>
+            <td data-label="Designation">{{ employee.Designation }}</td>
         </tr>
         <tr>
-            <th>Location</th>
-            <td>{{ employee.Location }}</td>
+            <th data-label="Location">Location</th>
+            <td data-label="Location">{{ employee.Location }}</td>
         </tr>
         <tr>
-            <th>Date of Birth</th>
-            <td>{{ employee.DOB }}</td>
+            <th data-label="Date of Birth">Date of Birth</th>
+            <td data-label="Date of Birth">{{ employee.DOB }}</td>
         </tr>
         <tr>
-            <th>Date of Joining</th>
-            <td>{{ employee.DOJ }}</td>
+            <th data-label="Date of Joining">Date of Joining</th>
+            <td data-label="Date of Joining">{{ employee.DOJ }}</td>
         </tr>
         <tr>
-            <th>Date of Leaving</th>
-            <td>{{ employee.DOL }}</td>
+            <th data-label="Date of Leaving">Date of Leaving</th>
+            <td data-label="Date of Leaving">{{ employee.DOL }}</td>
         </tr>
         <tr>
-            <th>Parents' Name</th>
-            <td>{{ employee.Parents_Name }}</td>
+            <th data-label="Parents' Name">Parents' Name</th>
+            <td data-label="Parents' Name">{{ employee.Parents_Name }}</td>
         </tr>
         <tr>
-            <th>Marital Status</th>
-            <td>{{ employee.Martial_Status }}</td>
+            <th data-label="Marital Status">Marital Status</th>
+            <td data-label="Marital Status">{{ employee.Martial_Status }}</td>
         </tr>
         <tr>
-            <th>Permanent Address</th>
-            <td>{{ employee.Permanent_Address }}</td>
+            <th data-label="Permanent Address">Permanent Address</th>
+            <td data-label="Permanent Address">{{ employee.Permanent_Address }}</td>
         </tr>
         <tr>
-            <th>Present Address</th>
-            <td>{{ employee.Present_Address }}</td>
+            <th data-label="Present Address">Present Address</th>
+            <td data-label="Present Address">{{ employee.Present_Address }}</td>
         </tr>
         <tr>
-            <th>Blood Group</th>
-            <td>{{ employee.Blood_Group }}</td>
+            <th data-label="Blood Group">Blood Group</th>
+            <td data-label="Blood Group">{{ employee.Blood_Group }}</td>
         </tr>
         <tr>
-            <th>UAN Number</th>
-            <td>{{ employee.UAN_Number }}</td>
+            <th data-label="UAN Number">UAN Number</th>
+            <td data-label="UAN Number">{{ employee.UAN_Number }}</td>
         </tr>
         <tr>
-            <th>PF PW</th>
-            <td>{{ employee.PF_PW }}</td>
+            <th data-label="PF PW">PF PW</th>
+            <td data-label="PF PW">{{ employee.PF_PW }}</td>
         </tr>
         <tr>
-            <th>ESI Number</th>
-            <td>{{ employee.ESI_Number }}</td>
+            <th data-label="ESI Number">ESI Number</th>
+            <td data-label="ESI Number">{{ employee.ESI_Number }}</td>
         </tr>
         <tr>
-            <th>Mobile Number</th>
-            <td>{{ employee.Mobile_No }}</td>
+            <th data-label="Mobile Number">Mobile Number</th>
+            <td data-label="Mobile Number">{{ employee.Mobile_No }}</td>
         </tr>
         <tr>
-            <th>Email</th>
-            <td>{{ employee.Email }}</td>
+            <th data-label="Email">Email</th>
+            <td data-label="Email">{{ employee.Email }}</td>
         </tr>
         <tr>
-            <th>Aadhar Number</th>
-            <td>{{ employee.Aadhar_No }}</td>
+            <th data-label="Aadhar Number">Aadhar Number</th>
+            <td data-label="Aadhar Number">{{ employee.Aadhar_No }}</td>
         </tr>
         <tr>
-            <th>PAN</th>
-            <td>{{ employee.PAN }}</td>
+            <th data-label="PAN">PAN</th>
+            <td data-label="PAN">{{ employee.PAN }}</td>
         </tr>
         <tr>
-            <th>Bank Account Number</th>
-            <td>{{ employee.Bank_Acc_NO }}</td>
+            <th data-label="Bank Account Number">Bank Account Number</th>
+            <td data-label="Bank Account Number">{{ employee.Bank_Acc_NO }}</td>
         </tr>
         <tr>
-            <th>IFSC Code</th>
-            <td>{{ employee.IFSC_Code }}</td>
+            <th data-label="IFSC Code">IFSC Code</th>
+            <td data-label="IFSC Code">{{ employee.IFSC_Code }}</td>
         </tr>
         <tr>
-            <th>Bank Name</th>
-            <td>{{ employee.Bank_Name }}</td>
+            <th data-label="Bank Name">Bank Name</th>
+            <td data-label="Bank Name">{{ employee.Bank_Name }}</td>
         </tr>
         <tr>
-            <th>Emergency Contact Number</th>
-            <td>{{ employee.Emergency_Contact_No }}</td>
+            <th data-label="Emergency Contact Number">Emergency Contact Number</th>
+            <td data-label="Emergency Contact Number">{{ employee.Emergency_Contact_No }}</td>
         </tr>
         <tr>
-            <th>Contact Number</th>
-            <td>{{ employee.Contact_No }}</td>
+            <th data-label="Contact Number">Contact Number</th>
+            <td data-label="Contact Number">{{ employee.Contact_No }}</td>
         </tr>
         <tr>
-            <th>Surname</th>
-            <td>{{ employee.Sur_name }}</td>
+            <th data-label="Surname">Surname</th>
+            <td data-label="Surname">{{ employee.Sur_name }}</td>
         </tr>
         <tr>
-            <th>Qualification</th>
-            <td>{{ employee.Qualification }}</td>
+            <th data-label="Qualification">Qualification</th>
+            <td data-label="Qualification">{{ employee.Qualification }}</td>
         </tr>
         <tr>
-            <th>Experience</th>
-            <td>{{ employee.Experience }}</td>
+            <th data-label="Experience">Experience</th>
+            <td data-label="Experience">{{ employee.Experience }}</td>
         </tr>
         <tr>
-            <th>Remarks</th>
-            <td>{{ employee.Remarks }}</td>
+            <th data-label="Remarks">Remarks</th>
+            <td data-label="Remarks">{{ employee.Remarks }}</td>
         </tr>
         <tr>
-            <th>Salary</th>
-            <td>{{ employee.Salary }}</td>
+            <th data-label="Salary">Salary</th>
+            <td data-label="Salary">{{ employee.Salary }}</td>
         </tr>
     </table>
 
     <!-- Edit and Delete Actions -->
-    <div>
+    <div class="action-buttons">
         <button onclick="location.href='{% url 'employee:employee_update' employee.pk %}'">Edit</button>
 
         <form method="post" action="{% url 'employee:employee_delete' employee.pk %}" style="display: inline;">
@@ -138,7 +261,7 @@
 
     <!-- Back to list link -->
     <div>
-        <a href="{% url 'employee:employee_list' %}">Back to Employee List</a>
+        <a href="{% url 'employee:employee_list' %}" class="back-link">Back to Employee List</a>
     </div>
 
     <!-- JavaScript function to confirm employee deletion -->

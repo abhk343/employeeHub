@@ -12,7 +12,16 @@ import logging
 from .models import Department, Employee, Attendance, Overtime
 from django_filters.views import FilterView
 from .filters import *
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import DetailView
+from django_filters.views import FilterView
+from .models import Employee
+from .filters import EmployeeFilter  # Assuming you have defined EmployeeFilter in filters.py
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.list import ListView
+from .models import Employee
+from .filters import EmployeeFilter
 from .forms import EmployeeCreateForm, AttendanceForm, DepartmentForm, OvertimeForm, OvertimeFilterForm,CustomUserCreationForm
 
 
@@ -71,22 +80,6 @@ def admin_check(user):
     return user.is_superuser
 
 
-@login_required
-@user_passes_test(admin_check)
-def add_user(request):
-    if not request.user.is_superuser:
-
-        return redirect('employee:add_user')
-    
-    if request.method == 'POST':
-        form = UserCreationFormExtended(request.POST)
-        if form.is_valid():
-            form.save()
-            return render(request,'emp/home.html')
-    else:
-        form = UserCreationFormExtended()
-    return render(request,'emp/add_user.html',{'form':form})
-    
 
 
 # Department Views
@@ -133,32 +126,15 @@ class DepartmentDeleteView(LoginRequiredMixin, DeleteView):
 
 
 
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import DetailView
-from django_filters.views import FilterView
-from .models import Employee
-from .filters import EmployeeFilter  # Assuming you have defined EmployeeFilter in filters.py
 
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django_filters.views import FilterView
-from .models import Employee
-from .filters import EmployeeFilter
-
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic.list import ListView
-from .models import Employee
-from .filters import EmployeeFilter
-
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic.list import ListView
-from .models import Employee
-from .filters import EmployeeFilter
+from django.shortcuts import render
+from django.views.generic import ListView
+from .models import Employee, Department  # Ensure you import the Department model
 
 class EmployeeListView(LoginRequiredMixin, ListView):
     model = Employee
     template_name = 'emp/emp_view.html'
     context_object_name = 'employees'
-    filterset_class = EmployeeFilter
     paginate_by = 5  # Number of employees per page
 
     def get_context_data(self, **kwargs):
@@ -182,14 +158,26 @@ class EmployeeListView(LoginRequiredMixin, ListView):
         context['current_page'] = page_number
         context['num_pages'] = num_pages
 
+        # Fetch all departments and add to context
+        context['departments'] = Department.objects.all()
+
+        # Add the selected department to the context
+        context['selected_department'] = self.request.GET.get('department', '')
+
         return context
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        
+        # Filter employees by selected department
+        department_id = self.request.GET.get('department')
+        if department_id:
+            queryset = queryset.filter(Department_id=department_id)
+        
         return queryset
 
-
-
+    
+    
 class EmployeeDetailView(LoginRequiredMixin, DetailView):
     model = Employee
     template_name = 'emp/emp_detail.html'
