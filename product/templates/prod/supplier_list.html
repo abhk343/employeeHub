@@ -1,18 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+    {% load static %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Supplier List</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/supplier_list.css' %}">
 </head>
 <body>
-    <h1>Supplier List</h1>
-    <ul>
-        {% for supplier in suppliers %}
-            <li>{{ supplier.Supplier_Name }}</li>
-            <!-- Add any other supplier details here -->
-        {% endfor %}
-    </ul>
-    <a href="{% url 'product:add_supplier' %}">Add New Supplier</a>
+    <div class="top-nav">
+        <a href="{% url 'product:add_supplier' %}">Add Supplier</a>
+        <a href="{% url 'product:item_list' %}">Item List</a>
+        <a href="{% url 'product:add_item' %}">Item Add</a>
+        <a href="{% url 'product:prd_add' %}">Add Product</a>
+        <a href="{% url 'product:prd_list' %}">Product List</a>
+        <a href="{% url 'product:stock_in_list' %}">Stock List</a>
+        <a href="{% url 'product:remaining_stock' %}">View Remaining Stock</a>
+        <a href="{% url 'product:stock_in_add' %}">Add Stock Entry</a>
+    </div>
+    <div class="container">
+        <h1>Supplier List</h1>
+        <ul>
+            {% for supplier in suppliers %}
+                <li>{{ supplier.Supplier_Name }}</li>
+                <!-- Add any other supplier details here -->
+            {% endfor %}
+        </ul>
+        <a href="{% url 'product:add_supplier' %}">Add New Supplier</a>
+    </div>
 </body>
 </html>

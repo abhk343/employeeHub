@@ -1,45 +1,59 @@
 <!DOCTYPE html>
 <html>
+    {% load static %}
 <head>
     <title>Remaining Stock</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/remaining_stock.css' %}">
 </head>
 <body>
-    <h1>Remaining Stock for Items</h1>
-
-    <!-- Container for displaying remaining stock -->
-    <div id="remainingStockList">
-        <!-- Check if there are items to display -->
-        {% if item_data %}
-            <!-- Table for displaying item details -->
-            <table border="1">
-                <thead>
-                    <!-- Table header with column names -->
-                    <tr>
-                        <th>Item Name</th>
-                        <th>Total Purchased</th>
-                        <th>Total Issued</th>
-                        <th>Remaining Stock</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Iterate over each item -->
-                    {% for data in item_data %}
-                        <!-- Table row for each item -->
-                        <tr>
-                            <!-- Display item details in each column -->
-                            <td>{{ data.item.Item_Name }}</td>
-                            <td>{{ data.total_purchased }}</td>
-                            <td>{{ data.total_issued }}</td>
-                            <td>{{ data.remaining_stock }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        <!-- If no items are found, display a message -->
-        {% else %}
-            <p>No items found.</p>
-        {% endif %}
+    <div class="top-nav">
+        <a href="{% url 'product:stock_in_list' %}">Stock In List</a>
+        <a href="{% url 'product:stock_in_add' %}">Add Stock Entry</a>
+        <a href="{% url 'product:item_list' %}">Item List</a>
+        <a href="{% url 'product:add_item' %}">Item Add</a>
+        <a href="{% url 'product:prd_list' %}">Product list</a>
+        <a href="{% url 'product:prd_add' %}">Add Product </a>
+        <a href="{% url 'product:add_supplier' %}">Supplier Add</a>
+        <a href="{% url 'product:supplier_list' %}">Supplier List</a>
+        
     </div>
-    
+    <div class="container">
+        <h1>Remaining Stock for Items</h1>
+
+        <!-- Container for displaying remaining stock -->
+        <div id="remainingStockList">
+            <!-- Check if there are items to display -->
+            {% if item_data %}
+                <!-- Table for displaying item details -->
+                <table>
+                    <thead>
+                        <!-- Table header with column names -->
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Total Purchased</th>
+                            <th>Total Issued</th>
+                            <th>Remaining Stock</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Iterate over each item -->
+                        {% for data in item_data %}
+                            <!-- Table row for each item -->
+                            <tr>
+                                <!-- Display item details in each column -->
+                                <td>{{ data.item.Item_Name }}</td>
+                                <td>{{ data.total_purchased }}</td>
+                                <td>{{ data.total_issued }}</td>
+                                <td>{{ data.remaining_stock }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            <!-- If no items are found, display a message -->
+            {% else %}
+                <p>No items found.</p>
+            {% endif %}
+        </div>
+    </div>
 </body>
 </html>

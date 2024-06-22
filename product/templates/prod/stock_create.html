@@ -1,16 +1,31 @@
 <!DOCTYPE html>
 <html>
+    {% load static %}
 <head>
     <title>Create Stock Entry</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/stock_add.css' %}">
 </head>
 <body>
-    <h1>Create Stock Entry</h1>
+    <div class="top-nav">
     
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Save</button>
-    </form>
-
+        <a href="{% url 'product:stock_in_list' %}">Stock list</a>
+        <a href="{% url 'product:remaining_stock' %}">View Remaining Stock</a>
+        <a href="{% url 'product:item_list' %}">Item List</a>
+        <a href="{% url 'product:add_item' %}">Item Add</a>
+        <a href="{% url 'product:prd_list' %}">Product list</a>
+        <a href="{% url 'product:prd_add' %}">Add Product </a>
+        <a href="{% url 'product:add_supplier' %}">Supplier Add</a>
+        <a href="{% url 'product:supplier_list' %}">Supplier List</a>
+        
+    </div>
+    <div class="container">
+        <h1>Create Stock Entry</h1>
+        
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Save</button>
+        </form>
+    </div>
 </body>
 </html>

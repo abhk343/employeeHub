@@ -1,0 +1,85 @@
+/* Reset default margin and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body and container styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table td, table th {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+table th {
+    background-color: #f2f2f2;
+}
+
+/* Edit link style */
+.edit-link {
+    color: #007bff;
+    text-decoration: none;
+    margin-left: 10px;
+}
+
+.edit-link:hover {
+    text-decoration: underline;
+}
+
+/* Top Navigation Bar styles */
+.top-nav {
+    background-color: #333;
+    padding: 10px;
+    text-align: right;
+}
+
+.top-nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+}
+
+.top-nav a:hover {
+    background-color: #555;
+}
+
+@media (max-width: 768px) {
+    .top-nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    .top-nav a {
+        margin-left: 10px;
+        margin-bottom: 10px;
+    }
+}

@@ -1,15 +1,29 @@
 <!DOCTYPE html>
 <html>
+    {% load static %}
 <head>
     <title>{% if form.instance.pk %}Edit{% else %}Add{% endif %} Product</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/product_form.css' %}">
 </head>
 <body>
-    <h1>{% if form.instance.pk %}Edit{% else %}Add{% endif %} Product</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Save</button>
-    </form>
-    <a href="{% url 'product:prd_list' %}">Cancel</a>
+    <div class="top-nav">
+        <a href="{% url 'product:prd_list' %}">Product List</a>
+        <a href="{% url 'product:item_list' %}">Item List</a>
+        <a href="{% url 'product:add_item' %}">Item Add</a>
+        <a href="{% url 'product:stock_in_list' %}">Stock list</a>
+        <a href="{% url 'product:remaining_stock' %}">View Remaining Stock</a>
+        <a href="{% url 'product:stock_in_add' %}">Add Stock Entry</a>
+        <a href="{% url 'product:add_supplier' %}">Supplier Add</a>
+        <a href="{% url 'product:supplier_list' %}">Supplier List</a>
+    </div>
+    <div class="container">
+        <h1>{% if form.instance.pk %}Edit{% else %}Add{% endif %} Product</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Save</button>
+        </form>
+        <a href="{% url 'product:prd_list' %}">Cancel</a>
+    </div>
 </body>
 </html>

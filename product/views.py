@@ -4,6 +4,12 @@ from django.db.models import Q
 from django.http import JsonResponse
 from .models import *
 from .forms import *
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def product_home(request):
+    return render(request, 'prod/product_home.html')
+
 
 # Item Views
 class ItemListView(ListView):

@@ -1,67 +1,78 @@
-<!-- stock_in.html -->
 <!DOCTYPE html>
 <html>
+    {% load static %}
 <head>
     <title>Stock In List</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/stock_list.css' %}">
 </head>
 <body>
-    <h1>Stock In List</h1>
+    <div class="top-nav">
+        <a href="{% url 'product:stock_in_add' %}">Add Stock Entry</a>
+        <a href="{% url 'product:remaining_stock' %}"> Remaining Stock</a>
+        <a href="{% url 'product:item_list' %}">Item List</a>
+        <a href="{% url 'product:add_item' %}">Item Add</a>
+        <a href="{% url 'product:prd_list' %}">Product list</a>
+        <a href="{% url 'product:prd_add' %}">Add Product </a>
+        <a href="{% url 'product:add_supplier' %}">Supplier Add</a>
+        <a href="{% url 'product:supplier_list' %}">Supplier List</a>
+    </div>
+    <div class="container">
+        <h1>Stock In List</h1>
 
-    <!-- Link to add a new stock entry -->
-    <a href="{% url 'product:stock_in_add' %}">Add Stock Entry</a>
+        <!-- Form for searching stock entries -->
+        <form method="get" action="{% url 'product:stock_in_list' %}">
+            <input type="text" name="q" placeholder="Search stock entries" value="{{ request.GET.q }}">
+            <button type="submit">Search</button>
+        </form>
+        
 
-    <!-- Form for searching stock entries -->
-    <form method="get" action="{% url 'product:stock_in_list' %}">
-        <input type="text" name="q" placeholder="Search stock entries" value="{{ request.GET.q }}">
-        <button type="submit">Search</button>
-    </form>
-    <a href="{% url 'product:remaining_stock' %}">View Remaining Stock</a>
-    <!-- Container for displaying stock entries -->
-    <div id="stockList">
-        <!-- Check if there are stock entries to display -->
-        {% if stock_entries %}
-            <!-- Table for displaying stock entry details -->
-            <table border="1">
-                <thead>
-                    <!-- Table header with column names -->
-                    <tr>
-                        <th>Employee</th>
-                        <th>Item</th>
-                        <th>Quantity</th>
-                        <th>Issue Date</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Iterate over each stock entry -->
-                    {% for stock in stock_entries %}
-                        <!-- Table row for each stock entry -->
+        <!-- Container for displaying stock entries -->
+        <div id="stockList">
+            <!-- Check if there are stock entries to display -->
+            {% if stock_entries %}
+                <!-- Table for displaying stock entry details -->
+                <table>
+                    <thead>
+                        <!-- Table header with column names -->
                         <tr>
-                            <!-- Display stock entry details in each column -->
-                            <td>{{ stock.employee }}</td>
-                            <td>{{ stock.item }}</td>
-                            <td>{{ stock.Quantity }}</td>
-                            <td>{{ stock.issue_date }}</td>
-                            <!-- Actions column for editing and deleting stock entries -->
-                            <td>
-                                <!-- Edit button to update stock entry details -->
-                                <button onclick="location.href='{% url 'product:stock_in_edit' stock.pk %}'">Edit</button>
-                                
-                                <!-- Form for deleting the stock entry -->
-                                <form method="post" action="{% url 'product:stock_in_delete' stock.pk %}" style="display: inline;">
-                                    {% csrf_token %}
-                                    <!-- Button to delete the stock entry -->
-                                    <button type="button" onclick="confirmDelete(this)">Delete</button>
-                                </form>
-                            </td>
+                            <th>Employee</th>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Issue Date</th>
+                            <th>Actions</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        <!-- If no stock entries are found, display a message -->
-        {% else %}
-            <p>No stock entries found.</p>
-        {% endif %}
+                    </thead>
+                    <tbody>
+                        <!-- Iterate over each stock entry -->
+                        {% for stock in stock_entries %}
+                            <!-- Table row for each stock entry -->
+                            <tr>
+                                <!-- Display stock entry details in each column -->
+                                <td>{{ stock.employee }}</td>
+                                <td>{{ stock.item }}</td>
+                                <td>{{ stock.Quantity }}</td>
+                                <td>{{ stock.issue_date }}</td>
+                                <!-- Actions column for editing and deleting stock entries -->
+                                <td>
+                                    <!-- Edit button to update stock entry details -->
+                                    <button onclick="location.href='{% url 'product:stock_in_edit' stock.pk %}'">Edit</button>
+                                    
+                                    <!-- Form for deleting the stock entry -->
+                                    <form method="post" action="{% url 'product:stock_in_delete' stock.pk %}" style="display: inline;">
+                                        {% csrf_token %}
+                                        <!-- Button to delete the stock entry -->
+                                        <button type="button" onclick="confirmDelete(this)">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            <!-- If no stock entries are found, display a message -->
+            {% else %}
+                <p>No stock entries found.</p>
+            {% endif %}
+        </div>
     </div>
     
     <!-- JavaScript function to confirm stock entry deletion -->
