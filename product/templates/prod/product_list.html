@@ -7,14 +7,14 @@
     <h1>Product List</h1>
 
     <!-- Link to add a new product -->
-    <a href="{% url 'prd_add' %}">Add Product</a>
+    <a href="{% url 'product:prd_add' %}">Add Product</a>
 
     <!-- Form for searching products -->
-    <form method="get" action="{% url 'prd_list' %}">
+    <form method="get" action="{% url 'product:prd_list' %}">
         <input type="text" name="q" placeholder="Search products" value="{{ request.GET.q }}">
         <button type="submit">Search</button>
     </form>
-    <a href="{% url 'remaining_stock' %}">View Remaining Stock</a>
+    <a href="{% url 'product:remaining_stock' %}">View Remaining Stock</a>
 
     <!-- Container for displaying product list -->
     <div id="productList">
@@ -51,10 +51,10 @@
                             <!-- Actions column for editing and deleting products -->
                             <td>
                                 <!-- Edit button to update product details -->
-                                <button onclick="location.href='{% url 'prd_edit' product.pk %}'">Edit</button>
+                                <button onclick="location.href='{% url 'product:prd_edit' product.pk %}'">Edit</button>
                                 
                                 <!-- Form for deleting the product -->
-                                <form method="post" action="{% url 'prd_delete' product.pk %}" style="display: inline;">
+                                <form method="post" action="{% url 'product:prd_delete' product.pk %}" style="display: inline;">
                                     {% csrf_token %}
                                     <!-- Button to delete the product -->
                                     <button type="button" onclick="confirmDelete(this)">Delete</button>

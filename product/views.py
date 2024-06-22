@@ -15,7 +15,7 @@ class ItemCreateView(CreateView):
     model = Item
     form_class = ItemForm
     template_name = 'prod/item_form.html'
-    success_url = reverse_lazy('item_list')
+    success_url = reverse_lazy('product:item_list')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -26,7 +26,7 @@ class ItemUpdateView(UpdateView):
     model = Item
     form_class = ItemForm
     template_name = 'prod/item_form.html'
-    success_url = reverse_lazy('item_list')
+    success_url = reverse_lazy('product:item_list')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -43,7 +43,7 @@ class SupplierCreateView(CreateView):
     model = Supplier
     form_class = SupplierForm
     template_name = 'prod/supplier_form.html'
-    success_url = reverse_lazy('supplier_list')
+    success_url = reverse_lazy('product:supplier_list')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -54,7 +54,7 @@ class SupplierUpdateView(UpdateView):
     model = Supplier
     form_class = SupplierForm
     template_name = 'prod/supplier_form.html'
-    success_url = reverse_lazy('supplier_list')
+    success_url = reverse_lazy('product:supplier_list')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -92,13 +92,13 @@ class ProductCreateView(CreateView):
     model = Product
     form_class = ProductForm
     template_name = 'prod/product_form.html'
-    success_url = reverse_lazy('prd_list')
+    success_url = reverse_lazy('product:prd_list')
 
 class ProductUpdateView(UpdateView):
     model = Product
     form_class = ProductForm
     template_name = 'prod/product_form.html'
-    success_url = reverse_lazy('prd_list')
+    success_url = reverse_lazy('product:prd_list')
 
 class ProductDeleteView(DeleteView):
     model = Product
@@ -137,7 +137,7 @@ class StockInCreateView(CreateView):
     model = Stock_in
     form_class = StockInForm
     template_name = 'prod/stock_create.html'
-    success_url = reverse_lazy('stock_in_list')
+    success_url = reverse_lazy('product:stock_in_list')
 
 class StockInUpdateView(UpdateView):
     model = Stock_in

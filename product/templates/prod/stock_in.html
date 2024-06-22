@@ -8,14 +8,14 @@
     <h1>Stock In List</h1>
 
     <!-- Link to add a new stock entry -->
-    <a href="{% url 'stock_in_add' %}">Add Stock Entry</a>
+    <a href="{% url 'product:stock_in_add' %}">Add Stock Entry</a>
 
     <!-- Form for searching stock entries -->
-    <form method="get" action="{% url 'stock_in_list' %}">
+    <form method="get" action="{% url 'product:stock_in_list' %}">
         <input type="text" name="q" placeholder="Search stock entries" value="{{ request.GET.q }}">
         <button type="submit">Search</button>
     </form>
-    <a href="{% url 'remaining_stock' %}">View Remaining Stock</a>
+    <a href="{% url 'product:remaining_stock' %}">View Remaining Stock</a>
     <!-- Container for displaying stock entries -->
     <div id="stockList">
         <!-- Check if there are stock entries to display -->
@@ -45,10 +45,10 @@
                             <!-- Actions column for editing and deleting stock entries -->
                             <td>
                                 <!-- Edit button to update stock entry details -->
-                                <button onclick="location.href='{% url 'stock_in_edit' stock.pk %}'">Edit</button>
+                                <button onclick="location.href='{% url 'product:stock_in_edit' stock.pk %}'">Edit</button>
                                 
                                 <!-- Form for deleting the stock entry -->
-                                <form method="post" action="{% url 'stock_in_delete' stock.pk %}" style="display: inline;">
+                                <form method="post" action="{% url 'product:stock_in_delete' stock.pk %}" style="display: inline;">
                                     {% csrf_token %}
                                     <!-- Button to delete the stock entry -->
                                     <button type="button" onclick="confirmDelete(this)">Delete</button>

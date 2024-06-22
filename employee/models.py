@@ -1,6 +1,6 @@
 from django.db import models
 from datetime import date
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator , EmailValidator
 
 class Department(models.Model):
     """
@@ -21,35 +21,38 @@ class Employee(models.Model):
     """
     Department = models.ForeignKey(Department, on_delete=models.CASCADE)
     Employee_id = models.AutoField(primary_key=True)
-    Punch_Card_NO = models.IntegerField(unique=True)
+    Punch_Card_NO = models.CharField(unique=True, max_length=20)
     Name = models.CharField(max_length=25)
     Designation = models.CharField(max_length=30)
     Location = models.CharField(max_length=30)
     DOB = models.DateField()
     DOJ = models.DateField()
-    DOL = models.DateField(null=True,blank=True)
+    DOL = models.DateField(null=True, blank=True)
     Parents_Name = models.CharField(max_length=25)
-    Martial_Status = models.CharField(max_length=25)
+    
+    # Changed Martial_Status to a boolean field
+    Martial_Status = models.BooleanField(choices=[(True, 'Yes'), (False, 'No')], default=False)
+    
     Permanent_Address = models.TextField()
     Present_Address = models.TextField()
     Blood_Group = models.CharField(max_length=10)
-    UAN_Number = models.IntegerField(null=True, unique=True)
-    PF_PW = models.IntegerField()
-    ESI_Number = models.IntegerField()
-    Mobile_No = models.IntegerField()
-    Email = models.EmailField(null=True)
-    Aadhar_No = models.IntegerField()
+    UAN_Number = models.IntegerField(null=True, unique=True, validators=[MinValueValidator(1)])
+    PF_PW = models.CharField(max_length=20)
+    ESI_Number = models.IntegerField(validators=[MinValueValidator(1)])
+    Mobile_No = models.IntegerField(validators=[MinValueValidator(1000000000), MaxValueValidator(9999999999)])
+    Email = models.EmailField(null=True, validators=[EmailValidator()])
+    Aadhar_No = models.IntegerField(validators=[MinValueValidator(100000000000), MaxValueValidator(999999999999)])
     PAN = models.CharField(max_length=25)
-    Bank_Acc_NO = models.IntegerField()
+    Bank_Acc_NO = models.IntegerField(validators=[MinValueValidator(1)])
     IFSC_Code = models.CharField(max_length=25)
     Bank_Name = models.CharField(max_length=25)
-    Emergency_Contact_No = models.IntegerField()
-    Contact_No = models.IntegerField()
+    Emergency_Contact_No = models.IntegerField(validators=[MinValueValidator(1000000000), MaxValueValidator(9999999999)])
+    Contact_No = models.IntegerField(validators=[MinValueValidator(1000000000), MaxValueValidator(9999999999)])
     Sur_name = models.CharField(max_length=25)
     Qualification = models.CharField(max_length=25)
     Experience = models.CharField(max_length=25)
     Remarks = models.TextField()
-    Salary = models.IntegerField()
+    Salary = models.IntegerField(validators=[MinValueValidator(1)])
 
     class Meta:
         db_table = "Employee"

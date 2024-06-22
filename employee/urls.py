@@ -1,9 +1,18 @@
 from django.urls import path
 from .views import *
 
+app_name = "employee"
 urlpatterns = [
     # Home
     path('', home, name='home'),
+
+    path('create_user/', create_user, name='create_user'),
+    path('user1/', user1_view, name='HR'),
+    path('user2/', user2_view, name='Supervisor'),
+
+    path('depemp_home/', depemp_home, name='depemp_home'),
+    path('attendance_home/', attendance_home, name='attendance_home'),
+    path('products_home/', products_home, name='products_home'),
 
     # Department URLs
     path('departments/', DepartmentListView.as_view(), name='department_list'),
@@ -12,6 +21,7 @@ urlpatterns = [
     path('emp/department/<int:pk>/delete/', DepartmentDeleteView.as_view(), name='department_delete'),
     # Employee URLs
     path('employees/', EmployeeListView.as_view(), name='employee_list'),
+    path('employees/<int:pk>/', EmployeeDetailView.as_view(), name='employee_detail'),
     path('employees/create/', EmployeeCreateView.as_view(), name='employee_create'),
     path('employees/update/<int:pk>/', EmployeeUpdateView.as_view(), name='employee_update'),
     path('employees/delete/<int:pk>/', EmployeeDeleteView.as_view(), name='employee_delete'),

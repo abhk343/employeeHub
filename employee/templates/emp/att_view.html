@@ -4,6 +4,110 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monthly Absence Count</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff8dc; /* Light yellowish background */
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #c2185b;
+            text-align: center;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 20px auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        select, input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #c2185b;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            max-width: 120px;
+            align-self: center;
+        }
+        button:hover {
+            background-color: #8e0038;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid #ccc; /* Add border to each cell */
+        }
+        th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+        @media (max-width: 600px) {
+            form {
+                flex-direction: column;
+                padding: 15px;
+            }
+            button {
+                font-size: 14px;
+                max-width: 100%;
+            }
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            th {
+                text-align: right;
+                display: flex;
+                justify-content: space-between;
+            }
+            td {
+                text-align: right;
+                display: flex;
+                justify-content: space-between;
+                border: none;
+                border-bottom: 1px solid #ccc;
+                padding-left: 50%;
+                position: relative;
+            }
+            td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 0;
+                width: 45%;
+                padding-left: 15px;
+                font-weight: bold;
+                text-align: left;
+            }
+        }
+    </style>
 </head>
 <body>
     <h1>Monthly Absence Count</h1>
@@ -23,7 +127,7 @@
         <button type="submit">Filter</button>
     </form>
 
-    <table border="1">
+    <table>
         <thead>
             <tr>
                 <th>Employee Name</th>
@@ -45,10 +149,10 @@
         <tbody>
             {% for employee, data in table_data.items %}
                 <tr>
-                    <td>{{ employee }}</td>
-                    <td>{{ data.department }}</td>
+                    <td data-label="Employee Name">{{ employee }}</td>
+                    <td data-label="Department">{{ data.department }}</td>
                     {% for count in data.months %}
-                        <td>{{ count }}</td>
+                        <td data-label="{{ count }}">{{ count }}</td>
                     {% endfor %}
                 </tr>
             {% endfor %}

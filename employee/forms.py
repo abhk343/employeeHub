@@ -3,6 +3,26 @@ from .models import Employee, Overtime, Department
 from datetime import datetime
 from django.forms.widgets import SelectDateWidget
 
+from django.contrib.auth.models import User, Group
+
+class CustomUserCreationForm(forms.ModelForm):
+    group = forms.ModelChoiceField(queryset=Group.objects.all(), required=True, label="Assign Group")
+    password = forms.CharField(widget=forms.PasswordInput, label="Password")
+    
+    class Meta:
+        model = User
+        fields = ['username', 'password', 'email', 'group']
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data['password'])
+        if commit:
+            user.save()
+            user.groups.add(self.cleaned_data['group'])
+        return user
+
+
+
 class AttendanceForm(forms.Form):
     """
     Form for adding attendance records.

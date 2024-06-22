@@ -1,17 +1,93 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse, HttpResponse
+from django.contrib.auth.decorators import login_required,user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
+from django.views.generic import ListView,DetailView, CreateView, UpdateView, DeleteView, View
 from django.urls import reverse_lazy
 from django.db.models import Q, Count, Sum, F
 from collections import defaultdict
+from django.contrib import messages
+import csv
+import logging
 from .models import Department, Employee, Attendance, Overtime
-from .forms import EmployeeCreateForm, AttendanceForm, DepartmentForm, OvertimeForm, OvertimeFilterForm
+from django_filters.views import FilterView
+from .filters import *
+
+from .forms import EmployeeCreateForm, AttendanceForm, DepartmentForm, OvertimeForm, OvertimeFilterForm,CustomUserCreationForm
+
+
+def is_superuser(user):
+    return user.is_authenticated and user.is_superuser
+
+@login_required
+@user_passes_test(is_superuser)
+def create_user(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('employee:home')  # Redirect to a success page
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'emp/create_user.html', {'form': form})
+
+def is_user1(user):
+    return user.groups.filter(name='HR').exists()
+
+def is_user2(user):
+    return user.groups.filter(name='Supervisor').exists()
+
+@login_required
+@user_passes_test(is_user1)
+def user1_view(request):
+    return render(request, 'user1_view.html')
+
+@login_required
+@user_passes_test(is_user2)
+def user2_view(request):
+    return render(request, 'user2_view.html')
+
 
 @login_required
 def home(request):
     return render(request, 'emp/home.html')
+    
+
+
+
+@login_required
+def depemp_home(request):
+    return render(request, 'emp/depemp_home.html')
+
+@login_required
+def attendance_home(request):
+    return render(request, 'emp/attendance_home.html')
+
+@login_required
+def products_home(request):
+    return render(request, 'emp/products_home.html')
+
+def admin_check(user):
+    return user.is_superuser
+
+
+@login_required
+@user_passes_test(admin_check)
+def add_user(request):
+    if not request.user.is_superuser:
+
+        return redirect('employee:add_user')
+    
+    if request.method == 'POST':
+        form = UserCreationFormExtended(request.POST)
+        if form.is_valid():
+            form.save()
+            return render(request,'emp/home.html')
+    else:
+        form = UserCreationFormExtended()
+    return render(request,'emp/add_user.html',{'form':form})
+    
+
 
 # Department Views
 class DepartmentListView(LoginRequiredMixin, ListView):
@@ -23,7 +99,7 @@ class DepartmentCreateView(LoginRequiredMixin, CreateView):
     model = Department
     fields = ['Department_Name']
     template_name = 'emp/dept_create.html'
-    success_url = reverse_lazy('department_list')
+    success_url = reverse_lazy('employee:department_list')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -34,7 +110,7 @@ class DepartmentUpdateView(LoginRequiredMixin, UpdateView):
     model = Department
     fields = ['Department_Name']
     template_name = 'emp/dept_create.html'
-    success_url = reverse_lazy('department_list')
+    success_url = reverse_lazy('employee:department_list')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -52,23 +128,75 @@ class DepartmentDeleteView(LoginRequiredMixin, DeleteView):
         self.object = self.get_object()
         self.object.delete()
         return JsonResponse({'message': 'Department deleted successfully'}, status=200)
-    
+
 # Employee Views
+
+
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import DetailView
+from django_filters.views import FilterView
+from .models import Employee
+from .filters import EmployeeFilter  # Assuming you have defined EmployeeFilter in filters.py
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django_filters.views import FilterView
+from .models import Employee
+from .filters import EmployeeFilter
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.list import ListView
+from .models import Employee
+from .filters import EmployeeFilter
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.list import ListView
+from .models import Employee
+from .filters import EmployeeFilter
+
 class EmployeeListView(LoginRequiredMixin, ListView):
     model = Employee
     template_name = 'emp/emp_view.html'
     context_object_name = 'employees'
+    filterset_class = EmployeeFilter
+    paginate_by = 5  # Number of employees per page
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Fetch all employees
+        employees = self.get_queryset()
+        
+        # Calculate the total number of pages
+        num_pages = (employees.count() // self.paginate_by) + (1 if employees.count() % self.paginate_by > 0 else 0)
+        
+        # Get the current page number
+        page_number = int(self.request.GET.get('page', 1))
+        
+        # Adjust employees queryset to display only for current page
+        start_index = (page_number - 1) * self.paginate_by
+        end_index = start_index + self.paginate_by
+        context['employees'] = employees[start_index:end_index]
+        
+        # Pass additional context variables
+        context['current_page'] = page_number
+        context['num_pages'] = num_pages
+
+        return context
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        query = self.request.GET.get('q')
-        if query:
-            queryset = queryset.filter(
-                Q(Name__icontains=query) | 
-                Q(Designation__icontains=query) | 
-                Q(Location__icontains=query)
-            )
         return queryset
+
+
+
+class EmployeeDetailView(LoginRequiredMixin, DetailView):
+    model = Employee
+    template_name = 'emp/emp_detail.html'
+    context_object_name = 'employee'
+
+
+logger = logging.getLogger(__name__)
 
 class EmployeeCreateView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
@@ -78,8 +206,16 @@ class EmployeeCreateView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         form = EmployeeCreateForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('employee_list')
+            try:
+                form.save()
+                messages.success(request, 'Employee created successfully!')
+                return redirect('employee:employee_list')
+            except Exception as e:
+                logger.error(f"Error creating employee: {e}")
+                messages.error(request, 'There was an error creating the employee. Please try again.')
+        else:
+            logger.error(f"Form errors: {form.errors}")
+            messages.error(request, 'Please correct the errors below.')
         return render(request, 'emp/emp_create.html', {'title': 'Create Employee', 'form': form})
 
 class EmployeeUpdateView(LoginRequiredMixin, View):
@@ -93,12 +229,12 @@ class EmployeeUpdateView(LoginRequiredMixin, View):
         form = EmployeeCreateForm(request.POST, instance=employee)
         if form.is_valid():
             form.save()
-            return redirect('employee_list')
+            return redirect('employee:employee_list')
         return render(request, 'emp/emp_create.html', {'title': 'Update Employee', 'form': form})
 
 class EmployeeDeleteView(LoginRequiredMixin, DeleteView):
     model = Employee
-    success_url = reverse_lazy('employee_list')
+    success_url = reverse_lazy('employee:employee_list')
 
     def delete(self, request, *args, **kwargs):
         """
@@ -107,10 +243,6 @@ class EmployeeDeleteView(LoginRequiredMixin, DeleteView):
         self.object = self.get_object()
         self.object.delete()
         return JsonResponse({'message': 'Employee deleted successfully'}, status=200)
-
-from django.http import HttpResponse
-import csv
-from .models import Employee
 
 class ExportEmployeeDataView(View):
     def get(self, request):
@@ -128,12 +260,10 @@ class ExportEmployeeDataView(View):
 
         # Define the fields to include in the CSV
         field_names = [
-             'Punch_Card_NO', 'Name', 'Designation', 'Location',
-            'DOB', 'DOJ', 'DOL', 'Parents_Name', 'Martial_Status', 'Permanent_Address',
-            'Present_Address', 'Blood_Group', 'UAN_Number', 'PF_PW', 'ESI_Number',
-            'Mobile_No', 'Email', 'Aadhar_No', 'PAN', 'Bank_Acc_NO', 'IFSC_Code',
-            'Bank_Name', 'Emergency_Contact_No', 'Contact_No', 'Sur_name', 'Qualification',
-            'Experience', 'Remarks', 'Salary',
+            'Punch_Card_NO', 'Name', 'Designation', 'Location', 'DOB', 'DOJ', 'DOL', 'Parents_Name', 'Martial_Status', 
+            'Permanent_Address', 'Present_Address', 'Blood_Group', 'UAN_Number', 'PF_PW', 'ESI_Number', 'Mobile_No', 
+            'Email', 'Aadhar_No', 'PAN', 'Bank_Acc_NO', 'IFSC_Code', 'Bank_Name', 'Emergency_Contact_No', 'Contact_No', 
+            'Sur_name', 'Qualification', 'Experience', 'Remarks', 'Salary',
         ]
 
         # Write header row
@@ -144,15 +274,10 @@ class ExportEmployeeDataView(View):
 
         # Write data rows
         for employee in employees:
-            # Get employee data
             row_data = [getattr(employee, field) for field in field_names]
-
-            # Write the row
             writer.writerow(row_data)
 
         return response
-
-
 
 # Attendance Views
 class AttendanceCreateView(LoginRequiredMixin, View):
@@ -174,9 +299,8 @@ class AttendanceCreateView(LoginRequiredMixin, View):
                     employee=employee,
                     date=date,
                 )
-            return redirect('monthly_absence_count')
+            return redirect('employee:monthly_absence_count')
         return render(request, self.template_name, {'form': form})
-
 
 @login_required
 def monthly_absence_count(request):
@@ -216,6 +340,7 @@ def monthly_absence_count(request):
     }
     
     return render(request, 'emp/att_view.html', context)
+
 # Overtime Views
 class OvertimeCreateView(LoginRequiredMixin, View):
     def get(self, request):

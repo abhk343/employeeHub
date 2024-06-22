@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department and Employees</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between; /* Adjusted for spacing */
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        h1 {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .nav-container a {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            margin: 0 20px;
+            text-align: center;
+            border: 2px solid #4CAF50;
+            background-color: #4CAF50;
+            border-radius: 5px;
+        }
+
+        .nav-container a:hover {
+            background-color: #45a049;
+            border-color: #45a049;
+        }
+
+        .back-container {
+            margin-bottom: 20px; /* Ensure some spacing from the bottom */
+        }
+
+        @media (max-width: 600px) {
+            .nav-container a, .back-container a {
+                padding: 8px 16px;
+                font-size: 14px;
+                margin: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Department and Employees</h1>
+    <div class="nav-container">
+        <a href="{% url 'employee:department_create' %}">Create department</a>
+        <a href="{% url 'employee:department_list' %}">Department list</a>
+        <a href="{% url 'employee:employee_create' %}">Create employees</a>
+        <a href="{% url 'employee:employee_list' %}">Employee list</a>
+    </div>
+    <div class="back-container">
+        <a href="{% url 'employee:home' %}">Back</a>
+    </div>
+</body>
+</html>

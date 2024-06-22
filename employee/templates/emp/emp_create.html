@@ -6,9 +6,18 @@
 </head>
 <body>
     <h1>{{ title }}</h1> <!-- Heading displaying the same title as the page -->
-    
+
+    <!-- Display success and error messages -->
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
     <!-- Form for submitting data -->
-    <form method="post">
+    <form method="post" action="{% url 'employee:employee_create' %}"> <!-- Added action attribute -->
         {% csrf_token %} <!-- CSRF (Cross-Site Request Forgery) token for security -->
         
         <!-- Render the form fields as paragraphs (p elements) -->
@@ -17,5 +26,24 @@
         <!-- Button to submit the form data -->
         <button type="submit">Submit</button>
     </form>
+
+    <!-- Display form errors if there are any -->
+    {% if form.errors %}
+        <div style="color: red;">
+            <p>Please correct the following errors:</p>
+            <ul>
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
 </body>
+</html>
+
 </html>
