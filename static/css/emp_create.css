@@ -1,94 +1,83 @@
-/* General body styling */
+/* Base styles */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f0f0f0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    overflow: hidden; /* Hide overflow for cleaner appearance */
 }
 
 .container {
-    background-color: #fff;
+    max-width: 800px;
+    margin: 20px auto;
+    background: #fff;
     padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
-    width: 100%;
-    max-width: 400px;
-    max-height: 80vh; /* Increased height for better visibility */
-    overflow-y: auto; /* Allow vertical scrolling if content exceeds height */
-    box-sizing: border-box;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-    font-size: 1.5em;
-    color: #333;
-    margin-bottom: 1em;
+    color: #c2185b;
     text-align: center;
 }
 
-.messages {
-    list-style: none;
-    padding: 0;
-    margin-bottom: 1em;
-}
-
-.messages li {
-    margin-bottom: 0.5em;
-    padding: 0.5em;
-    border-radius: 4px;
-}
-
-.success {
-    background-color: #e0ffe0;
-    color: #004d00;
-    border: 1px solid #004d00;
-}
-
-.error {
-    background-color: #ffe0e0;
-    color: #d00;
-    border: 1px solid #d00;
-}
-
-form p {
-    margin-bottom: 1em;
-}
-
-label {
-    display: block;
-    margin-bottom: 0.5em;
-    font-weight: bold;
-    color: #333;
-}
-
-input, select, textarea, button {
-    width: 100%;
-    padding: 0.5em;
-    margin-top: 0.5em;
+form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
     border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1em;
-    box-sizing: border-box;
+    border-radius: 8px;
+    background-color: #fff;
 }
 
-button {
-    background-color: #004d00;
-    color: white;
-    cursor: pointer;
+form button {
+    background-color: #c2185b;
+    color: #fff;
     border: none;
-    transition: background-color 0.3s;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
 }
 
-button:hover {
-    background-color: #003300;
+form button:hover {
+    background-color: #8e0038;
 }
 
 .error-messages {
     color: red;
-    font-size: 0.9em;
-    margin-top: 0.5em;
+    margin-top: 10px;
+}
+
+.error-messages ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.error-messages ul li {
+    margin: 5px 0;
+}
+
+.top-nav {
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+}
+
+.top-nav .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.top-nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+}
+
+.top-nav a:hover {
+    background-color: #555;
 }

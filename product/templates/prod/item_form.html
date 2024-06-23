@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    {% load static %}
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,7 +24,7 @@
 
         .container {
             max-width: 800px;
-            margin: 20px auto;
+            margin: 80px auto 20px; /* Adjusted margin to move form down */
             padding: 20px;
             background-color: #fff;
             border: 1px solid #ddd;
@@ -37,8 +37,9 @@
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            padding: 5px; /* Reduced padding */
+            padding: 15px 20px; /* Increased padding for height */
             margin-bottom: 20px;
+            
         }
 
         .nav-items {
@@ -53,7 +54,9 @@
         }
 
         .nav-items a:hover {
-            background-color: #555;
+            
+            background-color: #ddd;
+            color: black;
         }
 
         /* Form styles */
@@ -109,7 +112,7 @@
             }
             
             .top-nav {
-                padding: 5px;
+                padding: 10px 20px; /* Adjusted padding */
                 justify-content: flex-end;
                 align-items: flex-end;
             }
@@ -133,15 +136,8 @@
 <body>
     <div class="top-nav">
         <div class="nav-items">
-            
             <a href="{% url 'product:item_list' %}">Item List</a>
-            <a href="{% url 'product:prd_add' %}">Add Product</a>
-            <a href="{% url 'product:prd_list' %}">Product list</a>
-            <a href="{% url 'product:stock_in_list' %}">Stock list</a>
-            <a href="{% url 'product:remaining_stock' %}">View Remaining Stock</a>
-            <a href="{% url 'product:stock_in_add' %}">Add Stock Entry</a>
-            <a href="{% url 'product:add_supplier' %}">Supplier Add</a>
-            <a href="{% url 'product:supplier_list' %}">Supplier List</a>
+            <a href="{% url 'product:prod_home' %}"> Product Home</a>
         </div>
     </div>
 

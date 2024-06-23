@@ -5,9 +5,112 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/emp_create.css' %}">
+    <style>
+        /* Base styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        .top-nav {
+            background-color: #333;
+            color: white;
+            padding: 30px 0; /* Increased padding for height */
+            text-align: right;
+        }
+
+        .top-nav a {
+            color: white;
+            text-decoration: none;
+            padding: 20px 20px; /* Padding around each link */
+        }
+
+        .top-nav a:hover {
+            background-color: #555;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #c2185b;
+            text-align: center;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+
+        form button {
+            background-color: #c2185b;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        form button:hover {
+            background-color: #8e0038;
+        }
+
+        .error-messages {
+            color: red;
+            margin-top: 10px;
+        }
+
+        .error-messages ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .error-messages ul li {
+            margin: 5px 0;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+
+            form {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            form button {
+                width: 100%;
+                padding: 12px;
+            }
+        }
+    </style>
 </head>
 <body>
+    <nav class="top-nav">
+        <a href="{% url 'employee:employee_list' %}">Employee List</a>
+        <a href="{% url 'employee:depemp_home' %}">Department Home</a>
+        
+    </nav>
+
     <div class="container">
         <h1>{{ title }}</h1>
 

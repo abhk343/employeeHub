@@ -1,42 +1,207 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+{% load static %}
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Overtime</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff8dc; /* Light yellowish background */
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            color: #c2185b;
+            text-align: center;
+            margin-top: 80px; /* Adjust based on the navigation bar height */
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        h2 {
+            color: #c2185b;
+        }
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+        select, input[type="text"], input[type="number"], input[type="date"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+        button {
+            background-color: #c2185b;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #8e0038;
+        }
+        a {
+            display: inline-block;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-top: 20px;
+            text-align: center;
+            width: 100%;
+            max-width: 200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        a:hover {
+            background-color: #0056b3;
+        }
+        /* Navigation bar styles */
+        .top-nav {
+            width: 100%;
+            background-color: #333;
+            display: flex;
+            justify-content: flex-end;
+            padding: 15px 20px; /* Increased padding for height */
+            box-sizing: border-box;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+        .top-nav a {
+            display: inline-block;
+            color: white;
+            text-align: center;
+            padding: 10px 20px;
+            text-decoration: none;
+        }
+        .top-nav a:hover {
+            background-color: #555;
+        }
+        /* Adjust content below the navigation bar */
+        .container {
+            padding-top: 80px; /* Adjust based on the navigation bar height */
+            margin-bottom: 40px; /* Add more space below the content */
+        }
+        /* Table styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid #ccc; /* Add border to each cell */
+        }
+        th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+        @media (max-width: 600px) {
+            form {
+                padding: 15px;
+            }
+            button, a {
+                font-size: 14px;
+            }
+            .top-nav {
+                padding: 10px 15px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Add Overtime</h1>
+    <div class="top-nav">
+        <a href="{% url 'employee:overtime_list' %}">Overtime List</a>
+    </div>
+    <div class="container">
+        <h1>Add Overtime</h1>
 
-    <!-- Form for selecting department -->
-    <form method="post">
-        {% csrf_token %}
-        <h2>Select Department</h2>
-        {{ department_form.as_p }}
-        <button type="submit" name="filter">Filter Employees</button>
-    </form>
-
-    <!-- If employees are available after filtering -->
-    {% if employees %}
-        <!-- Form for adding overtime -->
+        <!-- Form for selecting department -->
         <form method="post">
             {% csrf_token %}
-            <h2>Add Overtime</h2>
-            <label for="id_Employee">Employee:</label>
-            <select name="Employee" id="id_Employee">
-                {% for employee in employees %}
-                    <option value="{{ employee.Employee_id }}">{{ employee.Name }}</option>
-                {% endfor %}
-            </select>
-            <label for="id_Overtime_hours">Overtime Hours:</label>
-            {{ overtime_form.Overtime_hours }}
-            <label for="id_Overtime_minutes">Overtime Minutes:</label>
-            {{ overtime_form.Overtime_minutes }}
-            <label for="id_Date">Date:</label>
-            {{ overtime_form.Date }}
-            <button type="submit" name="save">Save</button>
+            <h2>Select Department</h2>
+            {{ department_form.as_p }}
+            <button type="submit" name="filter">Filter Employees</button>
         </form>
-    {% endif %}
 
-    <!-- Link to navigate back to the overtime list -->
-    <a href="{% url 'employee:overtime_list' %}">Back to Overtime List</a>
+        <!-- If employees are available after filtering -->
+        {% if employees %}
+            <!-- Form for adding overtime -->
+            <form method="post">
+                {% csrf_token %}
+                <h2>Add Overtime</h2>
+                <label for="id_Employee">Employee:</label>
+                <select name="Employee" id="id_Employee">
+                    {% for employee in employees %}
+                        <option value="{{ employee.Employee_id }}">{{ employee.Name }}</option>
+                    {% endfor %}
+                </select>
+                <label for="id_Overtime_hours">Overtime Hours:</label>
+                {{ overtime_form.Overtime_hours }}
+                <label for="id_Overtime_minutes">Overtime Minutes:</label>
+                {{ overtime_form.Overtime_minutes }}
+                <label for="id_Date">Date:</label>
+                {{ overtime_form.Date }}
+                <button type="submit" name="save">Save</button>
+            </form>
+        {% endif %}
+
+        <!-- Link to navigate back to the overtime list -->
+        <a href="{% url 'employee:overtime_list' %}">Back to Overtime List</a>
+    </div>
+
+    <!-- Example table -->
+    <table>
+        <thead>
+            <tr>
+                <th>Header 1</th>
+                <th>Header 2</th>
+                <th>Header 3</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Data 1</td>
+                <td>Data 2</td>
+                <td>Data 3</td>
+            </tr>
+            <tr>
+                <td>Data 4</td>
+                <td>Data 5</td>
+                <td>Data 6</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Extra space below the table -->
+    <div style="height: 40px;"></div>
+
 </body>
 </html>

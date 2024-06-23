@@ -10,11 +10,12 @@
             background-color: #fff8dc; /* Light yellowish background */
             color: #333;
             margin: 0;
-            padding: 20px;
+            padding: 0;
         }
         h1 {
             color: #c2185b;
             text-align: center;
+            margin-top: 20px;
         }
         form {
             background: #fff;
@@ -22,7 +23,7 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             max-width: 800px;
-            margin: 20px auto;
+            margin: 60px auto 20px; /* Increased margin-top to accommodate nav */
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
@@ -107,56 +108,89 @@
                 text-align: left;
             }
         }
+        /* Navigation bar styles */
+        .top-nav {
+            width: 100%;
+            background-color: #333;
+            display: flex;
+            justify-content: flex-end;
+            padding: 15px 20px; /* Increased padding for height */
+            box-sizing: border-box;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+        .top-nav a {
+            display: inline-block;
+            color: white;
+            text-align: center;
+            padding: 10px 20px;
+            text-decoration: none;
+        }
+        .top-nav a:hover {
+            background-color: #555;
+        }
+        /* Adjust content below the navigation bar */
+        .container {
+            padding-top: 80px; /* Adjust based on the navigation bar height */
+        }
     </style>
 </head>
 <body>
-    <h1>Monthly Absence Count</h1>
+    <div class="top-nav">
+        <a href="{% url 'employee:attendance_create' %}">Add Attendance</a>
+        <a href="{% url 'employee:attendance_home' %}">Attendance Home</a>
+    </div>
+    <div class="container">
+        <h1>Monthly Absence Count</h1>
 
-    <form method="get">
-        <label for="department">Department:</label>
-        <select name="department" id="department">
-            <option value="">All</option>
-            {% for department in departments %}
-                <option value="{{ department.Department_id }}" {% if selected_department == department.Department_id %}selected{% endif %}>{{ department.Department_Name }}</option>
-            {% endfor %}
-        </select>
-        
-        <label for="year">Year:</label>
-        <input type="text" name="year" id="year" value="{{ selected_year }}">
+        <form method="get">
+            <label for="department">Department:</label>
+            <select name="department" id="department">
+                <option value="">All</option>
+                {% for department in departments %}
+                    <option value="{{ department.Department_id }}" {% if selected_department == department.Department_id %}selected{% endif %}>{{ department.Department_Name }}</option>
+                {% endfor %}
+            </select>
+            
+            <label for="year">Year:</label>
+            <input type="text" name="year" id="year" value="{{ selected_year }}">
 
-        <button type="submit">Filter</button>
-    </form>
+            <button type="submit">Filter</button>
+        </form>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Employee Name</th>
-                <th>Department</th>
-                <th>Jan</th>
-                <th>Feb</th>
-                <th>Mar</th>
-                <th>Apr</th>
-                <th>May</th>
-                <th>Jun</th>
-                <th>Jul</th>
-                <th>Aug</th>
-                <th>Sep</th>
-                <th>Oct</th>
-                <th>Nov</th>
-                <th>Dec</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for employee, data in table_data.items %}
+        <table>
+            <thead>
                 <tr>
-                    <td data-label="Employee Name">{{ employee }}</td>
-                    <td data-label="Department">{{ data.department }}</td>
-                    {% for count in data.months %}
-                        <td data-label="{{ count }}">{{ count }}</td>
-                    {% endfor %}
+                    <th>Employee Name</th>
+                    <th>Department</th>
+                    <th>Jan</th>
+                    <th>Feb</th>
+                    <th>Mar</th>
+                    <th>Apr</th>
+                    <th>May</th>
+                    <th>Jun</th>
+                    <th>Jul</th>
+                    <th>Aug</th>
+                    <th>Sep</th>
+                    <th>Oct</th>
+                    <th>Nov</th>
+                    <th>Dec</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for employee, data in table_data.items %}
+                    <tr>
+                        <td data-label="Employee Name">{{ employee }}</td>
+                        <td data-label="Department">{{ data.department }}</td>
+                        {% for count in data.months %}
+                            <td data-label="{{ count }}">{{ count }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>

@@ -23,6 +23,7 @@ body {
     position: absolute;
     top: 0;
     right: 0;
+    height: 70px;
 }
 
 .top-nav a {

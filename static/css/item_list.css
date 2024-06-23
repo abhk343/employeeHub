@@ -15,7 +15,7 @@ body {
 
 .container {
     max-width: 800px;
-    margin: 0 auto;
+    margin: 500px auto; /* Added margin to push content down */
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -27,6 +27,7 @@ h1 {
     margin-bottom: 20px;
 }
 
+/* Table styles */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -71,6 +72,7 @@ table th {
     background-color: #555;
 }
 
+/* Responsive styles */
 @media (max-width: 768px) {
     .top-nav {
         display: flex;

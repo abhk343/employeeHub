@@ -9,15 +9,41 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
             background-color: #f0f0f0;
         }
 
-        h1 {
+        .top-nav {
+            width: 100%;
+            background-color: #333;
+            display: flex;
+            justify-content: flex-end;
+            padding: 15px 20px;
+            box-sizing: border-box;
+        }
+
+        .top-nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin-left: 10px;
+        }
+
+        .top-nav a:hover {
+            background-color: #555;
+        }
+
+        /* Content styles */
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* Align content at the top */
+            min-height: calc(100vh - 60px); /* Adjust based on nav bar height */
+            padding: 20px;
+            margin-top: 20px; /* Adjust margin-top for spacing */
+        }
+
+        h1, h2 {
             font-size: 2em;
             margin-bottom: 1em;
             color: #333;
@@ -64,15 +90,19 @@
 
         /* Responsive styles */
         @media (max-width: 600px) {
-            body {
-                padding: 1em;
+            .top-nav {
+                padding: 10px 15px;
+            }
+
+            .content {
+                padding: 10px;
             }
 
             form {
                 padding: 1.5em;
             }
 
-            h1 {
+            h1, h2 {
                 font-size: 1.5em;
             }
 
@@ -84,23 +114,28 @@
     </style>
 </head>
 <body>
-    <!-- Heading displaying the title of the form -->
-    <h1>{{ view.title }}</h1>
-    
-    <!-- Form for adding or updating department details -->
-    <form method="post">
-        {% csrf_token %} <!-- CSRF token for security -->
+    <!-- Top navigation bar -->
+    <div class="top-nav">
+        <a href="{% url 'employee:department_list' %}">Total Department List</a>
+        <a href="{% url 'employee:depemp_home' %}">Department Home</a>
         
-        <!-- Display form fields as paragraphs -->
-        {{ form.as_p }}
+    </div>
+
+    <!-- Main content -->
+    <div class="content">
+        <!-- Heading displaying the title of the form -->
+        <h2>Create Department</h2>
         
-        <!-- Button to submit the form -->
-        <button type="submit">Save</button>
-    </form>
-    
-    <!-- Link to navigate back to the department list -->
-    <a href="{% url 'employee:department_list' %}">Total Department List</a>
-    <a href="{% url 'employee:depemp_home' %}">Back</a>
-    <a href="{% url 'employee:employee_list' %}">employee</a>
+        <!-- Form for adding or updating department details -->
+        <form method="post">
+            {% csrf_token %} <!-- CSRF token for security -->
+            
+            <!-- Display form fields as paragraphs -->
+            {{ form.as_p }}
+            
+            <!-- Button to submit the form -->
+            <button type="submit">Save</button>
+        </form>
+    </div>
 </body>
 </html>

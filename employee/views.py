@@ -360,7 +360,7 @@ class OvertimeCreateView(LoginRequiredMixin, View):
                     overtime.Overtime_hours = 8
                     overtime.Overtime_minutes = 0
                 overtime.save()
-                return redirect('overtime_list')
+                return redirect('employee:overtime_list')
         employees = Employee.objects.filter(Department=department_form.cleaned_data['department']) if department_form.is_valid() else Employee.objects.none()
         return render(request, 'emp/ot_add.html', {
             'department_form': department_form,

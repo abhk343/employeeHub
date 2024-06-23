@@ -37,7 +37,8 @@ body {
 }
 
 .top-nav a:hover {
-    background-color: #555;
+    background-color: #ddd;
+    color: black;
 }
 
 /* Form styles */
