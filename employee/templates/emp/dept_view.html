@@ -126,7 +126,6 @@
     <div class="top-nav">
         <a href="{% url 'employee:department_create' %}">Create Department</a>
         <a href="{% url 'employee:depemp_home' %}">Department Home</a>
-        
     </div>
 
     <!-- Table container -->
@@ -146,22 +145,16 @@
                     <tr>
                         <td>{{ department.Department_Name }}</td>
                         <td>
-                            <!-- Button to delete the department -->
-                            <button onclick="confirmDelete('{{ department.pk }}')">Delete</button>
                             <!-- Button to edit the department -->
-                            <button onclick="editDepartment('{{ department.pk }}')">Edit</button>
+                            <button onclick="location.href='{% url 'employee:department_update' department.pk %}'">Edit</button>
                         </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
-        <!-- Link to create a new department -->
-       
         {% else %}
         <!-- If no departments available, display a message -->
         <p>No departments available.</p>
-        <!-- Link to create a new department -->
-       
         {% endif %}
     </div>
 </body>

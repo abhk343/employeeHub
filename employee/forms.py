@@ -1,14 +1,13 @@
 from django import forms
-from .models import Employee, Overtime, Department
-from datetime import datetime
-from django.forms.widgets import SelectDateWidget
-
+from .models import Attendance, Employee, Department, Overtime
 from django.contrib.auth.models import User, Group
+from django.forms.widgets import SelectDateWidget
+from datetime import datetime
 
 class CustomUserCreationForm(forms.ModelForm):
     group = forms.ModelChoiceField(queryset=Group.objects.all(), required=True, label="Assign Group")
     password = forms.CharField(widget=forms.PasswordInput, label="Password")
-    
+
     class Meta:
         model = User
         fields = ['username', 'password', 'email', 'group']
@@ -21,21 +20,41 @@ class CustomUserCreationForm(forms.ModelForm):
             user.groups.add(self.cleaned_data['group'])
         return user
 
+# forms.py
+from django import forms
+from .models import Department
 
+class DepartmentSelectForm(forms.Form):
+    departments = forms.ModelChoiceField(
+        queryset=Department.objects.all(),
+        empty_label=None,
+        widget=forms.RadioSelect,
+        label="Departments"
+    )
 
-class AttendanceForm(forms.Form):
-    """
-    Form for adding attendance records.
-    """
-    current_year = datetime.now().year
-    years = [year for year in range(current_year - 1, current_year + 11)]  
-    date = forms.DateField(widget=forms.SelectDateWidget(years=years))
-    employees = forms.ModelMultipleChoiceField(queryset=Employee.objects.all(), widget=forms.CheckboxSelectMultiple)
+class AttendanceForm(forms.ModelForm):
+    employees = forms.ModelMultipleChoiceField(queryset=Employee.objects.none(), widget=forms.CheckboxSelectMultiple)
+    date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+
+    class Meta:
+        model = Attendance
+        fields = ['date']
+
+    def __init__(self, *args, **kwargs):
+        employees_queryset = kwargs.pop('employees_queryset', None)
+        super().__init__(*args, **kwargs)
+        if employees_queryset is not None:
+            self.fields['employees'].queryset = employees_queryset
+
+    def save(self, commit=True):
+        attendance = super().save(commit=False)
+        if commit:
+            attendance.save()
+            self.save_m2m()  # Save the many-to-many relationships
+        return attendance
+
 
 class EmployeeCreateForm(forms.ModelForm):
-    """
-    Form for creating employee records.
-    """
     class Meta:
         model = Employee
         fields = '__all__'
@@ -49,9 +68,6 @@ class EmployeeCreateForm(forms.ModelForm):
         self.fields['DOL'].widget = SelectDateWidget(years=years)
 
 class OvertimeForm(forms.ModelForm):
-    """
-    Form for adding overtime records.
-    """
     class Meta:
         model = Overtime
         fields = ['Employee', 'Date', 'Overtime_hours', 'Overtime_minutes']
@@ -60,15 +76,9 @@ class OvertimeForm(forms.ModelForm):
         }
 
 class DepartmentForm(forms.Form):
-    """
-    Form for selecting a department.
-    """
     department = forms.ModelChoiceField(queryset=Department.objects.all(), required=True, label='Department')
 
 class OvertimeFilterForm(forms.Form):
-    """
-    Form for filtering overtime records by department, month, and year.
-    """
     department = forms.ModelChoiceField(queryset=Department.objects.all(), required=True, label='Department')
     month = forms.IntegerField(min_value=1, max_value=12, label='Month')
     year = forms.IntegerField(min_value=1900, max_value=datetime.now().year + 1, label='Year')

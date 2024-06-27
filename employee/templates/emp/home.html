@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-    {%load static%}
+    {% load static %}
     {% load group_filters %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
     <title>Document</title>
 
     <!-- JavaScript function for confirmation -->
@@ -17,6 +16,123 @@
             return false; // Cancel logout
         }
     </script>
+
+    <!-- Internal CSS for responsiveness and larger icons -->
+    <style>
+        /* General styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .header {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .logout-container {
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px 20px;
+        }
+
+        .create-user-button,
+        .logout-container form input[type="submit"] {
+            padding: 10px 30px;
+            margin-left: 10px;
+            border: none;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .create-user-button:hover,
+        .logout-container form input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .nav-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px; /* Increased gap for better spacing */
+        }
+
+        .nav-container a {
+            text-align: center;
+            padding: 20px;
+            text-decoration: none;
+            color: black;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 300px; /* Added margin to move icons lower */
+        }
+
+        .nav-container a img {
+            width: 200px; /* Increased width */
+            height: 200px; /* Increased height */
+            margin-bottom: 10px;
+        }
+
+        .caption {
+            font-size: 18px; /* Increased font size */
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .logout-container {
+                justify-content: center;
+            }
+
+            .nav-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav-container a {
+                width: 80%;
+            }
+
+            .nav-container a img {
+                width: 100px; /* Adjusted for smaller screens */
+                height: 100px; /* Adjusted for smaller screens */
+            }
+
+            .caption {
+                font-size: 16px; /* Adjusted for smaller screens */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                font-size: 18px;
+            }
+
+            .create-user-button,
+            .logout-container form input[type="submit"] {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+
+            .nav-container a img {
+                width: 80px; /* Adjusted for smaller screens */
+                height: 80px; /* Adjusted for smaller screens */
+            }
+
+            .caption {
+                font-size: 14px; /* Adjusted for smaller screens */
+            }
+        }
+    </style>
 </head>
 <body>
     {% if user.is_authenticated %}
@@ -43,35 +159,35 @@
                 {% if user.is_superuser %}
                     <!-- Superuser links -->
                     <a href="{% url 'employee:depemp_home' %}">
-                        <img class="icon" src="{% static 'images/depemp1.jpg' %}" alt="Department Icon" width="96" height="96">
+                        <img class="icon" src="{% static 'images/depemp1.jpg' %}" alt="Department Icon">
                         <span class="caption">Department And Employees</span>
                     </a>
                     <a href="{% url 'employee:attendance_home' %}">
-                        <img class="icon" src="{% static 'images/attendance.jpg' %}" alt="Attendance Icon" width="96" height="96">
+                        <img class="icon" src="{% static 'images/attendance.jpg' %}" alt="Attendance Icon">
                         <span class="caption">Attendance</span>
                     </a>
                     <a href="{% url 'product:prod_home' %}">
-                        <img class="icon" src="{% static 'images/product.jpg' %}" alt="Product Icon" width="96" height="96">
+                        <img class="icon" src="{% static 'images/product.jpg' %}" alt="Product Icon">
                         <span class="caption">Product</span>
                     </a>
                 {% elif user|has_group:"Supervisor" %}
                     <!-- Supervisor links -->
                     <a href="{% url 'employee:depemp_home' %}">
-                        <img class="icon" src="{% static 'images/depemp1.jpg' %}" alt="Department Icon" width="96" height="96">
+                        <img class="icon" src="{% static 'images/depemp1.jpg' %}" alt="Department Icon">
                         <span class="caption">Department And Employees</span>
                     </a>
                     <a href="{% url 'employee:attendance_home' %}">
-                        <img class="icon" src="{% static 'images/attendance.jpg' %}" alt="Attendance Icon" width="96" height="96">
+                        <img class="icon" src="{% static 'images/attendance.jpg' %}" alt="Attendance Icon">
                         <span class="caption">Attendance</span>
                     </a>
                 {% elif user|has_group:"HR" %}
                     <!-- HR links -->
                     <a href="{% url 'employee:depemp_home' %}">
-                        <img class="icon" src="{% static 'images/depemp1.jpg' %}" alt="Department Icon" width="96" height="96">
+                        <img class="icon" src="{% static 'images/depemp1.jpg' %}" alt="Department Icon">
                         <span class="caption">Department And Employees</span>
                     </a>
                     <a href="{% url 'product:prod_home' %}">
-                        <img class="icon" src="{% static 'images/product.jpg' %}" alt="Product Icon" width="96" height="96">
+                        <img class="icon" src="{% static 'images/product.jpg' %}" alt="Product Icon">
                         <span class="caption">Product</span>
                     </a>
                 {% endif %}

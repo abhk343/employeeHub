@@ -110,17 +110,7 @@ class DepartmentUpdateView(LoginRequiredMixin, UpdateView):
         context['title'] = 'Update Department'
         return context
 
-class DepartmentDeleteView(LoginRequiredMixin, DeleteView):
-    model = Department
-    success_url = reverse_lazy('department_list')
 
-    def delete(self, request, *args, **kwargs):
-        """
-        Handle the deletion of a department.
-        """
-        self.object = self.get_object()
-        self.object.delete()
-        return JsonResponse({'message': 'Department deleted successfully'}, status=200)
 
 # Employee Views
 
@@ -131,20 +121,25 @@ from django.shortcuts import render
 from django.views.generic import ListView
 from .models import Employee, Department  # Ensure you import the Department model
 
-class EmployeeListView(LoginRequiredMixin, ListView):
+from django_filters.views import FilterView
+from .filters import EmployeeFilter
+from .models import Employee, Department
+
+class EmployeeListView(LoginRequiredMixin, FilterView):
     model = Employee
     template_name = 'emp/emp_view.html'
     context_object_name = 'employees'
     paginate_by = 5  # Number of employees per page
+    filterset_class = EmployeeFilter
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
-        # Fetch all employees
-        employees = self.get_queryset()
+        # Get the filtered queryset
+        filtered_qs = self.get_queryset()
         
         # Calculate the total number of pages
-        num_pages = (employees.count() // self.paginate_by) + (1 if employees.count() % self.paginate_by > 0 else 0)
+        num_pages = (filtered_qs.count() // self.paginate_by) + (1 if filtered_qs.count() % self.paginate_by > 0 else 0)
         
         # Get the current page number
         page_number = int(self.request.GET.get('page', 1))
@@ -152,29 +147,27 @@ class EmployeeListView(LoginRequiredMixin, ListView):
         # Adjust employees queryset to display only for current page
         start_index = (page_number - 1) * self.paginate_by
         end_index = start_index + self.paginate_by
-        context['employees'] = employees[start_index:end_index]
+        context['employees'] = filtered_qs[start_index:end_index]
         
         # Pass additional context variables
         context['current_page'] = page_number
         context['num_pages'] = num_pages
-
+        
         # Fetch all departments and add to context
         context['departments'] = Department.objects.all()
-
-        # Add the selected department to the context
-        context['selected_department'] = self.request.GET.get('department', '')
-
+        
+        # Add the selected department and filter to the context
+        context['selected_department'] = self.request.GET.get('Department', '')
+        context['filter'] = self.filterset_class(self.request.GET, queryset=self.get_queryset())
+        
         return context
 
     def get_queryset(self):
         queryset = super().get_queryset()
         
-        # Filter employees by selected department
-        department_id = self.request.GET.get('department')
-        if department_id:
-            queryset = queryset.filter(Department_id=department_id)
-        
-        return queryset
+        # Apply the filter
+        filter = self.filterset_class(self.request.GET, queryset=queryset)
+        return filter.qs
 
     
     
@@ -268,33 +261,111 @@ class ExportEmployeeDataView(View):
         return response
 
 # Attendance Views
-class AttendanceCreateView(LoginRequiredMixin, View):
-    form_class = AttendanceForm
-    template_name = 'emp/att_add.html'
+# views.py
+from django.shortcuts import render, redirect
+from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .models import Employee, Attendance, Department
+from .forms import DepartmentSelectForm, AttendanceForm
+
+class DepartmentSelectView(LoginRequiredMixin, View):
+    template_name = 'emp/select_department.html'
 
     def get(self, request, *args, **kwargs):
-        form = self.form_class()
+        form = DepartmentSelectForm()
         return render(request, self.template_name, {'form': form})
 
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
+        form = DepartmentSelectForm(request.POST)
+        if form.is_valid():
+            department = form.cleaned_data['departments']  # Access the selected department
+            department_id = department.Department_id  # Get the Department_id of the selected department
+            return redirect('employee:attendance_create', department_id=department_id)
+        return render(request, self.template_name, {'form': form})
+
+
+from django.shortcuts import render, redirect
+from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .forms import AttendanceForm
+from .models import Employee, Attendance
+
+class AttendanceCreateView(LoginRequiredMixin, View):
+    template_name = 'emp/att_add.html'
+    form_class = AttendanceForm
+
+    def get_form(self, department_id=None):
+        if department_id is not None:
+            employees = Employee.objects.filter(Department_id=department_id)
+        else:
+            employees = Employee.objects.none()
+
+        form = self.form_class(employees_queryset=employees)
+        return form
+
+    def get(self, request, *args, **kwargs):
+        department_id = kwargs.get('department_id')
+        form = self.get_form(department_id)
+        return render(request, self.template_name, {'form': form, 'department_id': department_id})
+
+    def post(self, request, *args, **kwargs):
+        department_id = kwargs.get('department_id')
+        form = self.form_class(request.POST, employees_queryset=Employee.objects.filter(Department_id=department_id))
+
         if form.is_valid():
             date = form.cleaned_data['date']
-            employees = form.cleaned_data['employees']
-            # Save attendance records for selected employees
-            for employee in employees:
+            selected_employees = form.cleaned_data['employees']
+
+            for employee in selected_employees:
                 Attendance.objects.update_or_create(
                     employee=employee,
                     date=date,
                 )
-            return redirect('employee:monthly_absence_count')
-        return render(request, self.template_name, {'form': form})
+            return redirect('employee:sele_dept')
+
+        return render(request, self.template_name, {'form': form, 'department_id': department_id})
+
+# views.py
+# views.py
+from django.shortcuts import render, redirect
+from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .models import Department
+
+class DepartmentSelect(LoginRequiredMixin, View):
+    template_name = 'emp/sele_dept.html'
+
+    def get(self, request, *args, **kwargs):
+        departments = Department.objects.all()
+        selected_department = request.GET.get('department')
+        selected_year = request.GET.get('year')
+        context = {
+            'departments': departments,
+            'selected_department': selected_department,
+            'selected_year': selected_year,
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        # Assuming post is not needed as you are using GET method for the form
+        return redirect('employee:monthly_absence_count', department=request.POST.get('department'), year=request.POST.get('year'))
+
+
+
+
+from collections import defaultdict
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Count
+from .models import Attendance, Department
 
 @login_required
 def monthly_absence_count(request):
     selected_department = request.GET.get('department')
     selected_year = request.GET.get('year')
     
+    # Validate the year parameter
     if selected_year:
         try:
             selected_year = int(selected_year)
@@ -303,31 +374,69 @@ def monthly_absence_count(request):
             
     absences = Attendance.objects.all()
     
+    # Apply filtering based on selected department and year
     if selected_department:
         absences = absences.filter(employee__Department_id=selected_department)
         
     if selected_year:
         absences = absences.filter(date__year=selected_year)
         
-    absence_data = absences.values('employee__Name', 'employee__Department__Department_Name', 'date__month').annotate(count=Count('attendance_id'))
+    # Apply the AttendanceFilter
+    attendance_filter = AttendanceFilter(request.GET, queryset=absences)
+    absences = attendance_filter.qs
+
+    absence_data = absences.values('employee__Name', 'employee__Department__Department_Name', 'employee__Designation', 'date__month').annotate(count=Count('attendance_id'))
     
-    table_data = defaultdict(lambda: {'department': '', 'months': [0] * 12})
+    table_data = {}
     
     for data in absence_data:
         employee_name = data['employee__Name']
         department_name = data['employee__Department__Department_Name']
+        designation = data['employee__Designation']
         month = data['date__month'] - 1
-        table_data[employee_name]['department'] = department_name
+        
+        if employee_name not in table_data:
+            table_data[employee_name] = {
+                'department': department_name,
+                'designation': designation,
+                'months': [0] * 12,
+            }
+        
         table_data[employee_name]['months'][month] = data['count']
         
+    # Convert defaultdict to regular dictionary
+    table_data = dict(table_data)
+    
+    # Convert dictionary items to list of tuples
+    table_data_list = list(table_data.items())
+    
+    # Pagination
+    paginator = Paginator(table_data_list, 5)  # Show 10 items per page
+    page_number = request.GET.get('page')
+    
+    try:
+        page_obj = paginator.page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages if paginator.num_pages > 1 else 1)
+    
     context = {
         'departments': Department.objects.all(),
         'selected_department': selected_department,
         'selected_year': selected_year,
-        'table_data': dict(table_data),
+        'page_obj': page_obj,  # Pass paginated data to the template
+        'filter': attendance_filter,  # Pass the filter to template
     }
     
     return render(request, 'emp/att_view.html', context)
+
+
+
+
+
+
+
 
 # Overtime Views
 class OvertimeCreateView(LoginRequiredMixin, View):

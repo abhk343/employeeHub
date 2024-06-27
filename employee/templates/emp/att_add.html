@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #fff8dc; /* Light yellowish background */
+            background-color: #fff8dc;
             color: #333;
             margin: 0;
             padding: 0;
@@ -57,63 +57,33 @@
         button:hover {
             background-color: #8e0038;
         }
-        @media (max-width: 600px) {
-            form {
-                padding: 15px;
-            }
-            button {
-                font-size: 14px;
-            }
+        .errorlist {
+            color: red;
+            margin: 10px 0;
         }
-        /* Navigation bar styles */
-        .top-nav {
-            width: 100%;
-            background-color: #333;
-            display: flex;
-            justify-content: flex-end;
-            padding: 15px 20px; /* Increased padding for height */
-            box-sizing: border-box;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-        }
-        .top-nav a {
-            display: inline-block;
-            color: white;
+        .no-employees {
             text-align: center;
-            padding: 10px 20px;
-            text-decoration: none;
-        }
-        .top-nav a:hover {
-            background-color: #555;
-        }
-        /* Adjust content below the navigation bar */
-        .container {
-            padding-top: 80px; /* Adjust based on the navigation bar height */
+            color: #c2185b;
+            margin: 20px 0;
         }
     </style>
 </head>
 <body>
-    <div class="top-nav">
-        <a href="{% url 'employee:monthly_absence_count' %}">Attendance Summary</a>
-        <a href="{% url 'employee:attendance_home' %}">Attendance Home</a>
-    </div>
-    <div class="container">
-        <h1>Add Attendance</h1>
-        <!-- Form for adding attendance records -->
-        <form method="post">
-            <!-- CSRF token for security -->
-            {% csrf_token %}
-            
-            <!-- Render each form field as a paragraph -->
-            {% for field in form %}
-                <p>{{ field.label_tag }} {{ field }}</p>
-            {% endfor %}
-            
-            <!-- Button for submitting the form -->
+    <h1>Add Attendance</h1>
+    <form method="post" action="{% url 'employee:attendance_create' department_id=department_id %}">
+        {% csrf_token %}
+        <p>
+            {{ form.date.label_tag }} {{ form.date }}
+        </p>
+        {% if form.fields.employees.queryset.exists %}
+            <div>
+                {{ form.employees.errors }}
+                {{ form.employees }}
+            </div>
             <button type="submit">Submit</button>
-        </form>
-    </div>
+        {% else %}
+            <p class="no-employees">No employees found in this department.</p>
+        {% endif %}
+    </form>
 </body>
 </html>

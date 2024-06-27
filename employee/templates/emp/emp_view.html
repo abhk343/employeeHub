@@ -125,7 +125,7 @@
             margin-bottom: 1em;
         }
 
-        .filter-form select, .filter-form button {
+        .filter-form select, .filter-form input, .filter-form button {
             padding: 0.5em;
             margin-right: 0.5em;
         }
@@ -141,14 +141,14 @@
                 font-size: 0.8em;
             }
 
-            .create-btn, .filter-form select, .filter-form button {
+            .create-btn, .filter-form select, .filter-form input, .filter-form button {
                 padding: 0.4em 0.8em;
                 font-size: 0.9em;
             }
         }
 
         @media (max-width: 480px) {
-            .filter-form select, .filter-form button {
+            .filter-form select, .filter-form input, .filter-form button {
                 width: 100%;
                 margin-bottom: 0.5em;
             }
@@ -209,22 +209,15 @@
     <div class="top-nav">
         <h1>Employee List</h1>
         <div class="top-nav-links">
-            
-            
             <a href="{% url 'employee:employee_create' %}" class="create-btn">Create New Employee</a>
             <a href="{% url 'employee:depemp_home' %}" class="create-btn">Department Home</a>
         </div>
     </div>
 
     <div class="container">
-        <!-- Form for filtering employees by department -->
+        <!-- Form for filtering employees -->
         <form method="get" action="{% url 'employee:employee_list' %}" class="filter-form">
-            <select name="department">
-                <option value="">All Departments</option>
-                {% for department in departments %}
-                    <option value="{{ department.id }}" {% if selected_department == department.id|stringformat:"s" %}selected{% endif %}>{{ department.Department_Name }}</option>
-                {% endfor %}
-            </select>
+            {{ filter.form.as_p }}
             <button type="submit">Filter</button>
         </form>
 
@@ -277,7 +270,6 @@
         <!-- Additional links -->
         <div class="download-back-links">
             <a href="{% url 'employee:export_employee_data' %}">Download</a>
-            
         </div>
     </div>
 </body>

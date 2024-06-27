@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Department</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            display: inline-block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        select, input[type="text"] {
+            margin-top: 10px;
+            padding: 8px;
+            width: 200px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Select Department</h1>
+
+    <form method="get" action="{% url 'employee:monthly_absence_count' %}">
+        <label for="department">Department:</label>
+        <select name="department" id="department">
+            <option value="">All</option>
+            {% for department in departments %}
+                <option value="{{ department.Department_id }}" {% if selected_department == department.Department_id %}selected{% endif %}>{{ department.Department_Name }}</option>
+            {% endfor %}
+        </select>
+        
+        <label for="year">Year:</label>
+        <input type="text" name="year" id="year" value="{{ selected_year }}">
+        
+        <button type="submit">Filter</button>
+    </form>
+</body>
+</html>

@@ -5,192 +5,123 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monthly Absence Count</title>
     <style>
+        /* Internal CSS for basic styling */
         body {
             font-family: Arial, sans-serif;
-            background-color: #fff8dc; /* Light yellowish background */
-            color: #333;
-            margin: 0;
-            padding: 0;
+            line-height: 1.6;
+            margin: 20px;
         }
         h1 {
-            color: #c2185b;
             text-align: center;
-            margin-top: 20px;
-        }
-        form {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
-            margin: 60px auto 20px; /* Increased margin-top to accommodate nav */
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-        label {
-            font-weight: bold;
-            margin-right: 10px;
-        }
-        select, input[type="text"] {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-        button {
-            background-color: #c2185b;
-            color: #fff;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            width: 100%;
-            max-width: 120px;
-            align-self: center;
-        }
-        button:hover {
-            background-color: #8e0038;
+            margin-bottom: 20px;
         }
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-            background: #fff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow-x: auto; /* Enable horizontal scroll on smaller screens */
+        }
+        table, th, td {
+            border: 1px solid #ddd;
         }
         th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border: 1px solid #ccc; /* Add border to each cell */
+            padding: 12px;
+            text-align: center;
         }
         th {
-            background-color: #f4f4f4;
-            font-weight: bold;
+            background-color: #f2f2f2;
         }
-        @media (max-width: 600px) {
-            form {
-                flex-direction: column;
-                padding: 15px;
-            }
-            button {
-                font-size: 14px;
-                max-width: 100%;
-            }
-            table, thead, tbody, th, td, tr {
-                display: block;
-            }
-            th {
-                text-align: right;
-                display: flex;
-                justify-content: space-between;
-            }
-            td {
-                text-align: right;
-                display: flex;
-                justify-content: space-between;
-                border: none;
-                border-bottom: 1px solid #ccc;
-                padding-left: 50%;
-                position: relative;
-            }
-            td::before {
-                content: attr(data-label);
-                position: absolute;
-                left: 0;
-                width: 45%;
-                padding-left: 15px;
-                font-weight: bold;
-                text-align: left;
-            }
-        }
-        /* Navigation bar styles */
-        .top-nav {
-            width: 100%;
-            background-color: #333;
-            display: flex;
-            justify-content: flex-end;
-            padding: 15px 20px; /* Increased padding for height */
-            box-sizing: border-box;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-        }
-        .top-nav a {
-            display: inline-block;
-            color: white;
+        .pagination {
+            margin-top: 20px;
             text-align: center;
-            padding: 10px 20px;
+        }
+        .pagination a {
             text-decoration: none;
+            padding: 8px 16px;
+            color: #000;
+            background-color: #f2f2f2;
+            border: 1px solid #ddd;
+            margin: 0 2px;
+            display: inline-block;
         }
-        .top-nav a:hover {
-            background-color: #555;
+        .pagination a:hover {
+            background-color: #ddd;
         }
-        /* Adjust content below the navigation bar */
-        .container {
-            padding-top: 80px; /* Adjust based on the navigation bar height */
+        .current {
+            font-weight: bold;
+            padding: 8px 16px;
         }
+
+        /* Responsive adjustments */
+        @media screen and (max-width: 600px) {
+            table {
+                overflow-x: auto; /* Enable horizontal scroll on smaller screens */
+            }
+            table, th, td {
+                font-size: 14px;
+            }
+        }       
     </style>
 </head>
 <body>
-    <div class="top-nav">
-        <a href="{% url 'employee:attendance_create' %}">Add Attendance</a>
-        <a href="{% url 'employee:attendance_home' %}">Attendance Home</a>
-    </div>
-    <div class="container">
-        <h1>Monthly Absence Count</h1>
-
-        <form method="get">
-            <label for="department">Department:</label>
-            <select name="department" id="department">
-                <option value="">All</option>
-                {% for department in departments %}
-                    <option value="{{ department.Department_id }}" {% if selected_department == department.Department_id %}selected{% endif %}>{{ department.Department_Name }}</option>
-                {% endfor %}
-            </select>
-            
-            <label for="year">Year:</label>
-            <input type="text" name="year" id="year" value="{{ selected_year }}">
-
-            <button type="submit">Filter</button>
-        </form>
-
-        <table>
-            <thead>
+    
+    <h1>Monthly Absence Count </h1> <!-- Display department name -->
+    <br>
+    <form method="get" action="{% url 'employee:monthly_absence_count' %}">
+        {{ filter.form.as_p }}
+        <button type="submit">Filter</button>
+    </form>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Employee</th>
+                <th>Designation</th>
+                <th>January</th>
+                <th>February</th>
+                <th>March</th>
+                <th>April</th>
+                <th>May</th>
+                <th>June</th>
+                <th>July</th>
+                <th>August</th>
+                <th>September</th>
+                <th>October</th>
+                <th>November</th>
+                <th>December</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee, data in page_obj %}
                 <tr>
-                    <th>Employee Name</th>
-                    <th>Department</th>
-                    <th>Jan</th>
-                    <th>Feb</th>
-                    <th>Mar</th>
-                    <th>Apr</th>
-                    <th>May</th>
-                    <th>Jun</th>
-                    <th>Jul</th>
-                    <th>Aug</th>
-                    <th>Sep</th>
-                    <th>Oct</th>
-                    <th>Nov</th>
-                    <th>Dec</th>
+                    <td>{{ employee }}</td>
+                    <td>{{ data.designation }}</td>
+                    {% for month in data.months %}
+                        <td>{{ month }}</td>
+                    {% endfor %}
                 </tr>
-            </thead>
-            <tbody>
-                {% for employee, data in table_data.items %}
-                    <tr>
-                        <td data-label="Employee Name">{{ employee }}</td>
-                        <td data-label="Department">{{ data.department }}</td>
-                        {% for count in data.months %}
-                            <td data-label="{{ count }}">{{ count }}</td>
-                        {% endfor %}
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination links -->
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1{% if selected_department %}&department={{ selected_department }}{% endif %}{% if selected_year %}&year={{ selected_year }}{% endif %}">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}{% if selected_department %}&department={{ selected_department }}{% endif %}{% if selected_year %}&year={{ selected_year }}{% endif %}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if selected_department %}&department={{ selected_department }}{% endif %}{% if selected_year %}&year={{ selected_year }}{% endif %}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_department %}&department={{ selected_department }}{% endif %}{% if selected_year %}&year={{ selected_year }}{% endif %}">last &raquo;</a>
+            {% endif %}
+        </span>
     </div>
+
 </body>
 </html>
