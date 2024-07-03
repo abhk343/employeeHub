@@ -1,141 +1,97 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <!-- Title of the HTML page -->
-    <title>{{ view.title }}</title>
-    <style>
-        /* Base styles */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
-        }
+{% extends "base.html" %}
 
-        .top-nav {
-            width: 100%;
-            background-color: #333;
-            display: flex;
-            justify-content: flex-end;
-            padding: 15px 20px;
-            box-sizing: border-box;
-        }
+{% block title %}Create Department{% endblock %}
 
-        .top-nav a {
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            margin-left: 10px;
-        }
+{% block content %}
+<style>
+    /* Custom styles for this page */
+    .content {
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top:20px;
+        min-height: 60vh; /* Adjust to fit most of the viewport */
+    }
 
-        .top-nav a:hover {
-            background-color: #555;
-        }
+    form {
+        width: 100%;
+        max-width: 600px;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
 
-        /* Content styles */
-        .content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start; /* Align content at the top */
-            min-height: calc(100vh - 60px); /* Adjust based on nav bar height */
-            padding: 20px;
-            margin-top: 20px; /* Adjust margin-top for spacing */
-        }
+    .head {
+        text-align: center;
+        margin-top: 300px;
+    }
 
-        h1, h2 {
-            font-size: 2em;
-            margin-bottom: 1em;
-            color: #333;
-        }
+    label {
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
 
+    input[type="text"], input[type="email"], input[type="password"], select {
+        padding: 12px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+        width: 100%;
+        box-sizing: border-box; /* Ensures padding and border are included in width */
+    }
+
+    button[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 16px;
+        transition: background-color 0.3s;
+        width: 100%;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #45a049;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
         form {
-            background: #fff;
-            padding: 2em;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            width: 100%;
+            padding: 15px;
         }
 
-        p {
-            margin-bottom: 1em;
+        input[type="text"], input[type="email"], input[type="password"], select {
+            font-size: 14px;
         }
 
-        button {
-            background: #007bff;
-            color: #fff;
-            padding: 0.75em 1.5em;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
+        button[type="submit"] {
+            padding: 10px 15px;
+            font-size: 14px;
         }
+    }
+</style>
 
-        button:hover {
-            background: #0056b3;
-        }
+<!-- Heading displaying the title of the form -->
+<div class="head">
+    <h2>Create Department</h2>
+</div>
 
-        a {
-            margin-top: 1em;
-            display: inline-block;
-            color: #007bff;
-            text-decoration: none;
-            font-size: 1em;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        /* Responsive styles */
-        @media (max-width: 600px) {
-            .top-nav {
-                padding: 10px 15px;
-            }
-
-            .content {
-                padding: 10px;
-            }
-
-            form {
-                padding: 1.5em;
-            }
-
-            h1, h2 {
-                font-size: 1.5em;
-            }
-
-            button {
-                width: 100%;
-                padding: 1em;
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- Top navigation bar -->
-    <div class="top-nav">
-        <a href="{% url 'employee:department_list' %}">Total Department List</a>
-        <a href="{% url 'employee:depemp_home' %}">Department Home</a>
+<!-- Main content -->
+<div class="content">
+    <!-- Form for adding or updating department details -->
+    <form method="post">
+        {% csrf_token %} <!-- CSRF token for security -->
         
-    </div>
-
-    <!-- Main content -->
-    <div class="content">
-        <!-- Heading displaying the title of the form -->
-        <h2>Create Department</h2>
+        <!-- Display form fields as paragraphs -->
+        {{ form.as_p }}
         
-        <!-- Form for adding or updating department details -->
-        <form method="post">
-            {% csrf_token %} <!-- CSRF token for security -->
-            
-            <!-- Display form fields as paragraphs -->
-            {{ form.as_p }}
-            
-            <!-- Button to submit the form -->
-            <button type="submit">Save</button>
-        </form>
-    </div>
-</body>
-</html>
+        <!-- Button to submit the form -->
+        <button type="submit">Save</button>
+    </form>
+</div>
+{% endblock %}

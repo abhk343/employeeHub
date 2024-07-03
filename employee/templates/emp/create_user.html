@@ -87,11 +87,45 @@
 <body>
     <div class="form-container">
         <h2>Create User</h2>
-        <form method="post">
+        <form id="createUserForm" method="post">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit">Create User</button>
+            <button type="submit" id="submitButton">Create User</button>
         </form>
+        <p id="successMessage" style="display: none; color: green; text-align: center; margin-top: 10px;">Successfully created user!</p>
+        <p id="homeLink" style="display: none; text-align: center;"><a href="{% url 'employee:home' %}">Go to Home Page</a></p>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#createUserForm').submit(function(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                // Serialize form data
+                var formData = $(this).serialize();
+
+                // Submit form via AJAX
+                $.ajax({
+                    type: 'POST',
+                    url: $(this).attr('action'),
+                    data: formData,
+                    success: function(response) {
+                        // Display success message and show home page link
+                        $('#successMessage').show();
+                        $('#homeLink').show();
+
+                        // Hide form and submit button
+                        $('#createUserForm').hide();
+                        $('#submitButton').hide();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                        // Handle errors if needed
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

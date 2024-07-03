@@ -1,71 +1,84 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monthly Absence Count</title>
-    <style>
-        /* Internal CSS for basic styling */
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 20px;
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            overflow-x: auto; /* Enable horizontal scroll on smaller screens */
-        }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-        th, td {
-            padding: 12px;
-            text-align: center;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .pagination {
-            margin-top: 20px;
-            text-align: center;
-        }
-        .pagination a {
-            text-decoration: none;
-            padding: 8px 16px;
-            color: #000;
-            background-color: #f2f2f2;
-            border: 1px solid #ddd;
-            margin: 0 2px;
-            display: inline-block;
-        }
-        .pagination a:hover {
-            background-color: #ddd;
-        }
-        .current {
-            font-weight: bold;
-            padding: 8px 16px;
+{% extends 'base.html' %}
+
+{% block title %}Monthly Absence Count{% endblock %}
+
+{% block content %}
+<style>
+    /* Container styles */
+    .container {
+        padding: 20px;
+        max-width: 100%;
+        overflow-x: auto; /* Allow horizontal scrolling on small screens */
+        margin-top: 100px;
+    }
+
+    /* Table styles */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    table, th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    /* Form styles */
+    form {
+        margin-bottom: 20px;
+    }
+
+    /* Pagination styles */
+    .pagination {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .pagination a {
+        color: black;
+        float: left;
+        padding: 8px 16px;
+        text-decoration: none;
+        transition: background-color .3s;
+        border: 1px solid #ddd;
+        margin: 0 4px;
+    }
+
+    .pagination a.active {
+        background-color: #4CAF50;
+        color: white;
+        border: 1px solid #4CAF50;
+    }
+
+    .pagination a:hover:not(.active) {
+        background-color: #ddd;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .container {
+            padding: 10px;
         }
 
-        /* Responsive adjustments */
-        @media screen and (max-width: 600px) {
-            table {
-                overflow-x: auto; /* Enable horizontal scroll on smaller screens */
-            }
-            table, th, td {
-                font-size: 14px;
-            }
-        }       
-    </style>
-</head>
-<body>
-    
-    <h1>Monthly Absence Count </h1> <!-- Display department name -->
+        table {
+            font-size: 14px;
+        }
+
+        .pagination {
+            overflow-x: auto;
+            white-space: nowrap; /* Prevent line break in pagination links */
+        }
+    }
+</style>
+
+<div class="container">
+    <h1>Monthly Absence Count</h1> <!-- Display department name -->
     <br>
     <form method="get" action="{% url 'employee:monthly_absence_count' %}">
         {{ filter.form.as_p }}
@@ -122,6 +135,5 @@
             {% endif %}
         </span>
     </div>
-
-</body>
-</html>
+</div>
+{% endblock %}

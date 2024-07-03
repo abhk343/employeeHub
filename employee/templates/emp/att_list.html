@@ -1,0 +1,173 @@
+<!-- emp/att_list.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}Attendance List{% endblock %}
+
+{% block content %}
+<style>
+    /* Container styles */
+    .container {
+        padding: 20px;
+        max-width: 800px;
+        margin: 50px auto; /* Center align container */
+    }
+
+    /* Header styles */
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    /* Filter form styles */
+    form {
+        margin-bottom: 20px;
+    }
+
+    /* Button styles */
+    .btn {
+        padding: 8px 16px;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+        margin-left: 10px;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+
+    /* List styles */
+    #attendance-list {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    #attendance-list li {
+        margin-bottom: 10px;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    /* Pagination styles */
+    .pagination {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .pagination a, .pagination span {
+        display: inline-block;
+        padding: 6px 12px;
+        text-decoration: none;
+        color: #007bff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin: 0 4px;
+        transition: background-color 0.3s;
+    }
+
+    .pagination a:hover {
+        background-color: #f2f2f2;
+    }
+
+    .pagination .current {
+        font-weight: bold;
+    }
+</style>
+
+<div class="container">
+    <h2>Attendance List</h2>
+
+    <!-- Filter Form -->
+    <form method="get">
+        {{ filter.form.as_p }}
+        <button type="submit" class="btn btn-success">Apply Filter</button>
+    </form>
+
+    <!-- Attendance List -->
+    <ul id="attendance-list">
+        {% for attendance in attendances %}
+            <li>
+                {{ attendance.date }} - {{ attendance.employee.Name }}
+                <button class="delete-attendance btn btn-danger" data-url="{% url 'employee:attendance_delete' attendance.pk %}">Delete</button>
+            </li>
+        {% empty %}
+            <li>No attendance records found.</li>
+        {% endfor %}
+    </ul>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    {% endif %}
+
+    <!-- JavaScript for handling Ajax delete -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const deleteButtons = document.querySelectorAll('.delete-attendance');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                if (confirm('Are you sure you want to delete this attendance record?')) {
+                    const url = this.getAttribute('data-url');
+                    fetch(url, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}',
+                            'Content-Type': 'application/json'
+                        },
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            // Optionally handle success message or UI update
+                            alert('Attendance record deleted successfully');
+                            this.closest('li').remove(); // Remove deleted item from list
+                        } else {
+                            alert('Error deleting attendance record');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error deleting attendance record');
+                    });
+                }
+            });
+        });
+    });
+    </script>
+</div>
+{% endblock %}

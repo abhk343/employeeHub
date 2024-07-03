@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+
+{% block title %}Overtime Records{% endblock %}
+{% block content %}
+<style>
+    /* Container styles */
+    .container {
+        padding: 20px;
+        max-width: 100%;
+        overflow-x: auto; /* Allow horizontal scrolling on small screens */
+        margin-top: 20px;
+    }
+    .header {
+        text-align: center;
+        margin-top: 200px;
+    }
+
+
+    /* Table styles */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+        padding: 12px 15px;
+        text-align: left;
+        border: 1px solid #ccc;
+    }
+
+    th {
+        background-color: #f4f4f4;
+        font-weight: bold;
+    }
+
+    /* Form and button styles */
+    form {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+        margin: 20px auto;
+        text-align: center;
+    }
+
+    button {
+        background-color: #c2185b;
+        color: #fff;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        width: 100%;
+        margin-top: 20px;
+        transition: background-color 0.3s;
+    }
+
+    button:hover {
+        background-color: #8e0038;
+    }
+
+    /* Pagination styles */
+    .pagination {
+        text-align: center;
+        margin: 20px 0;
+    }
+
+    .pagination a {
+        text-decoration: none;
+        padding: 8px 16px;
+        color: #333;
+        border: 1px solid #ccc;
+        margin: 0 2px;
+    }
+
+    .pagination a:hover {
+        background-color: #ddd;
+    }
+
+    .current {
+        font-weight: bold;
+        padding: 8px 16px;
+    }
+
+    /* Additional styles */
+    .delete-btn {
+        background-color: #dc3545;
+        color: #fff;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.3s;
+    }
+
+    .delete-btn:hover {
+        background-color: #c82333;
+    }
+
+    .table-container {
+        max-height: 500px;
+        overflow-y: auto;
+    }
+</style>
+
+
+
+    <h1 class="header">Overtime Records</h1>
+<div class="container">
+  
+
+    <!-- Form for filtering overtime records -->
+    <form method="get">
+        {% csrf_token %}
+        {{ filter.form.as_p }}
+        <button type="submit">Filter</button>
+    </form>
+
+    <!-- If there are overtime records -->
+    {% if overtimes %}
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Employee</th>
+                        <th>Date</th>
+                        <th>Overtime Hours</th>
+                        <th>Overtime Minutes</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for overtime in overtimes %}
+                        <tr id="overtime-{{ overtime.pk }}">
+                            <td>{{ overtime.Employee.Name }}</td>
+                            <td>{{ overtime.Date }}</td>
+                            <td>{{ overtime.Overtime_hours }}</td>
+                            <td>{{ overtime.Overtime_minutes }}</td>
+                            <td>
+                                <button class="delete-btn" onclick="deleteOvertime({{ overtime.pk }})">Delete</button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination links -->
+        <div class="pagination">
+            <span class="step-links">
+                {% if overtimes.has_previous %}
+                    <a href="?page=1{% if filter.form.is_bound %}&{{ filter.form.as_url }}{% endif %}">First</a>
+                    <a href="?page={{ overtimes.previous_page_number }}{% if filter.form.is_bound %}&{{ filter.form.as_url }}{% endif %}">Previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ overtimes.number }} of {{ overtimes.paginator.num_pages }}.
+                </span>
+
+                {% if overtimes.has_next %}
+                    <a href="?page={{ overtimes.next_page_number }}{% if filter.form.is_bound %}&{{ filter.form.as_url }}{% endif %}">Next</a>
+                    <a href="?page={{ overtimes.paginator.num_pages }}{% if filter.form.is_bound %}&{{ filter.form.as_url }}{% endif %}">Last</a>
+                {% endif %}
+            </span>
+        </div>
+    {% else %}
+        <p>No data available.</p>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function deleteOvertime(id) {
+        if (confirm('Are you sure you want to delete this overtime record?')) {
+            const url = `/overtime/${id}/delete/`;
+            const csrftoken = getCookie('csrftoken');
+
+            fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to delete overtime record');
+                }
+                document.getElementById(`overtime-${id}`).remove();
+                alert('Overtime record deleted successfully');
+            })
+            .catch(error => {
+                console.error('Failed to delete overtime record', error);
+                alert('Failed to delete overtime record');
+            });
+        }
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+{% endblock %}

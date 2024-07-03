@@ -3,92 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Attendance</title>
+    <title>Attendance Home</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #fff8dc; /* Light yellowish background */
-            color: #333;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            font-family: Arial, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             height: 100vh;
+            background-color: #f8f9fa; /* Light gray background */
         }
 
         .header {
-            color: #c2185b;
-            text-align: center;
             margin-top: 20px;
+            text-align: center;
+            font-size: 28px;
         }
 
         .nav-container {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2 columns in a row */
+            gap: 20px; /* Gap between grid items */
             justify-content: center;
-            margin-top: 20px;
-            margin-bottom: auto; /* Pushes the nav to the top */
+            margin-bottom: 30px;
         }
 
         .nav-container a {
             display: inline-block;
-            padding: 10px 20px;
+            padding: 15px 20px;
             font-size: 16px;
-            color: black;
+            color: white;
             text-decoration: none;
             cursor: pointer;
             transition: background-color 0.3s, color 0.3s;
-            margin: 0 20px;
             text-align: center;
-            border: 2px solid #c2185b;
-            background-color: #c2185b;
+            border: 2px solid #4CAF50;
+            background-color: #4CAF50;
             border-radius: 5px;
         }
 
         .nav-container a:hover {
-            color: #fff; /* Adjusted hover text color to white */
-            background-color: #8e0038;
-            border-color: #8e0038;
+            background-color: #45a049;
+            border-color: #45a049;
         }
 
         .back-link {
-            position: absolute;
-            bottom: 20px; /* Adjust as needed */
-            left: 50%;
-            transform: translateX(-50%);
-            margin-top: auto; /* Pushes the back link to the bottom */
+            text-align: center;
+            margin-bottom: 30px;
         }
 
-        .back-link a {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 16px;
-            color: #c2185b; /* Matching heading color */
-            text-decoration: none;
-            cursor: pointer;
-            transition: color 0.3s;
-            border: 2px solid #c2185b;
-            background-color: transparent;
-            border-radius: 5px;
-        }
+        @media (max-width: 800px) {
+            .nav-container {
+                grid-template-columns: repeat(1, 1fr); /* 1 column in a row for smaller screens */
+            }
 
-        .back-link a:hover {
-            color: #8e0038;
-            border-color: #8e0038;
+            .nav-container a {
+                padding: 12px 16px;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 <body>
     <h1 class="header">Attendance</h1>
     <div class="nav-container">
-        <a href="{% url 'employee:select_department' %}">Add Attendance</a>
-        <a href="{% url 'employee:sele_dept' %}">Attendance Summary</a>
-        <a href="{% url 'employee:overtime_add' %}">Add Overtime</a>
-        <a href="{% url 'employee:overtime_list' %}">Overtime Summary</a>
+        <a href="{% url 'employee:select_department' %}" class="btn btn-primary">Add Attendance</a>
+        <a href="{% url 'employee:sele_dept' %}" class="btn btn-primary">Attendance Summary</a>
+       
+        <a href="{% url 'employee:attendance_list' %}" class="btn btn-primary">View Attendance List</a>
+        <a href="{% url 'employee:overtime_add' %}" class="btn btn-primary">Add Overtime</a>
+        <a href="{% url 'employee:overtim_list' %}" class="btn btn-primary">Overtime Summary</a>
+        <a href="{% url 'employee:overtime_list' %}" class="btn btn-primary">View Overtime Records</a>
     </div>
     <div class="back-link">
-        <a href="{% url 'employee:home' %}">Back</a>
+        <a href="{% url 'employee:home' %}" class="btn btn-secondary">Back to Dashboard</a>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

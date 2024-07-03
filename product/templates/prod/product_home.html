@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Management</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
             margin: 0;
@@ -68,17 +69,21 @@
 <body>
     <h1>Welcome to Product Management</h1>
     <div class="nav-container">
-        <a href="{% url 'product:add_item' %}">Add Item</a>
-        <a href="{% url 'product:item_list' %}">Item List</a>
-        <a href="{% url 'product:add_supplier' %}">Add Supplier</a>
-        <a href="{% url 'product:supplier_list' %}">Supplier List</a>
-        <a href="{% url 'product:prd_add' %}">Add Products</a>
-        <a href="{% url 'product:prd_list' %}">Products List</a>
-        <a href="{% url 'product:stock_in_add' %}">Add Stock</a>
-        <a href="{% url 'product:stock_in_list' %}">Stocks List</a>
+        <a href="{% url 'product:add_item' %}" class="btn btn-primary">Add Item</a>
+        <a href="{% url 'product:item_list' %}" class="btn btn-primary">Item List</a>
+        <a href="{% url 'product:add_supplier' %}" class="btn btn-primary">Add Supplier</a>
+        <a href="{% url 'product:supplier_list' %}" class="btn btn-primary">Supplier List</a>
+        <a href="{% url 'product:prd_add' %}" class="btn btn-primary">Add Products</a>
+        <a href="{% url 'product:prd_list' %}" class="btn btn-primary">Products List</a>
+        <a href="{% url 'product:stock_in_add' %}" class="btn btn-primary">Add Stock</a>
+        <a href="{% url 'product:stock_in_list' %}" class="btn btn-primary">Stocks List</a>
     </div>
     <div class="back-container">
-        <a href="{% url 'employee:home' %}">Back</a>
+        <a href="{% url 'employee:home' %}" class="btn btn-secondary">Back to Dashboard</a>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

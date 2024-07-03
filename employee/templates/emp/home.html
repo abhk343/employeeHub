@@ -1,12 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-    {% load static %}
-    {% load group_filters %}
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+{% extends 'base.html' %}
 
+{% load static %}
+{% load group_filters %}
+
+{% block title %}
+Dashboard - My Application
+{% endblock %}
+
+{% block content %}
     <!-- JavaScript function for confirmation -->
     <script>
         function confirmLogout() {
@@ -25,10 +26,14 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.7), rgba(255,255,255,0.3)), url('{% static "images/ashir2.png" %}');
+            background-size: 60%;
+            background-position: center;
+            background-repeat: no-repeat;
         }
 
         .header {
-            background-color: #f8f9fa;
+            background-color: rgba(255, 255, 255, 0.8); /* Example: semi-transparent white */
             padding: 20px;
             text-align: center;
         }
@@ -67,6 +72,7 @@
         }
 
         .nav-container a {
+            background-color:lightgreen;
             text-align: center;
             padding: 20px;
             text-decoration: none;
@@ -107,9 +113,20 @@
                 height: 100px; /* Adjusted for smaller screens */
             }
 
+            .nav-container a:hover {
+                background-color: lightblue;
+                color: white;
+            }
+    
+            .nav-container a:hover img {
+                transform: scale(1.1); /* Increase size on hover */
+            }
+
             .caption {
+                
                 font-size: 16px; /* Adjusted for smaller screens */
             }
+            
         }
 
         @media (max-width: 480px) {
@@ -133,25 +150,11 @@
             }
         }
     </style>
-</head>
-<body>
-    {% if user.is_authenticated %}
-        <div class="header">
-            <h1>Hello, {{ user.username }}!</h1>
-        </div>
 
-        <div class="logout-container">
-            <!-- Create User Button (if user is superuser) -->
-            {% if user.is_superuser %}
-                <a href="{% url 'employee:create_user' %}" class="create-user-button">Create User</a>
-            {% endif %}
-            
-            <!-- Logout Form -->
-            <form action="{% url 'logout' %}" method="post" onsubmit="return confirmLogout()">
-                {% csrf_token %}
-                <input type="submit" value="Logout">
-            </form>
-        </div>
+    {% if user.is_authenticated %}
+        
+
+        
 
         <div class="container">
             <div class="nav-container">
@@ -170,32 +173,31 @@
                         <img class="icon" src="{% static 'images/product.jpg' %}" alt="Product Icon">
                         <span class="caption">Product</span>
                     </a>
-                {% elif user|has_group:"Supervisor" %}
+                {% elif user|has_group:"HR" %}
                     <!-- Supervisor links -->
                     <a href="{% url 'employee:depemp_home' %}">
                         <img class="icon" src="{% static 'images/depemp1.jpg' %}" alt="Department Icon">
                         <span class="caption">Department And Employees</span>
                     </a>
-                    <a href="{% url 'employee:attendance_home' %}">
-                        <img class="icon" src="{% static 'images/attendance.jpg' %}" alt="Attendance Icon">
-                        <span class="caption">Attendance</span>
-                    </a>
-                {% elif user|has_group:"HR" %}
-                    <!-- HR links -->
-                    <a href="{% url 'employee:depemp_home' %}">
-                        <img class="icon" src="{% static 'images/depemp1.jpg' %}" alt="Department Icon">
-                        <span class="caption">Department And Employees</span>
-                    </a>
+
                     <a href="{% url 'product:prod_home' %}">
                         <img class="icon" src="{% static 'images/product.jpg' %}" alt="Product Icon">
                         <span class="caption">Product</span>
                     </a>
+                   
+                {% elif user|has_group:"Supervisor" %}
+                    <!-- HR links -->
+                    <a href="{% url 'employee:attendance_home' %}">
+                        <img class="icon" src="{% static 'images/attendance.jpg' %}" alt="Attendance Icon">
+                        <span class="caption">Attendance</span>
+                    </a>
+                    
+                    
                 {% endif %}
             </div>
         </div>
 
-    {% elif not user.is_authenticated %}
+    {% else %}
         <a href="{% url 'login' %}">Log in</a>
     {% endif %}
-</body>
-</html>
+{% endblock %}

@@ -12,7 +12,7 @@ import logging
 from .models import Department, Employee, Attendance, Overtime
 from django_filters.views import FilterView
 from .filters import *
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
 from django.views.generic import DetailView
 from django_filters.views import FilterView
 from .models import Employee
@@ -23,7 +23,13 @@ from django.views.generic.list import ListView
 from .models import Employee
 from .filters import EmployeeFilter
 from .forms import EmployeeCreateForm, AttendanceForm, DepartmentForm, OvertimeForm, OvertimeFilterForm,CustomUserCreationForm
+from django.shortcuts import render
+from django.views.generic import ListView
+from .models import Employee, Department  # Ensure you import the Department model
 
+from django_filters.views import FilterView
+from .filters import EmployeeFilter
+from .models import Employee, Department
 
 def is_superuser(user):
     return user.is_authenticated and user.is_superuser
@@ -79,6 +85,8 @@ def products_home(request):
 def admin_check(user):
     return user.is_superuser
 
+is_user1_required = user_passes_test(is_user1)
+
 
 
 
@@ -117,15 +125,10 @@ class DepartmentUpdateView(LoginRequiredMixin, UpdateView):
 
 
 
-from django.shortcuts import render
-from django.views.generic import ListView
-from .models import Employee, Department  # Ensure you import the Department model
 
-from django_filters.views import FilterView
-from .filters import EmployeeFilter
-from .models import Employee, Department
 
-class EmployeeListView(LoginRequiredMixin, FilterView):
+
+class EmployeeListView(LoginRequiredMixin, FilterView): 
     model = Employee
     template_name = 'emp/emp_view.html'
     context_object_name = 'employees'
@@ -199,19 +202,46 @@ class EmployeeCreateView(LoginRequiredMixin, View):
             messages.error(request, 'Please correct the errors below.')
         return render(request, 'emp/emp_create.html', {'title': 'Create Employee', 'form': form})
 
+
+from django.db import IntegrityError
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views import View
+from .models import Employee
+from .forms import EmployeeCreateForm  # Adjust this import based on your actual form
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views import View
+from .models import Employee
+from .forms import EmployeeCreateForm  # Adjust this import based on your actual form
+
 class EmployeeUpdateView(LoginRequiredMixin, View):
     def get(self, request, pk, *args, **kwargs):
         employee = get_object_or_404(Employee, pk=pk)
         form = EmployeeCreateForm(instance=employee)
-        return render(request, 'emp/emp_create.html', {'title': 'Update Employee', 'form': form})
+
+        return render(request, 'emp/emp_create.html', {'edit': True, 'form': form})
 
     def post(self, request, pk, *args, **kwargs):
+
         employee = get_object_or_404(Employee, pk=pk)
         form = EmployeeCreateForm(request.POST, instance=employee)
         if form.is_valid():
-            form.save()
-            return redirect('employee:employee_list')
-        return render(request, 'emp/emp_create.html', {'title': 'Update Employee', 'form': form})
+            try:
+                # Check if Punch_Card_NO or UAN_Number has changed
+                if form.cleaned_data['Punch_Card_NO'] != employee.Punch_Card_NO:
+                    employee.Punch_Card_NO = form.cleaned_data['Punch_Card_NO']
+                if form.cleaned_data['UAN_Number'] != employee.UAN_Number:
+                    employee.UAN_Number = form.cleaned_data['UAN_Number']
+                employee.save()
+                return redirect('employee:employee_list')
+            except IntegrityError:
+                # Handle specific integrity errors here
+                form.add_error(None, 'Employee with this Punch Card NO or UAN Number already exists.')
+        
+        # If form is not valid or errors occurred, render the form again with errors
+        return render(request, 'emp/emp_create.html', {'edit': True, 'form': form})
+
+
+
 
 class EmployeeDeleteView(LoginRequiredMixin, DeleteView):
     model = Employee
@@ -433,9 +463,44 @@ def monthly_absence_count(request):
 
 
 
+# views.py
+from django.views.generic import ListView, DeleteView
+from django.http import JsonResponse
+from django.urls import reverse_lazy
+from .models import Attendance
+from .filters import AttendanceFilter
 
+class AttendanceListView(ListView):
+    model = Attendance
+    filterset_class = AttFilter
+    template_name = 'emp/att_list.html'  # Ensure this matches your template path
+    context_object_name = 'attendances'
+    paginate_by = 10  # Number of records per page
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        self.filterset = self.filterset_class(self.request.GET, queryset=queryset)
+        return self.filterset.qs
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter'] = self.filterset
+        return context
+
+class AttendanceDeleteView(DeleteView):
+    model = Attendance
+    success_url = reverse_lazy('employee:attendance_list')
+
+    def delete(self, request, *args, **kwargs):
+        """
+        Handle the deletion of an attendance record via Ajax.
+        """
+        self.object = self.get_object()
+        try:
+            self.object.delete()
+            return JsonResponse({'message': 'Attendance record deleted successfully'}, status=200)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
 
 
 # Overtime Views
@@ -469,7 +534,7 @@ class OvertimeCreateView(LoginRequiredMixin, View):
                     overtime.Overtime_hours = 8
                     overtime.Overtime_minutes = 0
                 overtime.save()
-                return redirect('employee:overtime_list')
+                return redirect('employee:overtim_list')
         employees = Employee.objects.filter(Department=department_form.cleaned_data['department']) if department_form.is_valid() else Employee.objects.none()
         return render(request, 'emp/ot_add.html', {
             'department_form': department_form,
@@ -520,3 +585,55 @@ class OvertimeListView(LoginRequiredMixin, View):
             'month': None,
             'year': None,
         })
+
+
+    # views.py
+
+from django.http import JsonResponse
+from django.views import View
+from django.views.generic import ListView
+from django.shortcuts import get_object_or_404
+from django.core.paginator import Paginator
+from .models import Overtime
+from .filters import OvertimeFilter
+
+from django.views.generic import ListView
+from .models import Overtime
+from .filters import OvertimeFilter
+
+class OvertimeView(FilterView):
+    model = Overtime
+    template_name = 'emp/ot_detaillist.html'
+    context_object_name = 'overtimes'
+    filterset_class = OvertimeFilter
+    paginate_by = 10  # Set the number of items per page
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        filter = context['filter']
+
+        # Apply pagination to the filtered queryset
+        paginator = Paginator(filter.qs, self.paginate_by)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        context['overtimes'] = page_obj
+        return context
+# views.py
+
+from django.views import View
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from .models import Overtime
+
+class OvertimeDeleteView(View):
+    def delete(self, request, overtime_id):
+        """
+        Handle the deletion of an overtime record via Ajax.
+        """
+        overtime = get_object_or_404(Overtime, pk=overtime_id)
+        try:
+            overtime.delete()
+            return JsonResponse({'message': 'Overtime record deleted successfully.'}, status=204)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)

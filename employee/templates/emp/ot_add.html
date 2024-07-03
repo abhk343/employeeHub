@@ -1,147 +1,152 @@
-<!DOCTYPE html>
-<html lang="en">
-    {% load static %}
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Overtime</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #fff8dc; /* Light yellowish background */
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
-        h1 {
-            color: #c2185b;
-            text-align: center;
-            margin-top: 20px;
-        }
-        form {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
-            margin: 20px auto;
-        }
-        h2 {
-            color: #c2185b;
-        }
-        label {
-            font-weight: bold;
-            margin-top: 10px;
-            display: block;
-        }
-        select, input[type="text"], input[type="number"], input[type="date"] {
-            width: calc(100% - 22px);
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 16px;
-            margin-top: 5px;
-        }
-        button {
-            background-color: #c2185b;
-            color: #fff;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            width: 100%;
-            margin-top: 20px;
-        }
-        button:hover {
-            background-color: #8e0038;
-        }
-        a.btn-secondary {
-            display: inline-block;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            font-size: 16px;
-            margin-top: 20px;
-            text-align: center;
-            width: 100%;
-            max-width: 200px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        a.btn-secondary:hover {
-            background-color: #0056b3;
-        }
-        /* Navigation bar styles */
-        .top-nav {
-            width: 100%;
-            background-color: #333;
-            display: flex;
-            justify-content: flex-end;
-            padding: 15px 20px; /* Increased padding for height */
-            box-sizing: border-box;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-        }
-        .top-nav a {
-            display: inline-block;
-            color: white;
-            text-align: center;
-            padding: 10px 20px;
-            text-decoration: none;
-        }
-        .top-nav a:hover {
-            background-color: #555;
-        }
-        /* Adjust content below the navigation bar */
+{% extends 'base.html' %}
+
+{% block title %}Add Overtime{% endblock %}
+
+{% block content %}
+<style>
+    /* Container styles */
+    .container {
+        padding: 20px;
+        max-width: 600px;
+        margin: 20px auto; /* Center align container */
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    /* Top navigation styles */
+    .top-nav {
+        margin-bottom: 20px;
+    }
+    .header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+
+    .top-nav a {
+        margin-right: 20px;
+        color: #007bff;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    /* Form styles */
+    form {
+        margin-bottom: 20px;
+    }
+
+    /* Overtime form styles */
+    .overtime-form {
+        padding: 15px;
+    }
+
+    .overtime-form label {
+        margin-top: 10px;
+        display: block;
+        font-weight: bold;
+    }
+
+    .overtime-form select,
+    .overtime-form input[type="number"],
+    .overtime-form input[type="date"] {
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .overtime-form button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 16px;
+        transition: background-color 0.3s;
+        width: 100%;
+    }
+
+    .overtime-form button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
         .container {
-            padding-top: 80px; /* Adjust based on the navigation bar height */
+            padding: 10px;
         }
-    </style>
-</head>
-<body>
-    <div class="top-nav">
-        <a href="{% url 'employee:overtime_list' %}">Overtime List</a>
-        <a href="{% url 'employee:attendance_home' %}">Attendance Home</a>
-    </div>
-    <div class="container">
-        <h1>Add Overtime</h1>
 
-        <!-- Form for selecting department -->
-        <form method="post">
+        .overtime-form {
+            padding: 10px;
+        }
+
+        .overtime-form select,
+        .overtime-form input[type="number"],
+        .overtime-form input[type="date"] {
+            font-size: 12px;
+        }
+
+        .overtime-form button {
+            padding: 10px 15px;
+            font-size: 14px;
+        }
+    }
+</style>
+
+
+
+<h1 class="header">Add Overtime</h1>
+
+<div class="container">
+    <!-- Form for selecting department -->
+    <form method="post">
+        {% csrf_token %}
+        <h2>Select Department</h2>
+        {{ department_form.as_p }}
+        <button type="submit" name="filter" class="btn-primary">Filter Employees</button>
+    </form>
+
+    <!-- If employees are available after filtering -->
+    {% if employees %}
+        <!-- Form for adding overtime -->
+        <form method="post" onsubmit="return validateOvertime();" class="overtime-form">
             {% csrf_token %}
-            <h2>Select Department</h2>
-            {{ department_form.as_p }}
-            <button type="submit" name="filter" class="btn-primary">Filter Employees</button>
+            <h2>Add Overtime</h2>
+            <label for="id_Employee">Employee:</label>
+            <select name="Employee" id="id_Employee" class="form-control">
+                {% for employee in employees %}
+                    <option value="{{ employee.Employee_id }}">{{ employee.Name }}</option>
+                {% endfor %}
+            </select>
+            <label for="id_Overtime_hours">Overtime Hours:</label>
+            {{ overtime_form.Overtime_hours }}
+            <label for="id_Overtime_minutes">Overtime Minutes:</label>
+            {{ overtime_form.Overtime_minutes }}
+            <label for="id_Date">Date:</label>
+            {{ overtime_form.Date }}
+            <button type="submit" name="save" class="btn-primary">Save</button>
         </form>
+    {% endif %}
+</div>
 
-        <!-- If employees are available after filtering -->
-        {% if employees %}
-            <!-- Form for adding overtime -->
-            <form method="post">
-                {% csrf_token %}
-                <h2>Add Overtime</h2>
-                <label for="id_Employee">Employee:</label>
-                <select name="Employee" id="id_Employee" class="form-control">
-                    {% for employee in employees %}
-                        <option value="{{ employee.Employee_id }}">{{ employee.Name }}</option>
-                    {% endfor %}
-                </select>
-                <label for="id_Overtime_hours">Overtime Hours:</label>
-                {{ overtime_form.Overtime_hours }}
-                <label for="id_Overtime_minutes">Overtime Minutes:</label>
-                {{ overtime_form.Overtime_minutes }}
-                <label for="id_Date">Date:</label>
-                {{ overtime_form.Date }}
-                <button type="submit" name="save" class="btn-primary">Save</button>
-            </form>
-        {% endif %}
 
-        
-    </div>
-</body>
-</html>
+
+<script>
+    function validateOvertime() {
+        var hours = parseInt(document.getElementById('id_Overtime_hours').value) || 0;
+        var minutes = parseInt(document.getElementById('id_Overtime_minutes').value) || 0;
+        var totalMinutes = hours * 60 + minutes;
+
+        if (totalMinutes > 480) { // 8 hours * 60 minutes
+            alert('The total overtime cannot exceed 8 hours (480 minutes).');
+            return false;
+        }
+        return true;
+    }
+</script>
+{% endblock %}

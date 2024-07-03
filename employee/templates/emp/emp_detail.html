@@ -2,9 +2,6 @@
 <html>
 <head>
     <title>Employee Details</title>
-</head>
-<head>
-    <title>Employee Details</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,101 +9,108 @@
             padding: 20px;
             background-color: #f0f0f0;
         }
-        
+
         h1 {
-            text-align:center;
-            font-size: 1.5em;
+            text-align: center;
+            font-size: 1.8em;
             color: #006400; /* Dark green */
+            margin-bottom: 20px;
         }
-        
+
         table {
             width: 100%;
             border-collapse: collapse;
             background: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 1em;
+            border-radius: 8px;
+            overflow: hidden;
         }
-        
+
         th, td {
-            padding: 0.5em;
+            padding: 0.8em;
             text-align: left;
             border-bottom: 1px solid #ddd;
-            font-size: 0.9em;
+            font-size: 1em;
         }
-        
+
         th {
             background-color: #e0ffe0; /* Light green background */
             color: #006400; /* Dark green text */
         }
-        
+
         tr:hover {
             background-color: #f1f1f1;
         }
-        
+
         .action-buttons {
-            text-align:center;
+            text-align: center;
             display: flex;
-            gap: 0.5em;
+            justify-content: center;
+            gap: 1em;
+            margin-top: 20px;
         }
-        
+
         .action-buttons button, .action-buttons form {
             display: inline-block;
             margin: 0;
         }
-        
+
         .action-buttons button, .action-buttons form button {
-            padding: 0.5em 1em;
+            padding: 0.6em 1.2em;
             border: none;
             background-color: #e0ffe0; /* Light green */
             color: #006400; /* Dark green text */
             cursor: pointer;
             border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s;
         }
-        
+
         .action-buttons button:hover, .action-buttons form button:hover {
             background-color: #ccffcc;
+            color: #003300;
         }
-        
+
         .back-link {
             display: inline-block;
-            margin-top: 1em;
+            margin-top: 20px;
             color: #006400; /* Dark green */
             text-decoration: none;
         }
-        
+
         .back-link:hover {
             text-decoration: underline;
         }
-        
+
         /* Responsive styles */
         @media (max-width: 768px) {
             table {
-                font-size: 0.8em;
+                font-size: 0.9em;
             }
-        
+
             th, td {
-                padding: 0.4em;
+                padding: 0.6em;
             }
-        
+
             .action-buttons button, .action-buttons form button {
-                padding: 0.4em 0.8em;
-                font-size: 0.8em;
+                padding: 0.5em 1em;
+                font-size: 0.9em;
             }
         }
-        
+
         @media (max-width: 480px) {
             table, th, td {
                 display: block;
                 width: 100%;
             }
-        
+
             th, td {
                 text-align: right;
                 position: relative;
                 padding-left: 50%;
                 border-bottom: 1px solid #ddd;
             }
-        
+
             th::before, td::before {
                 content: attr(data-label);
                 position: absolute;
@@ -117,20 +121,19 @@
                 text-align: left;
                 background: #f0f0f0;
             }
-        
+
             th {
                 background: #e0ffe0;
                 color: #006400;
             }
         }
-        
     </style>
 </head>
 <body>
     <h1>Employee Details: {{ employee.Name }}</h1>
 
     <!-- Table for displaying employee details -->
-    <table border="solid">
+    <table>
         <tr>
             <th data-label="Name">Name</th>
             <td data-label="Name">{{ employee.Name }}</td>

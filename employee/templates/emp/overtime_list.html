@@ -1,178 +1,152 @@
-<!DOCTYPE html>
-<html lang="en">
-{% load static %}
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Overtime List</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #fff8dc; /* Light yellowish background */
-            color: #333;
-            margin: 0;
-            padding: 0;
+{% extends 'base.html' %}
+
+{% block title %}Overtime List{% endblock %}
+
+{% block content %}
+<style>
+    /* Container styles */
+    .container {
+        padding: 20px;
+        max-width: 100%;
+        overflow-x: auto; /* Allow horizontal scrolling on small screens */
+        margin-top: 300px;
+    }
+    h1{
+        margin-top:200px;
+    }
+
+    /* Table styles */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    table, th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    /* Form styles */
+    form {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    form button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 16px;
+        transition: background-color 0.3s;
+        margin-left: 10px;
+    }
+
+    form button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Pagination styles */
+    .pagination {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .pagination a {
+        color: black;
+        float: left;
+        padding: 8px 16px;
+        text-decoration: none;
+        transition: background-color .3s;
+        border: 1px solid #ddd;
+        margin: 0 4px;
+    }
+
+    .pagination a.active {
+        background-color: #4CAF50;
+        color: white;
+        border: 1px solid #4CAF50;
+    }
+
+    .pagination a:hover:not(.active) {
+        background-color: #ddd;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .container {
+            padding: 10px;
         }
+
+        table {
+            font-size: 14px;
+        }
+
+        .pagination {
+            overflow-x: auto;
+            white-space: nowrap; /* Prevent line break in pagination links */
+        }
+
         h1, h2 {
-            color: #c2185b;
-            text-align: center;
-            margin-top: 80px; /* Adjust based on the navigation bar height */
+            text-align: left;
+            margin-bottom: 10px;
         }
+
         form {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
-            margin: 20px auto;
+            text-align: left;
         }
-        label {
-            font-weight: bold;
+
+        form button {
+            margin-left: 0;
             margin-top: 10px;
             display: block;
-        }
-        select, input[type="text"], input[type="number"], input[type="date"] {
-            width: calc(100% - 22px);
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 16px;
-            margin-top: 5px;
-        }
-        button {
-            background-color: #c2185b;
-            color: #fff;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
             width: 100%;
-            margin-top: 20px;
         }
-        button:hover {
-            background-color: #8e0038;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background: #fff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border: 1px solid #ccc;
-        }
-        th {
-            background-color: #f4f4f4;
-            font-weight: bold;
-        }
-        /* Navigation bar styles */
-        .top-nav {
-            width: 100%;
-            background-color: #333;
-            display: flex;
-            justify-content: flex-end;
-            padding: 15px 20px; /* Increased padding for height */
-            box-sizing: border-box;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-        }
-        .top-nav a {
-            display: inline-block;
-            color: white;
-            text-align: center;
-            padding: 10px 20px;
-            text-decoration: none;
-        }
-        .top-nav a:hover {
-            background-color: #555;
-        }
-        /* Adjust content below the navigation bar */
-        .container {
-            padding-top: 80px; /* Adjust based on the navigation bar height */
-        }
-        /* Responsive styles */
-        @media (max-width: 600px) {
-            form {
-                padding: 15px;
-            }
-            button {
-                font-size: 14px;
-            }
-            .top-nav {
-                padding: 10px 15px;
-            }
-            table, thead, tbody, th, td, tr {
-                display: block;
-            }
-            th {
-                text-align: right;
-                display: flex;
-                justify-content: space-between;
-            }
-            td {
-                text-align: right;
-                display: flex;
-                justify-content: space-between;
-                border: none;
-                border-bottom: 1px solid #ccc;
-                padding-left: 50%;
-                position: relative;
-            }
-            td::before {
-                content: attr(data-label);
-                position: absolute;
-                left: 0;
-                width: 45%;
-                padding-left: 15px;
-                font-weight: bold;
-                text-align: left;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="top-nav">
-        <a href="{% url 'employee:overtime_add' %}">Add Overtime</a>
-    </div>
-    <div class="container">
-        <h1>Overtime List</h1>
+    }
+</style>
 
-        <!-- Form for filtering overtime records -->
-        <form method="post">
-            {% csrf_token %}
-            {{ filter_form.as_p }}
-            <button type="submit">Filter</button>
-        </form>
 
-        <!-- If department, month, and year are provided -->
-        {% if department and month and year %}
-            <!-- Display filtered results -->
-            <h2>Department: {{ department.Department_Name }} | Month: {{ month }} | Year: {{ year }}</h2>
-            <table>
-                <thead>
+
+
+<h1>Overtime List</h1>
+<div class="container">
+    
+
+    <!-- Form for filtering overtime records -->
+    <form method="post">
+        {% csrf_token %}
+        {{ filter_form.as_p }}
+        <button type="submit">Filter</button>
+    </form>
+
+    <!-- If department, month, and year are provided -->
+    {% if department and month and year %}
+        <!-- Display filtered results -->
+        <h2>Department: {{ department.Department_Name }} | Month: {{ month }} | Year: {{ year }}</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Employee</th>
+                    <th>Total Overtime (Hours:Minutes)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for overtime in overtimes %}
                     <tr>
-                        <th>Employee</th>
-                        <th>Total Overtime (Hours:Minutes)</th>
+                        <td data-label="Employee">{{ overtime.Employee__Name }}</td>
+                        <td data-label="Total Overtime">{{ overtime.total_hours }}:{{ overtime.remaining_minutes }}</td>
                     </tr>
-                </thead>
-                <tbody>
-                    {% for overtime in overtimes %}
-                        <tr>
-                            <td data-label="Employee">{{ overtime.Employee__Name }}</td>
-                            <td data-label="Total Overtime">{{ overtime.total_hours }}:{{ overtime.remaining_minutes }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% endif %}
-    </div>
-</body>
-</html>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+{% endblock %}
