@@ -27,7 +27,7 @@
             margin-right: 10px; /* Adds spacing between items */
         }
         .more{
-            padding-left:350px;
+            padding-left:250px;
         }
     </style>
 </head>
@@ -89,6 +89,30 @@
                                 <a class="dropdown-item" href="{% url 'employee:overtime_add' %}">Add Overtime</a>
                             </div>
                         </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="overtimeDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Item And Supplier
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="overtimeDropdown">
+                                <a class="dropdown-item" href="{% url 'product:add_item' %}">Create Item</a>
+                                <a class="dropdown-item" href="{% url 'product:item_list' %}">List items</a>
+                                <a class="dropdown-item" href="{% url 'product:add_supplier' %}">Create Supplier </a>
+                                <a class="dropdown-item" href="{% url 'product:supplier_list' %}">Supplier list</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="overtimeDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Purchased and Distribution
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="overtimeDropdown">
+                                <a class="dropdown-item" href="{% url 'product:prd_add' %}">Add Purchased Items</a>
+                                <a class="dropdown-item" href="{% url 'product:prd_list' %}">Purchased lists</a>
+                                <a class="dropdown-item" href="{% url 'product:stock_in_add' %}">Add Stock Distribution</a>
+                                <a class="dropdown-item" href="{% url 'product:stock_in_list' %}">Stock Distribution List</a>
+                                <a class="dropdown-item" href="{% url 'product:remaining_stock' %}">View Remaining Stock</a>
+                            </div>
+                        </li>
+
                     
                     {% elif  user|has_group:"Supervisor" %}
                         <li class="nav-item dropdown">
@@ -127,6 +151,29 @@
                             <div class="dropdown-menu" aria-labelledby="employeesDropdown">
                                 <a class="dropdown-item" href="{% url 'employee:employee_list' %}">List Employees</a>
                                 <a class="dropdown-item" href="{% url 'employee:employee_create' %}">Add Employee</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="overtimeDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Item And Supplier
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="overtimeDropdown">
+                                <a class="dropdown-item" href="{% url 'product:add_item' %}">Create Item</a>
+                                <a class="dropdown-item" href="{% url 'product:item_list' %}">List items</a>
+                                <a class="dropdown-item" href="{% url 'product:add_supplier' %}">Create Supplier </a>
+                                <a class="dropdown-item" href="{% url 'product:supplier_list' %}">Supplier list</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="overtimeDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Purchased and Distribution
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="overtimeDropdown">
+                                <a class="dropdown-item" href="{% url 'product:prd_add' %}">Add Purchased Items</a>
+                                <a class="dropdown-item" href="{% url 'product:prd_list' %}">Purchased lists</a>
+                                <a class="dropdown-item" href="{% url 'product:stock_in_add' %}">Add Stock Distribution</a>
+                                <a class="dropdown-item" href="{% url 'product:stock_in_list' %}">Stock Distribution List</a>
+                                <a class="dropdown-item" href="{% url 'product:remaining_stock' %}">View Remaining Stock</a>
                             </div>
                         </li>
 

@@ -1,154 +1,125 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
 {% load static %}
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/item_form.css' %}">
-    <style>
-        /* Reset default margin and padding */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
-        /* Body and container styles */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 0;
-        }
+<link rel="stylesheet" type="text/css" href="{% static 'css/item_form.css' %}">
+<style>
+    /* Reset default margin and padding */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
+    /* Body and container styles */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 150px auto 20px; /* Adjusted margin to move form down */
+        padding: 5px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        
+    }
+
+    /* Top Navigation Bar styles */
+    
+
+    /* Form styles */
+    form {
+        margin-top: 5px;
+    }
+
+    form label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+
+    form input[type="text"],
+    form select {
+        width: calc(100% - 20px);
+        padding: 8px;
+        font-size: 14px;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+    }
+
+    form button {
+        margin-top: 10px;
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    form button:hover {
+        background-color: #45a049;
+    }
+
+    /* Link styles */
+    a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
         .container {
-            max-width: 800px;
-            margin: 80px auto 20px; /* Adjusted margin to move form down */
-            padding: 20px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            margin: 10px;
+            padding: 10px;
         }
-
-        /* Top Navigation Bar styles */
+        
         .top-nav {
-            background-color: #333;
-            display: flex;
+            padding: 10px 20px; /* Adjusted padding */
             justify-content: flex-end;
-            align-items: center;
-            padding: 15px 20px; /* Increased padding for height */
-            margin-bottom: 20px;
-            
+            align-items: flex-end;
         }
-
+        
         .nav-items {
-            display: flex;
-            gap: 10px; /* Adjust the gap between navigation items */
+            flex-direction: column;
+            gap: 5px; /* Adjust gap for smaller screens */
         }
-
+        
         .nav-items a {
-            color: white;
-            text-decoration: none;
-            padding: 10px 15px; /* Adjusted padding */
+            padding: 8px 12px; /* Adjusted padding for smaller screens */
         }
-
-        .nav-items a:hover {
-            
-            background-color: #ddd;
-            color: black;
-        }
-
-        /* Form styles */
-        form {
-            margin-top: 20px;
-        }
-
-        form label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-
+        
         form input[type="text"],
         form select {
-            width: calc(100% - 20px);
-            padding: 8px;
-            font-size: 14px;
-            border: 1px solid #ddd;
-            border-radius: 3px;
+            width: 100%;
         }
+    }
+</style>
 
-        form button {
-            margin-top: 10px;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
 
-        form button:hover {
-            background-color: #45a049;
-        }
+<div class="container">
+    
 
-        /* Link styles */
-        a {
-            color: #007bff;
-            text-decoration: none;
-        }
+    
+    <h1>{{ title }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">{{ title }}</button>
+    </form>
+</div>
+{% endblock %}
 
-        a:hover {
-            text-decoration: underline;
-        }
-
-        /* Responsive styles */
-        @media (max-width: 768px) {
-            .container {
-                margin: 10px;
-                padding: 10px;
-            }
-            
-            .top-nav {
-                padding: 10px 20px; /* Adjusted padding */
-                justify-content: flex-end;
-                align-items: flex-end;
-            }
-            
-            .nav-items {
-                flex-direction: column;
-                gap: 5px; /* Adjust gap for smaller screens */
-            }
-            
-            .nav-items a {
-                padding: 8px 12px; /* Adjusted padding for smaller screens */
-            }
-            
-            form input[type="text"],
-            form select {
-                width: 100%;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="top-nav">
-        <div class="nav-items">
-            <a href="{% url 'product:item_list' %}">Item List</a>
-            <a href="{% url 'product:prod_home' %}"> Product Home</a>
-        </div>
-    </div>
-
-    <div class="container">
-        <h1>{{ title }}</h1>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">{{ title }}</button>
-        </form>
-        
-    </div>
-</body>
-</html>

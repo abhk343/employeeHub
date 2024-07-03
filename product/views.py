@@ -149,11 +149,11 @@ class StockInUpdateView(UpdateView):
     model = Stock_in
     form_class = StockInForm
     template_name = 'prod/stock_create.html'
-    success_url = reverse_lazy('stock_in_list')
+    success_url = reverse_lazy('product:stock_in_list')
 
 class StockInDeleteView(DeleteView):
     model = Stock_in
-    success_url = reverse_lazy('stock_in_list')
+    success_url = reverse_lazy('product:stock_in_list')
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()

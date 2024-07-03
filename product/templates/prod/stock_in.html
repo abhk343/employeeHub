@@ -1,115 +1,245 @@
-<!DOCTYPE html>
-<html>
-    {% load static %}
-<head>
-    <title>Stock In List</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/stock_list.css' %}">
-</head>
-<body>
-    <div class="top-nav">
-        <a href="{% url 'product:stock_in_add' %}">Add Stock Entry</a>
-        <a href="{% url 'product:remaining_stock' %}"> Remaining Stock</a>
-        <a href="{% url 'product:prod_home' %}"> Product Home</a>
-    </div>
-    <div class="container">
-        <h1>Stock In List</h1>
+{% extends "base.html" %}
 
-        <!-- Form for searching stock entries -->
-        <form method="get" action="{% url 'product:stock_in_list' %}">
-            <input type="text" name="q" placeholder="Search stock entries" value="{{ request.GET.q }}">
-            <button type="submit">Search</button>
-        </form>
-        
+{% block title %}Stock In List{% endblock %}
 
-        <!-- Container for displaying stock entries -->
-        <div id="stockList">
-            <!-- Check if there are stock entries to display -->
-            {% if stock_entries %}
-                <!-- Table for displaying stock entry details -->
-                <table>
-                    <thead>
-                        <!-- Table header with column names -->
-                        <tr>
-                            <th>Employee</th>
-                            <th>Item</th>
-                            <th>Quantity</th>
-                            <th>Issue Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Iterate over each stock entry -->
-                        {% for stock in stock_entries %}
-                            <!-- Table row for each stock entry -->
-                            <tr>
-                                <!-- Display stock entry details in each column -->
-                                <td>{{ stock.employee }}</td>
-                                <td>{{ stock.item }}</td>
-                                <td>{{ stock.Quantity }}</td>
-                                <td>{{ stock.issue_date }}</td>
-                                <!-- Actions column for editing and deleting stock entries -->
-                                <td>
-                                    <!-- Edit button to update stock entry details -->
-                                    <button onclick="location.href='{% url 'product:stock_in_edit' stock.pk %}'">Edit</button>
-                                    
-                                    <!-- Form for deleting the stock entry -->
-                                    <form method="post" action="{% url 'product:stock_in_delete' stock.pk %}" style="display: inline;">
-                                        {% csrf_token %}
-                                        <!-- Button to delete the stock entry -->
-                                        <button type="button" onclick="confirmDelete(this)">Delete</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            <!-- If no stock entries are found, display a message -->
-            {% else %}
-                <p>No stock entries found.</p>
-            {% endif %}
-        </div>
-    </div>
-    
-    <!-- JavaScript function to confirm stock entry deletion -->
-    <script>
-        function confirmDelete(button) {
-            // Ask for confirmation before deleting
-            if (confirm("Are you sure you want to delete this stock entry?")) {
-                // Get the form containing the delete button
-                const form = button.parentElement;
-                // Get the CSRF token value from the form
-                const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+{% block content %}
+{% load static %}
 
-                // Send a DELETE request to delete the stock entry
-                fetch(form.action, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRFToken': csrfToken
-                    }
-                }).then(response => {
-                    // Check if deletion is successful
-                    if (response.ok) {
-                        alert("Stock entry deleted successfully");
-                        // Remove the row from the table
-                        const row = button.closest('tr');
-                        row.remove();
-                    } else if (response.status === 404) {
-                        // Display a specific error message for 404 Not Found
-                        alert("Stock entry not found. Please refresh the page.");
-                    } else if (response.status === 403) {
-                        // Display a specific error message for 403 Forbidden
-                        alert("You are not authorized to delete this stock entry.");
-                    } else {
-                        // Display a generic error message for other errors
-                        alert("An error occurred while trying to delete the stock entry.");
-                    }
-                }).catch(error => {
-                    console.error('Error deleting stock entry:', error);
-                    alert("An error occurred while trying to delete the stock entry.");
-                });
-            }
+<link rel="stylesheet" type="text/css" href="{% static 'css/stock_list.css' %}">
+<style>
+    /* Reset default margin and padding */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* Body and container styles */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        padding-top: 50px; /* Adjust for the fixed navigation bar */
+    }
+
+    /* Top Navigation Bar styles */
+    .top-nav {
+        width: 100%;
+        background-color: #333;
+        display: flex;
+        justify-content: flex-end;
+        padding: 10px 20px;
+        box-sizing: border-box;
+        position: fixed;
+        top: 0;
+        right: 0;
+        z-index: 1;
+        height: 70px; /* Fixed height for navigation bar */
+    }
+
+    .top-nav a {
+        display: inline-block;
+        color: white;
+        text-align: center;
+        padding: 10px 20px;
+        text-decoration: none;
+        line-height: 30px; /* Adjust line height for vertical alignment */
+    }
+
+    .top-nav a:hover {
+        background-color: #ddd;
+        color: black;
+    }
+
+    /* Container for page content */
+    .container {
+        max-width: 1200px;
+        margin: 100px auto 20px; /* Adjusted margin to move it down */
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    /* Styles for the main heading */
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    /* Form styles */
+    form {
+        display: flex;
+        margin-bottom: 20px;
+    }
+
+    form input[type="text"] {
+        width: calc(100% - 20px);
+        padding: 10px;
+        font-size: 14px;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        margin-bottom: 10px;
+    }
+
+    form button {
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-left: 10px;
+    }
+
+    form button:hover {
+        background-color: #45a049;
+    }
+
+    /* Table styles */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    table th, table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    table th {
+        background-color: #f2f2f2;
+    }
+
+    /* Edit and delete link styles */
+    .edit-link, .delete-btn {
+        padding: 5px 10px;
+        text-decoration: none;
+        color: #007bff;
+        cursor: pointer;
+    }
+
+    .edit-link:hover, .delete-btn:hover {
+        text-decoration: underline;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
+        .top-nav {
+            justify-content: center;
         }
-    </script>
-    
-</body>
-</html>
+
+        .container {
+            margin: 10px;
+            padding: 10px;
+        }
+
+        form input[type="text"] {
+            width: 100%;
+        }
+    }
+</style>
+
+
+<div class="container">
+    <h1>Stock In List</h1>
+
+    <!-- Form for searching stock entries -->
+    <form method="get" action="{% url 'product:stock_in_list' %}">
+        <input type="text" name="q" placeholder="Search stock entries" value="{{ request.GET.q }}">
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Container for displaying stock entries -->
+    <div id="stockList">
+        <!-- Check if there are stock entries to display -->
+        {% if stock_entries %}
+            <!-- Table for displaying stock entry details -->
+            <table>
+                <thead>
+                    <!-- Table header with column names -->
+                    <tr>
+                        <th>Employee</th>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Issue Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Iterate over each stock entry -->
+                    {% for stock in stock_entries %}
+                        <!-- Table row for each stock entry -->
+                        <tr>
+                            <!-- Display stock entry details in each column -->
+                            <td>{{ stock.employee }}</td>
+                            <td>{{ stock.item }}</td>
+                            <td>{{ stock.Quantity }}</td>
+                            <td>{{ stock.issue_date }}</td>
+                            <!-- Actions column for editing and deleting stock entries -->
+                            <td>
+                                <!-- Edit button to update stock entry details -->
+                                <button onclick="location.href='{% url 'product:stock_in_edit' stock.pk %}'">Edit</button>
+                                
+                                <!-- Form for deleting the stock entry -->
+                                <form method="post" action="{% url 'product:stock_in_delete' stock.pk %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <!-- Button to delete the stock entry -->
+                                    <button type="button" onclick="confirmDelete(this)">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        <!-- If no stock entries are found, display a message -->
+        {% else %}
+            <p>No stock entries found.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- JavaScript function to confirm stock entry deletion -->
+<script>
+    function confirmDelete(button) {
+        // Ask for confirmation before deleting
+        if (confirm("Are you sure you want to delete this stock entry?")) {
+            // Get the form containing the delete button
+            const form = button.parentElement;
+            // Get the CSRF token value from the form
+            const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            // Send a DELETE request to delete the stock entry
+            fetch(form.action, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': csrfToken
+                }
+            }).then(response => {
+                // Check if deletion is successful
+                if (response.ok) {
+                    alert("Stock entry deleted successfully");
+                    // Remove the row from the table
+                    const row = button.closest('tr');
+                    row.remove();
+                } else if (response.status === 404) {
+                    // Display a specific error message for 404 Not Found
+                    alert("Stock entry not found. Please refresh the page.");
+                } else if (response.status === 403) {
+                    // Display a specific error message for 403 Forbidden
+                    alert("You are not authorized to delete this stock entry.");
+                } else {
+                    // Display a generic error message for other errors
+                    alert("An error occurred while trying to delete the stock entry.");
+                }
+            }).catch(error => {
+                console.error('Error deleting stock entry:', error);
+                alert("An error occurred while trying to delete the stock entry.");
+            });
+        }
+    }
+</script>
+
+{% endblock %}
