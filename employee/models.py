@@ -7,7 +7,7 @@ class Department(models.Model):
     Model to represent a department.
     """
     Department_id = models.AutoField(primary_key=True)
-    Department_Name = models.CharField(max_length=25)
+    Department_Name = models.CharField(unique = True,max_length=25)
 
     class Meta:
         db_table = "Department"

@@ -3,7 +3,7 @@ from employee.models import *
 
 class Item(models.Model):
     Item_id = models.AutoField(primary_key=True)
-    Item_Name = models.CharField(max_length=20)
+    Item_Name = models.CharField(unique = True ,max_length=20)
 
     class Meta:
         db_table = "Item"
@@ -13,7 +13,7 @@ class Item(models.Model):
     
 class Supplier(models.Model):
     Supplier_id = models.AutoField(primary_key=True)
-    Supplier_Name = models.CharField(max_length=30)
+    Supplier_Name = models.CharField( unique = True,max_length=30)
 
     class Meta:
         db_table = "Supplier"
