@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{% if form.instance.pk %}Edit{% else %}Add{% endif %} Product{% endblock %}
+{% block title %}{% if form.instance.pk %}Edit{% else %}Add{% endif %} Purchased Items{% endblock %}
 
 {% block content %}
 {% load static %}
@@ -138,7 +138,7 @@
 
 
 <div class="container">
-    <h1>{% if form.instance.pk %}Edit{% else %}Add{% endif %} Product</h1>
+    <h1>{% if form.instance.pk %}Edit{% else %}Add{% endif %} Purchased Items</h1>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
