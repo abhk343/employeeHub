@@ -8,6 +8,10 @@
     .container {
         padding: 20px;
         max-width: 1200px;
+        margin-top: 20px;
+    }
+    h1 {
+        text-align: center;
         margin-top: 100px;
     }
 
@@ -107,7 +111,7 @@
         }
     }
 </style>
-
+<h1>Employee List</h1>
 <div class="container">
     <!-- Form for filtering employees -->
     <form method="get" action="{% url 'employee:employee_list' %}" class="filter-form">
