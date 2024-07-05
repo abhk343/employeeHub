@@ -3,6 +3,7 @@ from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import *
+from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 from django.urls import reverse_lazy
 from django.db.models import Q, Count, Sum, F
 from collections import defaultdict
@@ -430,7 +431,7 @@ def monthly_absence_count(request):
         
         return render(request, 'emp/att_view.html', context)
     except Exception as e:
-         render("error.html")
+        return render(request,"error.html")
 
 class AttendanceListView(ListView):
     try:
