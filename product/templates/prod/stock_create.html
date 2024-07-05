@@ -1,26 +1,131 @@
-<!DOCTYPE html>
-<html>
-    {% load static %}
-<head>
-    <title>Create Stock Entry</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/stock_add.css' %}">
-</head>
-<body>
-    <div class="top-nav">
+{% extends "base.html" %}
+
+{% block title %}Create Stock Entry{% endblock %}
+
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/stock_add.css' %}">
+<style>
+    /* Reset default margin and padding */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* Body and container styles */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        padding-top: 50px; /* Adjust for the fixed navigation bar */
+    }
+
+    /* Top Navigation Bar styles */
+    .top-nav {
+        width: 100%;
+        background-color: #333;
+        display: flex;
+        justify-content: flex-end;
+        padding: 10px 20px;
+        box-sizing: border-box;
+        position: fixed;
+        top: 0;
+        right: 0;
+        z-index: 1;
+        height: 70px; /* Fixed height for navigation bar */
+    }
+
+    .top-nav a {
+        display: inline-block;
+        color: white;
+        text-align: center;
+        padding: 10px 20px;
+        text-decoration: none;
+        line-height: 30px; /* Adjust line height for vertical alignment */
+    }
+
+    .top-nav a:hover {
+        background-color: #ddd;
+        color: black;
+    }
+
+    /* Container for page content */
+    .container {
+        max-width: 1200px;
+        margin: 100px auto 20px; /* Adjusted margin to move it down */
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    /* Styles for the main heading */
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    /* Form styles */
+    form {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+    }
+
+    form input[type="text"],
+    form select {
+        width: calc(100% - 20px);
+        padding: 10px;
+        font-size: 14px;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        margin-bottom: 10px;
+    }
+
+    form button {
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        align-self: flex-start;
+    }
+
+    form button:hover {
+        background-color: #45a049;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
+        .top-nav {
+            justify-content: center;
+        }
+
+        .container {
+            margin: 10px;
+            padding: 10px;
+        }
+
+        form input[type="text"],
+        form select {
+            width: 100%;
+        }
+    }
+</style>
+
+
+
+<div class="container">
+    <h1>Create Stock Entry</h1>
     
-        <a href="{% url 'product:stock_in_list' %}">Stock list</a>
-        <a href="{% url 'product:remaining_stock' %}">View Remaining Stock</a>
-        <a href="{% url 'product:prod_home' %}"> Product Home</a>
-        
-    </div>
-    <div class="container">
-        <h1>Create Stock Entry</h1>
-        
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Save</button>
-        </form>
-    </div>
-</body>
-</html>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+</div>
+
+{% endblock %}

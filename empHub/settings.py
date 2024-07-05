@@ -40,8 +40,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'employee',
     'product',
-    'django_filters'
+    'django_filters',
+    'crispy_forms',
+    'widget_tweaks',
+    'django_extensions',
+    
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -51,7 +58,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'employee.middleware.LoginRequiredMiddleware'
+    'employee.middleware.LoginRequiredMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
 ]
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
@@ -62,7 +70,7 @@ ROOT_URLCONF = 'empHub.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'app', 'templates', 'emp'),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

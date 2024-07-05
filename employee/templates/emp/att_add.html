@@ -1,89 +1,134 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Attendance</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #fff8dc;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
-        h1 {
-            color: #c2185b;
-            text-align: center;
-            margin-top: 20px;
-        }
-        form {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            margin: 40px auto;
-        }
-        p {
-            margin: 10px 0;
-        }
-        label {
-            font-weight: bold;
-        }
-        input[type="date"] {
-            width: calc(100% - 22px);
+{% extends "base.html" %}
+
+{% block title %}Add Attendance{% endblock %}
+
+{% block content %}
+<style>
+    /* Container styles */
+    .container {
+        padding: 20px;
+        max-width: 800px;
+        margin: 20px auto 100px; /* Adjusted margin for spacing */
+    }
+
+    /* Header styles */
+    .header {
+        text-align: center;
+        margin-top: 100px;
+    }
+
+    /* Table styles */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    /* Form styles */
+    form {
+        background-color: #ffffff;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        margin-bottom: 20px; /* Add margin at the bottom for spacing */
+    }
+
+    form p {
+        margin-bottom: 15px;
+    }
+
+    /* Input field styles */
+    input[type="date"], select {
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Button styles */
+    .btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 16px;
+        transition: background-color 0.3s;
+        width: 100%;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+
+    /* No employees message styles */
+    .no-employees {
+        text-align: center;
+        margin-top: 20px;
+        color: #888;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .container {
             padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 16px;
-            margin-top: 5px;
         }
-        input[type="checkbox"] {
-            margin-right: 10px;
-            transform: scale(1.2);
+
+        form {
+            padding: 10px;
         }
-        button {
-            background-color: #c2185b;
-            color: #fff;
-            border: none;
+
+        input[type="date"], select {
+            font-size: 12px;
+        }
+
+        .btn {
             padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            width: 100%;
-            margin-top: 20px;
+            font-size: 14px;
         }
-        button:hover {
-            background-color: #8e0038;
-        }
-        .errorlist {
-            color: red;
-            margin: 10px 0;
-        }
-        .no-employees {
-            text-align: center;
-            color: #c2185b;
-            margin: 20px 0;
-        }
-    </style>
-</head>
-<body>
-    <h1>Add Attendance</h1>
-    <form method="post" action="{% url 'employee:attendance_create' department_id=department_id %}">
-        {% csrf_token %}
-        <p>
-            {{ form.date.label_tag }} {{ form.date }}
-        </p>
-        {% if form.fields.employees.queryset.exists %}
-            <div>
-                {{ form.employees.errors }}
-                {{ form.employees }}
-            </div>
-            <button type="submit">Submit</button>
-        {% else %}
-            <p class="no-employees">No employees found in this department.</p>
-        {% endif %}
-    </form>
-</body>
-</html>
+    }
+</style>
+
+
+
+<h1 class="header">Add Attendance</h1>
+
+<!-- Move the form above the container for better content flow -->
+<form method="post" action="{% url 'employee:attendance_create' department_id=department_id %}">
+    {% csrf_token %}
+    <div class="container">
+        <table>
+            <tr>
+                <th><label for="id_date">Date:</label></th>
+                <td>{{ form.date }}</td>
+            </tr>
+            <tr>
+                <th><label for="id_employees">Employees:</label></th>
+                <td>
+                    {% if form.fields.employees.queryset.exists %}
+                        {{ form.employees.errors }}
+                        {{ form.employees }}
+                    {% else %}
+                        <p class="no-employees">No employees found in this department.</p>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+{% endblock %}

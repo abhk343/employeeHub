@@ -1,153 +1,178 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
-    {% load static %}
-    <style>
-        /* Base styles */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
-        }
+{% extends "base.html" %}
 
-        .top-nav {
-            background-color: #333;
-            color: white;
-            padding: 30px 0; /* Increased padding for height */
-            text-align: right;
-        }
+{% block title %}Create Department{% endblock %}
 
-        .top-nav a {
-            color: white;
-            text-decoration: none;
-            padding: 20px 20px; /* Padding around each link */
-        }
+{% block content %}
+<style>
+    /* Custom styles for this page */
+    .content {
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        max-height: 10Y0vh; /* Adjust to fit most of the viewport */
+    }
 
-        .top-nav a:hover {
-            background-color: #555;
-        }
+    form {
+        width: 100%;
+        max-width: 400px; /* Adjusted max-width for smaller form */
+        background-color: #ffffff;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
 
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+    h1 {
+        text-align: center;
+        margin-top: 200px;
+    }
 
-        h1 {
-            color: #c2185b;
-            text-align: center;
-        }
+    /* Messages styles */
+    .messages {
+        list-style: none;
+        padding: 0;
+        margin-bottom: 20px;
+    }
 
+    .messages li {
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 4px;
+    }
+
+    .messages .success {
+        background-color: #dff0d8;
+        color: #3c763d;
+    }
+
+    .messages .info {
+        background-color: #d9edf7;
+        color: #31708f;
+    }
+
+    .messages .warning {
+        background-color: #fcf8e3;
+        color: #8a6d3b;
+    }
+
+    .messages .error {
+        background-color: #f2dede;
+        color: #a94442;
+    }
+
+    /* Form errors */
+    .error-messages {
+        background-color: #f2dede;
+        color: #a94442;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+
+    .error-messages ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .error-messages ul li {
+        margin-bottom: 5px;
+    }
+
+    /* Form fields */
+    input[type="text"], input[type="email"], input[type="password"], select {
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px; /* Adjusted font size */
+        width: 100%;
+        box-sizing: border-box; /* Ensures padding and border are included in width */
+    }
+
+    button[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 16px;
+        transition: background-color 0.3s;
+        width: 100%;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #45a049;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
         form {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            background-color: #fff;
+            padding: 10px;
         }
 
-        form button {
-            background-color: #c2185b;
-            color: #fff;
-            border: none;
+        input[type="text"], input[type="email"], input[type="password"], select {
+            font-size: 12px; /* Adjusted font size for smaller screens */
+        }
+
+        button[type="submit"] {
             padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 10px;
+            font-size: 14px;
         }
+    }
+</style>
+{% if edit %}
+<h1>Edit Employee</h1>
+{% else %}
+<h1>Add Employee</h1>
+{% endif %}
 
-        form button:hover {
-            background-color: #8e0038;
-        }
+<!-- Main content -->
+<div class="content">
+    <!-- Page title -->
+    
 
-        .error-messages {
-            color: red;
-            margin-top: 10px;
-        }
+    <!-- Display success and error messages -->
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% if edit %}
+    <form method="post" action="">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+{% else %}
 
-        .error-messages ul {
-            list-style-type: none;
-            padding: 0;
-        }
+<form method="post" action="{% url 'employee:employee_create' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
 
-        .error-messages ul li {
-            margin: 5px 0;
-        }
+    <!-- Button to submit the form data -->
+    <button type="submit">Save</button>
+</form>
 
-        /* Responsive styles */
-        @media (max-width: 600px) {
-            .container {
-                padding: 10px;
-            }
+{% endif %}
 
-            form {
-                padding: 15px;
-            }
-
-            h1 {
-                font-size: 1.5em;
-            }
-
-            form button {
-                width: 100%;
-                padding: 12px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <nav class="top-nav">
-        <a href="{% url 'employee:employee_list' %}">Employee List</a>
-        <a href="{% url 'employee:depemp_home' %}">Department Home</a>
-        
-    </nav>
-
-    <div class="container">
-        <h1>{{ title }}</h1>
-
-        <!-- Display success and error messages -->
-        {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                    <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-
-        <!-- Form for submitting data -->
-        <form method="post" action="{% url 'employee:employee_create' %}">
-            {% csrf_token %}
-            {{ form.as_p }}
-
-            <!-- Button to submit the form data -->
-            <button type="submit">Submit</button>
-        </form>
-
-        <!-- Display form errors if there are any -->
-        {% if form.errors %}
-            <div class="error-messages">
-                <p>Please correct the following errors:</p>
-                <ul>
-                    {% for field in form %}
-                        {% for error in field.errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                    {% endfor %}
-                    {% for error in form.non_field_errors %}
+    <!-- Display form errors if there are any -->
+    {% if form.errors %}
+        <div class="error-messages">
+            <p>Please correct the following errors:</p>
+            <ul>
+                {% for field in form %}
+                    {% for error in field.errors %}
                         <li>{{ error }}</li>
                     {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
-    </div>
-</body>
-</html>
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

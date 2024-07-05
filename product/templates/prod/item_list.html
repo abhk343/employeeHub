@@ -1,10 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-    {% load static %}
+{% extends "base.html" %}
+
+{% block title %}Item List{% endblock %}
+
+{% block content %}
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Item List</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/item_list.css' %}">
     <style>
         /* Reset default margin and padding */
@@ -29,7 +31,7 @@
             justify-content: flex-end;
             padding: 10px 20px;
             box-sizing: border-box;
-            position: absolute;
+            position: fixed;
             top: 0;
             right: 0;
             z-index: 1;
@@ -113,10 +115,7 @@
     </style>
 </head>
 <body>
-    <div class="top-nav">
-        <a href="{% url 'product:add_item' %}">Item Add</a>
-        <a href="{% url 'product:prod_home' %}"> Product Home</a>
-    </div>
+    
 
     <div class="container">
         <h1>Item List</h1>
@@ -132,7 +131,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        <a href="{% url 'product:add_item' %}" class="edit-link">Add a new item</a>
+        
     </div>
 </body>
-</html>
+{% endblock %}

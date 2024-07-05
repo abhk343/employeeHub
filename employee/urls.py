@@ -32,7 +32,15 @@ urlpatterns = [
     path('attendance/create/<int:department_id>/', AttendanceCreateView.as_view(), name='attendance_create'),
     path('attendance/sele-dept/', DepartmentSelect.as_view(), name='sele_dept'),
     path('attendance/monthly-absence-count/', views.monthly_absence_count, name='monthly_absence_count'),
+    path('attendances/', AttendanceListView.as_view(), name='attendance_list'),
+    path('attendance/delete/<int:pk>/', AttendanceDeleteView.as_view(), name='attendance_delete'),
+
     # Overtime URLs
     path('overtime/create/', OvertimeCreateView.as_view(), name='overtime_add'),
-    path('overtime/list/', OvertimeListView.as_view(), name='overtime_list'),
-]
+    path('overtime/list/', OvertimeListView.as_view(), name='overtim_list'),
+    path('overtimes/', OvertimeView.as_view(), name='overtime_list'),
+    
+    # Path for deleting a specific overtime record
+    path('overtime/<int:overtime_id>/delete/', OvertimeDeleteView.as_view(), name='overtime_delete'),
+    # Other URL patterns...
+]   

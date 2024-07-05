@@ -1,53 +1,89 @@
-<!DOCTYPE html>
-<html>
-    {% load static %}
-<head>
-    <title>Remaining Stock</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/remaining_stock.css' %}">
-</head>
-<body>
-    <div class="top-nav">
-        <a href="{% url 'product:stock_in_list' %}">Stock In List</a>
-        <a href="{% url 'product:stock_in_add' %}">Add Stock Entry</a>
-        <a href="{% url 'product:prod_home' %}"> Product Home</a>
-    </div>
-    <div class="container">
-        <h1>Remaining Stock for Items</h1>
+{% extends 'base.html' %}
 
-        <!-- Container for displaying remaining stock -->
-        <div id="remainingStockList">
-            <!-- Check if there are items to display -->
-            {% if item_data %}
-                <!-- Table for displaying item details -->
-                <table>
-                    <thead>
-                        <!-- Table header with column names -->
+{% block title %}Remaining Stock{% endblock %}
+
+{% block content %}
+{% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/remaining_stock.css' %}">
+    <style>
+        /* Additional styles specific to the remaining_stock.html page */
+        /* Add your custom styles here */
+        .container {
+            max-width: 800px;
+            margin: 100px auto 20px;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 10px;
+            }
+        }
+    </style>
+
+
+<div class="container">
+    <h1>Remaining Stock for Items</h1>
+
+    <!-- Container for displaying remaining stock -->
+    <div id="remainingStockList">
+        <!-- Check if there are items to display -->
+        {% if item_data %}
+            <!-- Table for displaying item details -->
+            <table>
+                <thead>
+                    <!-- Table header with column names -->
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Total Purchased</th>
+                        <th>Total Issued</th>
+                        <th>Remaining Stock</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Iterate over each item -->
+                    {% for data in item_data %}
+                        <!-- Table row for each item -->
                         <tr>
-                            <th>Item Name</th>
-                            <th>Total Purchased</th>
-                            <th>Total Issued</th>
-                            <th>Remaining Stock</th>
+                            <!-- Display item details in each column -->
+                            <td>{{ data.item.Item_Name }}</td>
+                            <td>{{ data.total_purchased }}</td>
+                            <td>{{ data.total_issued }}</td>
+                            <td>{{ data.remaining_stock }}</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Iterate over each item -->
-                        {% for data in item_data %}
-                            <!-- Table row for each item -->
-                            <tr>
-                                <!-- Display item details in each column -->
-                                <td>{{ data.item.Item_Name }}</td>
-                                <td>{{ data.total_purchased }}</td>
-                                <td>{{ data.total_issued }}</td>
-                                <td>{{ data.remaining_stock }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            <!-- If no items are found, display a message -->
-            {% else %}
-                <p>No items found.</p>
-            {% endif %}
-        </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        <!-- If no items are found, display a message -->
+        {% else %}
+            <p>No items found.</p>
+        {% endif %}
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

@@ -1,276 +1,173 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee List</title>
-    <style>
-        /* Base styles */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f0f0f0;
-        }
+{% extends 'base.html' %}
 
-        .top-nav {
-            background-color: #333; /* Dark green background */
-            color: white;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+{% block title %}Employee List{% endblock %}
 
-        .top-nav h1 {
-            margin: 0;
-            font-size: 1.5em;
-        }
+{% block content %}
+<style>
+    /* Container styles */
+    .container {
+        padding: 20px;
+        max-width: 1200px;
+        margin-top: 20px;
+    }
+    h1 {
+        text-align: center;
+        margin-top: 100px;
+    }
 
-        .top-nav-links {
-            display: flex;
-        }
+    /* Form for filtering employees */
+    .filter-form {
+        margin-bottom: 20px;
+        padding: 10px;
+        background-color: #f2f2f2;
+        border-radius: 8px;
+    }
 
-        .top-nav-links a {
-            color: white;
-            text-decoration: none;
-            margin-left: 20px; /* Adjust spacing between links */
-        }
+    .filter-form button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
 
-        .top-nav-links a:hover {
-            text-decoration: underline;
-        }
+    .filter-form button:hover {
+        background-color: #45a049;
+    }
 
-        /* Main content */
+    /* Table styles */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    /* Pagination styles */
+    .pagination {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .pagination a, .pagination span {
+        display: inline-block;
+        padding: 8px 16px;
+        text-decoration: none;
+        color: #666;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+
+    .pagination a:hover {
+        background-color: #f2f2f2;
+    }
+
+    .pagination .disabled {
+        pointer-events: none;
+        color: #ccc;
+    }
+
+    /* Additional links styles */
+    .download-back-links {
+        text-align: right;
+    }
+
+    .download-back-links a {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+
+    .download-back-links a:hover {
+        background-color: #0056b3;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
         .container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-top: 20px; /* Ensure content below top nav */
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 1em;
-        }
-
-        th, td {
-            padding: 0.5em;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-            font-size: 0.9em;
-        }
-
-        th {
-            background-color: #004d00; /* Dark green background */
-            color: white;
-        }
-
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        .pagination {
-            margin-top: 1em;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .pagination a, .pagination span {
-            margin: 0 0.25em;
-            padding: 0.5em 1em;
-            text-decoration: none;
-            color: #004d00; /* Dark green color */
-        }
-
-        .pagination a:hover {
-            background-color: #f1f1f1;
-        }
-
-        .pagination .disabled {
-            color: #bbb;
-        }
-
-        a {
-            display: inline-block;
-            margin-top: 1em;
-            color: #004d00; /* Dark green color */
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        .create-btn {
-            margin-bottom: 1em;
-            padding: 0.5em 1em;
-            background-color: #004d00;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            display: inline-block;
-        }
-
-        .create-btn:hover {
-            background-color: #003300;
+            padding: 10px;
         }
 
         .filter-form {
-            margin-bottom: 1em;
+            padding: 8px;
         }
 
-        .filter-form select, .filter-form input, .filter-form button {
-            padding: 0.5em;
-            margin-right: 0.5em;
+        .pagination a, .pagination span {
+            padding: 6px 12px;
         }
+    }
+</style>
+<h1>Employee List</h1>
+<div class="container">
+    <!-- Form for filtering employees -->
+    <form method="get" action="{% url 'employee:employee_list' %}" class="filter-form">
+        {{ filter.form.as_p }}
+        <button type="submit">Filter</button>
+    </form>
 
-        /* Responsive styles */
-        @media (max-width: 768px) {
-            th, td {
-                font-size: 0.8em;
-            }
-
-            .pagination a, .pagination span {
-                padding: 0.4em 0.8em;
-                font-size: 0.8em;
-            }
-
-            .create-btn, .filter-form select, .filter-form input, .filter-form button {
-                padding: 0.4em 0.8em;
-                font-size: 0.9em;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .filter-form select, .filter-form input, .filter-form button {
-                width: 100%;
-                margin-bottom: 0.5em;
-            }
-
-            .filter-form button {
-                margin-right: 0;
-            }
-
-            .pagination {
-                flex-direction: column;
-            }
-
-            .pagination a, .pagination span {
-                margin-bottom: 0.5em;
-            }
-
-            .create-btn {
-                width: 100%;
-                text-align: center;
-            }
-
-            .download-back-links {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .download-back-links a {
-                width: 100%;
-                text-align: center;
-                margin-top: 0.5em;
-            }
-        }
-
-        .download-back-links {
-            display: flex;
-            justify-content: flex-start;
-            gap: 1em;
-            margin-top: 1em;
-        }
-
-        .download-back-links a {
-            padding: 0.5em 1em;
-            background-color: #e0ffe0; /* Light green background */
-            color: #004d00; /* Dark green text */
-            text-decoration: none;
-            border-radius: 4px;
-            border: 1px solid #004d00; /* Dark green border */
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .download-back-links a:hover {
-            background-color: #ccffcc; /* Slightly darker green on hover */
-            color: #003300; /* Slightly darker green text on hover */
-        }
-    </style>
-</head>
-<body>
-    <div class="top-nav">
-        <h1>Employee List</h1>
-        <div class="top-nav-links">
-            <a href="{% url 'employee:employee_create' %}" class="create-btn">Create New Employee</a>
-            <a href="{% url 'employee:depemp_home' %}" class="create-btn">Department Home</a>
-        </div>
-    </div>
-
-    <div class="container">
-        <!-- Form for filtering employees -->
-        <form method="get" action="{% url 'employee:employee_list' %}" class="filter-form">
-            {{ filter.form.as_p }}
-            <button type="submit">Filter</button>
-        </form>
-
-        <!-- Table to display employees -->
-        <table>
-            <thead>
+    <!-- Table to display employees -->
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Department</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in employees %}
                 <tr>
-                    <th>Name</th>
-                    <th>Position</th>
-                    <th>Department</th>
-                    <th>Actions</th>
+                    <td>{{ employee.Name }}</td>
+                    <td>{{ employee.Designation }}</td>
+                    <td>{{ employee.Department.Department_Name }}</td>
+                    <td><a href="{% url 'employee:employee_detail' employee.pk %}">View More</a></td>
                 </tr>
-            </thead>
-            <tbody>
-                {% for employee in employees %}
-                    <tr>
-                        <td>{{ employee.Name }}</td>
-                        <td>{{ employee.Designation }}</td>
-                        <td>{{ employee.Department.Department_Name }}</td>
-                        <td><a href="{% url 'employee:employee_detail' employee.pk %}">View More</a></td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="4">No employees found.</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+            {% empty %}
+                <tr>
+                    <td colspan="4">No employees found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-        <!-- Pagination controls -->
-        <div class="pagination">
-            <!-- Previous page link -->
-            {% if current_page > 1 %}
-                <a href="?page={{ current_page|add:-1 }}">&laquo; Previous</a>
-            {% else %}
-                <span class="disabled">&laquo; Previous</span>
-            {% endif %}
+    <!-- Pagination controls -->
+    <div class="pagination">
+        <!-- Previous page link -->
+        {% if current_page > 1 %}
+            <a href="?page={{ current_page|add:-1 }}">&laquo; Previous</a>
+        {% else %}
+            <span class="disabled">&laquo; Previous</span>
+        {% endif %}
 
-            <!-- Current page indicator -->
-            <span>Page {{ current_page }} of {{ num_pages }}</span>
+        <!-- Current page indicator -->
+        <span>Page {{ current_page }} of {{ num_pages }}</span>
 
-            <!-- Next page link -->
-            {% if current_page < num_pages %}
-                <a href="?page={{ current_page|add:1 }}">Next &raquo;</a>
-            {% else %}
-                <span class="disabled">Next &raquo;</span>
-            {% endif %}
-        </div>
-
-        <!-- Additional links -->
-        <div class="download-back-links">
-            <a href="{% url 'employee:export_employee_data' %}">Download</a>
-        </div>
+        <!-- Next page link -->
+        {% if current_page < num_pages %}
+            <a href="?page={{ current_page|add:1 }}">Next &raquo;</a>
+        {% else %}
+            <span class="disabled">Next &raquo;</span>
+        {% endif %}
     </div>
-</body>
-</html>
+
+    <!-- Additional links -->
+    <div class="download-back-links">
+        <a href="{% url 'employee:export_employee_data' %}">Download</a>
+    </div>
+</div>
+{% endblock %}
