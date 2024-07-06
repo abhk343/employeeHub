@@ -5,7 +5,7 @@
 {% block content %}
 {% load static %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'css/item_form.css' %}">
+
 <style>
     /* Reset default margin and padding */
     * {
@@ -17,19 +17,24 @@
     /* Body and container styles */
     body {
         font-family: Arial, sans-serif;
-        background-color: #f0f0f0;
+       
         margin: 0;
         padding: 0;
     }
 
     .container {
         max-width: 800px;
-        margin: 150px auto 20px; /* Adjusted margin to move form down */
+        margin: 120px auto 20px; /* Adjusted margin to move form down */
         padding: 5px;
-        background-color: #fff;
-        border: 1px solid #ddd;
+        
+        
         border-radius: 5px;
         
+    }
+    .hey{
+        padding:100px;
+        border: 2px solid black;
+
     }
 
     /* Top Navigation Bar styles */
@@ -111,7 +116,7 @@
 
 
 <div class="container">
-    
+   <div class="hey"> 
 
     
     <h1>{{ title }}</h1>
@@ -120,6 +125,7 @@
         {{ form.as_p }}
         <button type="submit">{{ title }}</button>
     </form>
+</div>
 </div>
 {% endblock %}
 

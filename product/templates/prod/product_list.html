@@ -5,7 +5,7 @@
 {% block content %}
 {% load static %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'css/product_list.css' %}">
+
 <style>
     /* Reset default margin and padding */
     * {
@@ -17,7 +17,7 @@
     /* Body and container styles */
     body {
         font-family: Arial, sans-serif;
-        background-color: #f0f0f0;
+        
         padding-top: 50px; /* Adjust for the fixed navigation bar */
     }
 
@@ -53,13 +53,17 @@
     /* Container for page content */
     .container {
         max-width: 1200px;
-        margin: 100px auto 20px; /* Adjusted margin to move it down */
+        margin: 70px auto 20px; /* Adjusted margin to move it down */
         padding: 20px;
-        background-color: #fff;
-        border: 1px solid #ddd;
+        
+        
         border-radius: 5px;
     }
+    .hey{
+        padding:100px;
+        border: 2px solid black;
 
+    }
     /* Styles for the main heading */
     h1 {
         text-align: center;
@@ -82,7 +86,7 @@
         margin-bottom: 10px;
     }
 
-    form button {
+    button form button {
         padding: 10px 20px;
         background-color: #4CAF50;
         color: white;
@@ -148,7 +152,8 @@
 </div>
 
 <div class="container">
-    <h1>Product List</h1>
+    <div class="hey">
+    <h1>Purchased Items Details</h1>
 
     <!-- Form for searching products -->
     <form method="get" action="{% url 'product:prd_list' %}">
@@ -191,7 +196,7 @@
                             <!-- Actions column for editing and deleting products -->
                             <td>
                                 <!-- Edit button to update product details -->
-                                <button onclick="location.href='{% url 'product:prd_edit' product.pk %}'">Edit</button>
+                                <button onclick="location.href='{% url "product:prd_edit" product.pk %}'">Edit</button>
                                 
                                 <!-- Form for deleting the product -->
                                 <form method="post" action="{% url 'product:prd_delete' product.pk %}" style="display: inline;">
@@ -208,6 +213,7 @@
         {% else %}
             <p>No products found.</p>
         {% endif %}
+    </div>
     </div>
 </div>
 

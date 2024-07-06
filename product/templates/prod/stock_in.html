@@ -5,7 +5,7 @@
 {% block content %}
 {% load static %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'css/stock_list.css' %}">
+
 <style>
     /* Reset default margin and padding */
     * {
@@ -17,7 +17,7 @@
     /* Body and container styles */
     body {
         font-family: Arial, sans-serif;
-        background-color: #f0f0f0;
+        
         padding-top: 50px; /* Adjust for the fixed navigation bar */
     }
 
@@ -53,13 +53,16 @@
     /* Container for page content */
     .container {
         max-width: 1200px;
-        margin: 100px auto 20px; /* Adjusted margin to move it down */
+        margin: 70px auto 20px; /* Adjusted margin to move it down */
         padding: 20px;
-        background-color: #fff;
-        border: 1px solid #ddd;
+        
+        
         border-radius: 5px;
     }
-
+    .hey{
+        padding:100px;
+        border: 2px solid black;
+    }
     /* Styles for the main heading */
     h1 {
         text-align: center;
@@ -81,7 +84,7 @@
         margin-bottom: 10px;
     }
 
-    form button {
+    button form button {
         padding: 10px 20px;
         background-color: #4CAF50;
         color: white;
@@ -90,6 +93,9 @@
         cursor: pointer;
         font-size: 16px;
         margin-left: 10px;
+    }
+    button{
+        padding:5px;
     }
 
     form button:hover {
@@ -144,7 +150,8 @@
 
 
 <div class="container">
-    <h1>Stock In List</h1>
+    <div class = "hey">
+    <h1>Stock Distribution Details</h1>
 
     <!-- Form for searching stock entries -->
     <form method="get" action="{% url 'product:stock_in_list' %}">
@@ -199,6 +206,7 @@
             <p>No stock entries found.</p>
         {% endif %}
     </div>
+</div>
 </div>
 
 <!-- JavaScript function to confirm stock entry deletion -->
