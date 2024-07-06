@@ -77,6 +77,7 @@ def admin_check(user):
 is_user1_required = user_passes_test(is_user1)
 
 # Department Views
+
 class DepartmentListView(LoginRequiredMixin, ListView):
     try:
         model = Department
