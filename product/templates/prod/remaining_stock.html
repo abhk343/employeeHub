@@ -4,17 +4,21 @@
 
 {% block content %}
 {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/remaining_stock.css' %}">
+    
     <style>
         /* Additional styles specific to the remaining_stock.html page */
         /* Add your custom styles here */
         .container {
-            max-width: 800px;
-            margin: 100px auto 20px;
+            max-width: 1200px;
+            margin: 70px auto 20px; /* Adjusted margin to move it down */
             padding: 20px;
-            background-color: #fff;
-            border: 1px solid #ddd;
+            
+            
             border-radius: 5px;
+        }
+        .hey{
+            padding:100px;
+            border: 2px solid black;
         }
 
         h1 {
@@ -49,7 +53,8 @@
 
 
 <div class="container">
-    <h1>Remaining Stock for Items</h1>
+    <div class = "hey">
+    <h1>Remaining Stock </h1>
 
     <!-- Container for displaying remaining stock -->
     <div id="remainingStockList">
@@ -85,5 +90,6 @@
             <p>No items found.</p>
         {% endif %}
     </div>
+</div>
 </div>
 {% endblock %}

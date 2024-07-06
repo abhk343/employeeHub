@@ -5,7 +5,6 @@
 {% block content %}
 {% load static %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'css/stock_add.css' %}">
 <style>
     /* Reset default margin and padding */
     * {
@@ -17,7 +16,7 @@
     /* Body and container styles */
     body {
         font-family: Arial, sans-serif;
-        background-color: #f0f0f0;
+        
         padding-top: 50px; /* Adjust for the fixed navigation bar */
     }
 
@@ -53,11 +52,15 @@
     /* Container for page content */
     .container {
         max-width: 1200px;
-        margin: 100px auto 20px; /* Adjusted margin to move it down */
+        margin: 70px auto 20px; /* Adjusted margin to move it down */
         padding: 20px;
-        background-color: #fff;
-        border: 1px solid #ddd;
+        
+        
         border-radius: 5px;
+    }
+    .hey{
+        padding:100px;
+        border: 2px solid black;
     }
 
     /* Styles for the main heading */
@@ -119,13 +122,16 @@
 
 
 <div class="container">
-    <h1>Create Stock Entry</h1>
+    <div class="hey">
+    <h1>Create Stock Distribution</h1>
     
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Save</button>
+    
     </form>
+    </div>
 </div>
 
 {% endblock %}

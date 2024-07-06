@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/item_list.css' %}">
+   
     <style>
         /* Reset default margin and padding */
         * {
@@ -19,7 +19,7 @@
         /* Body styles */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            
             padding-top: 50px; /* Adjust for the fixed navigation bar */
         }
 
@@ -55,11 +55,16 @@
         /* Container for page content */
         .container {
             max-width: 1200px;
-            margin: 80px auto 20px; /* Adjusted margin to move it down */
+            margin: 70px auto 20px; /* Adjusted margin to move it down */
             padding: 20px;
-            background-color: #fff;
-            border: 1px solid #ddd;
+            
+            
             border-radius: 5px;
+        }
+        .hey{
+            padding:100px;
+            border: 2px solid black;
+    
         }
 
         /* Styles for the main heading */
@@ -71,12 +76,12 @@
         /* Table styles */
         table {
             width: 100%;
-            border-collapse: collapse;
+            
             margin-top: 20px;
         }
 
         table th, table td {
-            border: 1px solid #ddd;
+            border: 2px solid #ddd;
             padding: 8px;
             text-align: left;
         }
@@ -118,20 +123,21 @@
     
 
     <div class="container">
-        <h1>Item List</h1>
-        <table>
-            <tbody>
-                {% for item in items %}
-                <tr>
-                    <td>{{ item.Item_Name }}</td>
-                    <td>
-                        <a href="{% url 'product:edit_item' item.pk %}" class="edit-link">Edit</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        
+        <div class="hey">
+            <h1>Item List</h1>
+            <table>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>{{ item.Item_Name }}</td>
+                        <td>
+                            <a href="{% url 'product:edit_item' item.pk %}" class="edit-link">Edit</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </body>
 {% endblock %}
