@@ -1,7 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Employee Details</title>
+{% extends "base.html" %}
+
+{% block title %}Add Attendance{% endblock %}
+
+{% block content %}
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,7 +15,7 @@
             text-align: center;
             font-size: 1.8em;
             color: #006400; /* Dark green */
-            margin-bottom: 20px;
+            margin-top: 200px;
         }
 
         table {
@@ -22,7 +23,7 @@
             border-collapse: collapse;
             background: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 1em;
+            margin-top: 200px;
             border-radius: 8px;
             overflow: hidden;
         }
@@ -128,8 +129,8 @@
             }
         }
     </style>
-</head>
-<body>
+
+
     <h1>Employee Details: {{ employee.Name }}</h1>
 
     <!-- Table for displaying employee details -->
@@ -297,5 +298,5 @@
             }
         }
     </script>
-</body>
-</html>
+    {% endblock %}
+    
