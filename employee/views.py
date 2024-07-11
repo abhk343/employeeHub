@@ -8,10 +8,13 @@ from django.urls import reverse_lazy
 from django.db.models import Q, Count, Sum, F
 from collections import defaultdict
 from django.contrib import messages
+from django.utils.decorators import method_decorator
 import csv
 import logging
 from .models import *
 from django_filters.views import FilterView
+from .decorators import hr_or_superuser_required,supervisor_or_superuser_required
+
 from .filters import *
 from .forms import *
 
@@ -77,7 +80,7 @@ def admin_check(user):
 is_user1_required = user_passes_test(is_user1)
 
 # Department Views
-
+@method_decorator(hr_or_superuser_required, name='dispatch')
 class DepartmentListView(LoginRequiredMixin, ListView):
     try:
         model = Department
@@ -85,7 +88,8 @@ class DepartmentListView(LoginRequiredMixin, ListView):
         context_object_name = 'object_list'
     except Exception as e:
          render("error.html")
-        
+
+@method_decorator(hr_or_superuser_required, name='dispatch')
 class DepartmentCreateView(LoginRequiredMixin, CreateView):
     try:
         model = Department
@@ -99,7 +103,8 @@ class DepartmentCreateView(LoginRequiredMixin, CreateView):
             return context
     except Exception as e:
          render("error.html")
-        
+
+@method_decorator(hr_or_superuser_required, name='dispatch')        
 class DepartmentUpdateView(LoginRequiredMixin, UpdateView):
     try:
         model = Department
@@ -113,7 +118,8 @@ class DepartmentUpdateView(LoginRequiredMixin, UpdateView):
             return context
     except Exception as e:
          render("error.html")
-        
+
+@method_decorator(hr_or_superuser_required, name='dispatch')        
 class EmployeeListView(LoginRequiredMixin, FilterView): 
     try:
         model = Employee
@@ -160,7 +166,8 @@ class EmployeeListView(LoginRequiredMixin, FilterView):
             return filter.qs
     except Exception as e:
          render("error.html")
-        
+
+@method_decorator(hr_or_superuser_required, name='dispatch')        
 class EmployeeDetailView(LoginRequiredMixin, DetailView):
     try:
         model = Employee
@@ -172,6 +179,7 @@ class EmployeeDetailView(LoginRequiredMixin, DetailView):
 
 logger = logging.getLogger(__name__)
 
+@method_decorator(hr_or_superuser_required, name='dispatch')
 class EmployeeCreateView(LoginRequiredMixin, View):
     try:
         def get(self, request, *args, **kwargs):
@@ -194,7 +202,8 @@ class EmployeeCreateView(LoginRequiredMixin, View):
             return render(request, 'emp/emp_create.html', {'title': 'Create Employee', 'form': form})
     except Exception as e:
          render("error.html")
-        
+
+@method_decorator(hr_or_superuser_required, name='dispatch')        
 class EmployeeUpdateView(LoginRequiredMixin, View):
     try:
         def get(self, request, pk, *args, **kwargs):
@@ -224,7 +233,8 @@ class EmployeeUpdateView(LoginRequiredMixin, View):
             return render(request, 'emp/emp_create.html', {'edit': True, 'form': form})
     except Exception as e:
          render("error.html")
-        
+
+@method_decorator(hr_or_superuser_required, name='dispatch')        
 class EmployeeDeleteView(LoginRequiredMixin, DeleteView):
     try:
         model = Employee
@@ -239,7 +249,8 @@ class EmployeeDeleteView(LoginRequiredMixin, DeleteView):
             return JsonResponse({'message': 'Employee deleted successfully'}, status=200)
     except Exception as e:
          render("error.html")
-        
+
+@method_decorator(hr_or_superuser_required, name='dispatch')        
 class ExportEmployeeDataView(View):
     try:
         def get(self, request):
@@ -279,7 +290,7 @@ class ExportEmployeeDataView(View):
          render("error.html")
         
 
-
+@method_decorator(supervisor_or_superuser_required, name='dispatch')
 class DepartmentSelectView(LoginRequiredMixin, View):
     try:
         template_name = 'emp/select_department.html'
@@ -299,7 +310,7 @@ class DepartmentSelectView(LoginRequiredMixin, View):
          render("error.html")
         
 
-
+@method_decorator(supervisor_or_superuser_required, name='dispatch')
 class AttendanceCreateView(LoginRequiredMixin, View):
     try:
         template_name = 'emp/att_add.html'
@@ -338,7 +349,7 @@ class AttendanceCreateView(LoginRequiredMixin, View):
     except Exception as e:
          render("error.html")
 
-
+@method_decorator(supervisor_or_superuser_required, name='dispatch')
 class DepartmentSelect(LoginRequiredMixin, View):
     try:
         template_name = 'emp/sele_dept.html'
@@ -361,6 +372,7 @@ class DepartmentSelect(LoginRequiredMixin, View):
          render("error.html")
 
 @login_required
+@method_decorator(supervisor_or_superuser_required, name='dispatch')
 def monthly_absence_count(request):
     try:
         selected_department = request.GET.get('department')
@@ -434,6 +446,7 @@ def monthly_absence_count(request):
     except Exception as e:
         return render(request,"error.html")
 
+@method_decorator(supervisor_or_superuser_required, name='dispatch')
 class AttendanceListView(ListView):
     try:
         model = Attendance
@@ -454,6 +467,7 @@ class AttendanceListView(ListView):
     except Exception as e:
          render("error.html")
 
+@method_decorator(supervisor_or_superuser_required, name='dispatch')
 class AttendanceDeleteView(DeleteView):
     try:
             
@@ -473,7 +487,8 @@ class AttendanceDeleteView(DeleteView):
     except Exception as e:
          render("error.html")
 
-# Overtime Views
+# Overtime 
+@method_decorator(supervisor_or_superuser_required, name='dispatch')
 class OvertimeCreateView(LoginRequiredMixin, View):
     try:
         def get(self, request):
@@ -514,7 +529,8 @@ class OvertimeCreateView(LoginRequiredMixin, View):
             })
     except Exception as e:
          render("error.html")
-    
+
+@method_decorator(supervisor_or_superuser_required, name='dispatch')
 class OvertimeListView(LoginRequiredMixin, View):
     try:
             
@@ -563,7 +579,7 @@ class OvertimeListView(LoginRequiredMixin, View):
     except Exception as e:
          render("error.html")
 
-
+@method_decorator(supervisor_or_superuser_required, name='dispatch')
 class OvertimeView(FilterView):
     """
     Displays a list of Overtime entries with filtering and pagination.
@@ -588,7 +604,8 @@ class OvertimeView(FilterView):
             return context
     except Exception as e:
          render("error.html")
-    
+
+@method_decorator(supervisor_or_superuser_required, name='dispatch') 
 class OvertimeDeleteView(View):
     """
     Handles the deletion of an overtime record via an Ajax request.
