@@ -372,7 +372,6 @@ class DepartmentSelect(LoginRequiredMixin, View):
          render("error.html")
 
 @login_required
-@method_decorator(supervisor_or_superuser_required, name='dispatch')
 def monthly_absence_count(request):
     try:
         selected_department = request.GET.get('department')
