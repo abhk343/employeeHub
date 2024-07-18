@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Select Department{% endblock %}
+
+{% block content %}
+<style>
+    body{
+        padding: 15%;
+    }
+    /* Styles for the buttons */
+    .department-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .department-button {
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        text-align: center;
+    }
+
+    .department-button:hover {
+        background-color: #45a049;
+    }
+</style>
+
+<h1 >Select Department</h1>
+
+<form method="post">
+    {% csrf_token %}
+    <div class="department-buttons">
+        {% for department in departments %}
+            <button type="submit" name="department" value="{{ department.Department_id }}" class="department-button">{{ department.Department_Name }}</button>
+        {% endfor %}
+    </div>
+</form>
+{% endblock %}

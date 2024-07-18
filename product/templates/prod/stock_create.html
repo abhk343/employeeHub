@@ -120,17 +120,11 @@
 </style>
 
 
-
-<div class="container">
-    <div class="hey">
-    <h1>Add Stock Distribution Details</h1>
-    
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Save</button>
-    
-    </form>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Save</button>
+        </form>
     </div>
 </div>
 

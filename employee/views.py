@@ -63,9 +63,9 @@ def home(request):
 def depemp_home(request):
     return render(request, 'emp/depemp_home.html')
 
-@login_required
-def attendance_home(request):
-    return render(request, 'emp/attendance_home.html')
+# @login_required
+# def attendance_home(request):
+#     return render(request, 'emp/attendance_home.html')
 
 @login_required
 def products_home(request):
@@ -257,11 +257,13 @@ class ExportEmployeeDataView(View):
 
             # Define the fields to include in the CSV
             field_names = [
-                'Punch_Card_NO', 'Name', 'Designation', 'Location', 'DOB', 'DOJ', 'DOL', 'Parents_Name', 'Martial_Status', 
-                'Permanent_Address', 'Present_Address', 'Blood_Group', 'UAN_Number', 'PF_PW', 'ESI_Number', 'Mobile_No', 
-                'Email', 'Aadhar_No', 'PAN', 'Bank_Acc_NO', 'IFSC_Code', 'Bank_Name', 'Emergency_Contact_No', 'Contact_No', 
-                'Sur_name', 'Qualification', 'Experience', 'Remarks', 'Salary',
-            ]
+                    'Department', 'Emp_code','Esic_no', 'Punch_Card_NO', 'Name', 'Designation', 'Location', 'DOB', 'DOJ', 'DOL', 'Parents_Name',
+                    'Martial_Status', 'Permanent_Address', 'Present_Address', 'Blood_Group', 'UAN_Number', 'PF_Member_Id', 'ESI_Number', 
+                    'Mobile_No', 'Email', 'Aadhar_No', 'PAN', 'Bank_Acc_NO', 'IFSC_Code', 'Bank_Name', 'Emergency_Contact_No', 
+                    'Contact_Name', 'Relation', 'Qualification', 'Experience', 'basic', 'VDA', 'HRA', 'convenience', 'sp_convenience', 
+                    'Gross1', 'Remarks'
+                ]
+
 
             # Write header row
             writer.writerow(field_names)
@@ -280,331 +282,332 @@ class ExportEmployeeDataView(View):
         
 
 
-class DepartmentSelectView(LoginRequiredMixin, View):
-    try:
-        template_name = 'emp/select_department.html'
 
-        def get(self, request, *args, **kwargs):
-            form = DepartmentSelectForm()
-            return render(request, self.template_name, {'form': form})
+# class DepartmentSelectView(LoginRequiredMixin, View):
+#     try:
+#         template_name = 'emp/select_department.html'
 
-        def post(self, request, *args, **kwargs):
-            form = DepartmentSelectForm(request.POST)
-            if form.is_valid():
-                department = form.cleaned_data['departments']  # Access the selected department
-                department_id = department.Department_id  # Get the Department_id of the selected department
-                return redirect('employee:attendance_create', department_id=department_id)
-            return render(request, self.template_name, {'form': form})
-    except Exception as e:
-         render("error.html")
+#         def get(self, request, *args, **kwargs):
+#             form = DepartmentSelectForm()
+#             return render(request, self.template_name, {'form': form})
+
+#         def post(self, request, *args, **kwargs):
+#             form = DepartmentSelectForm(request.POST)
+#             if form.is_valid():
+#                 department = form.cleaned_data['departments']  # Access the selected department
+#                 department_id = department.Department_id  # Get the Department_id of the selected department
+#                 return redirect('employee:attendance_create', department_id=department_id)
+#             return render(request, self.template_name, {'form': form})
+#     except Exception as e:
+#          render("error.html")
         
 
 
-class AttendanceCreateView(LoginRequiredMixin, View):
-    try:
-        template_name = 'emp/att_add.html'
-        form_class = AttendanceForm
+# class AttendanceCreateView(LoginRequiredMixin, View):
+#     try:
+#         template_name = 'emp/att_add.html'
+#         form_class = AttendanceForm
 
-        def get_form(self, department_id=None):
-            if department_id is not None:
-                employees = Employee.objects.filter(Department_id=department_id)
-            else:
-                employees = Employee.objects.none()
+#         def get_form(self, department_id=None):
+#             if department_id is not None:
+#                 employees = Employee.objects.filter(Department_id=department_id)
+#             else:
+#                 employees = Employee.objects.none()
 
-            form = self.form_class(employees_queryset=employees)
-            return form
+#             form = self.form_class(employees_queryset=employees)
+#             return form
 
-        def get(self, request, *args, **kwargs):
-            department_id = kwargs.get('department_id')
-            form = self.get_form(department_id)
-            return render(request, self.template_name, {'form': form, 'department_id': department_id})
+#         def get(self, request, *args, **kwargs):
+#             department_id = kwargs.get('department_id')
+#             form = self.get_form(department_id)
+#             return render(request, self.template_name, {'form': form, 'department_id': department_id})
 
-        def post(self, request, *args, **kwargs):
-            department_id = kwargs.get('department_id')
-            form = self.form_class(request.POST, employees_queryset=Employee.objects.filter(Department_id=department_id))
+#         def post(self, request, *args, **kwargs):
+#             department_id = kwargs.get('department_id')
+#             form = self.form_class(request.POST, employees_queryset=Employee.objects.filter(Department_id=department_id))
 
-            if form.is_valid():
-                date = form.cleaned_data['date']
-                selected_employees = form.cleaned_data['employees']
+#             if form.is_valid():
+#                 date = form.cleaned_data['date']
+#                 selected_employees = form.cleaned_data['employees']
 
-                for employee in selected_employees:
-                    Attendance.objects.update_or_create(
-                        employee=employee,
-                        date=date,
-                    )
-                return redirect('employee:sele_dept')
+#                 for employee in selected_employees:
+#                     Attendance.objects.update_or_create(
+#                         employee=employee,
+#                         date=date,
+#                     )
+#                 return redirect('employee:sele_dept')
 
-            return render(request, self.template_name, {'form': form, 'department_id': department_id})
-    except Exception as e:
-         render("error.html")
+#             return render(request, self.template_name, {'form': form, 'department_id': department_id})
+#     except Exception as e:
+#          render("error.html")
 
 
-class DepartmentSelect(LoginRequiredMixin, View):
-    try:
-        template_name = 'emp/sele_dept.html'
+# class DepartmentSelect(LoginRequiredMixin, View):
+#     try:
+#         template_name = 'emp/sele_dept.html'
 
-        def get(self, request, *args, **kwargs):
-            departments = Department.objects.all()
-            selected_department = request.GET.get('department')
-            selected_year = request.GET.get('year')
-            context = {
-                'departments': departments,
-                'selected_department': selected_department,
-                'selected_year': selected_year,
-            }
-            return render(request, self.template_name, context)
+#         def get(self, request, *args, **kwargs):
+#             departments = Department.objects.all()
+#             selected_department = request.GET.get('department')
+#             selected_year = request.GET.get('year')
+#             context = {
+#                 'departments': departments,
+#                 'selected_department': selected_department,
+#                 'selected_year': selected_year,
+#             }
+#             return render(request, self.template_name, context)
 
-        def post(self, request, *args, **kwargs):
-            # Assuming post is not needed as you are using GET method for the form
-            return redirect('employee:monthly_absence_count', department=request.POST.get('department'), year=request.POST.get('year'))
-    except Exception as e:
-         render("error.html")
+#         def post(self, request, *args, **kwargs):
+#             # Assuming post is not needed as you are using GET method for the form
+#             return redirect('employee:monthly_absence_count', department=request.POST.get('department'), year=request.POST.get('year'))
+#     except Exception as e:
+#          render("error.html")
 
-@login_required
-def monthly_absence_count(request):
-    try:
-        selected_department = request.GET.get('department')
-        selected_year = request.GET.get('year')
+# @login_required
+# def monthly_absence_count(request):
+#     try:
+#         selected_department = request.GET.get('department')
+#         selected_year = request.GET.get('year')
         
-        # Validate the year parameter
-        if selected_year:
-            try:
-                selected_year = int(selected_year)
-            except ValueError:
-                selected_year = None
+#         # Validate the year parameter
+#         if selected_year:
+#             try:
+#                 selected_year = int(selected_year)
+#             except ValueError:
+#                 selected_year = None
                 
-        absences = Attendance.objects.all()
+#         absences = Attendance.objects.all()
         
-        # Apply filtering based on selected department and year
-        if selected_department:
-            absences = absences.filter(employee__Department_id=selected_department)
+#         # Apply filtering based on selected department and year
+#         if selected_department:
+#             absences = absences.filter(employee__Department_id=selected_department)
             
-        if selected_year:
-            absences = absences.filter(date__year=selected_year)
+#         if selected_year:
+#             absences = absences.filter(date__year=selected_year)
             
-        # Apply the AttendanceFilter
-        attendance_filter = AttendanceFilter(request.GET, queryset=absences)
-        absences = attendance_filter.qs
+#         # Apply the AttendanceFilter
+#         attendance_filter = AttendanceFilter(request.GET, queryset=absences)
+#         absences = attendance_filter.qs
 
-        absence_data = absences.values('employee__Name', 'employee__Department__Department_Name', 'employee__Designation', 'date__month').annotate(count=Count('attendance_id'))
+#         absence_data = absences.values('employee__Name', 'employee__Department__Department_Name', 'employee__Designation', 'date__month').annotate(count=Count('attendance_id'))
         
-        table_data = {}
+#         table_data = {}
         
-        for data in absence_data:
-            employee_name = data['employee__Name']
-            department_name = data['employee__Department__Department_Name']
-            designation = data['employee__Designation']
-            month = data['date__month'] - 1
+#         for data in absence_data:
+#             employee_name = data['employee__Name']
+#             department_name = data['employee__Department__Department_Name']
+#             designation = data['employee__Designation']
+#             month = data['date__month'] - 1
             
-            if employee_name not in table_data:
-                table_data[employee_name] = {
-                    'department': department_name,
-                    'designation': designation,
-                    'months': [0] * 12,
-                }
+#             if employee_name not in table_data:
+#                 table_data[employee_name] = {
+#                     'department': department_name,
+#                     'designation': designation,
+#                     'months': [0] * 12,
+#                 }
             
-            table_data[employee_name]['months'][month] = data['count']
+#             table_data[employee_name]['months'][month] = data['count']
             
-        # Convert defaultdict to regular dictionary
-        table_data = dict(table_data)
+#         # Convert defaultdict to regular dictionary
+#         table_data = dict(table_data)
         
-        # Convert dictionary items to list of tuples
-        table_data_list = list(table_data.items())
+#         # Convert dictionary items to list of tuples
+#         table_data_list = list(table_data.items())
         
-        # Pagination
-        paginator = Paginator(table_data_list, 5)  # Show 10 items per page
-        page_number = request.GET.get('page')
+#         # Pagination
+#         paginator = Paginator(table_data_list, 5)  # Show 10 items per page
+#         page_number = request.GET.get('page')
         
-        try:
-            page_obj = paginator.page(page_number)
-        except PageNotAnInteger:
-            page_obj = paginator.page(1)
-        except EmptyPage:
-            page_obj = paginator.page(paginator.num_pages if paginator.num_pages > 1 else 1)
+#         try:
+#             page_obj = paginator.page(page_number)
+#         except PageNotAnInteger:
+#             page_obj = paginator.page(1)
+#         except EmptyPage:
+#             page_obj = paginator.page(paginator.num_pages if paginator.num_pages > 1 else 1)
         
-        context = {
-            'departments': Department.objects.all(),
-            'selected_department': selected_department,
-            'selected_year': selected_year,
-            'page_obj': page_obj,  # Pass paginated data to the template
-            'filter': attendance_filter,  # Pass the filter to template
-        }
+#         context = {
+#             'departments': Department.objects.all(),
+#             'selected_department': selected_department,
+#             'selected_year': selected_year,
+#             'page_obj': page_obj,  # Pass paginated data to the template
+#             'filter': attendance_filter,  # Pass the filter to template
+#         }
         
-        return render(request, 'emp/att_view.html', context)
-    except Exception as e:
-        return render(request,"error.html")
+#         return render(request, 'emp/att_view.html', context)
+#     except Exception as e:
+#         return render(request,"error.html")
 
-class AttendanceListView(ListView):
-    try:
-        model = Attendance
-        filterset_class = AttFilter
-        template_name = 'emp/att_list.html'  # Ensure this matches your template path
-        context_object_name = 'attendances'
-        paginate_by = 10  # Number of records per page
+# class AttendanceListView(ListView):
+#     try:
+#         model = Attendance
+#         filterset_class = AttFilter
+#         template_name = 'emp/att_list.html'  # Ensure this matches your template path
+#         context_object_name = 'attendances'
+#         paginate_by = 10  # Number of records per page
 
-        def get_queryset(self):
-            queryset = super().get_queryset()
-            self.filterset = self.filterset_class(self.request.GET, queryset=queryset)
-            return self.filterset.qs
+#         def get_queryset(self):
+#             queryset = super().get_queryset()
+#             self.filterset = self.filterset_class(self.request.GET, queryset=queryset)
+#             return self.filterset.qs
 
-        def get_context_data(self, **kwargs):
-            context = super().get_context_data(**kwargs)
-            context['filter'] = self.filterset
-            return context
-    except Exception as e:
-         render("error.html")
+#         def get_context_data(self, **kwargs):
+#             context = super().get_context_data(**kwargs)
+#             context['filter'] = self.filterset
+#             return context
+#     except Exception as e:
+#          render("error.html")
 
-class AttendanceDeleteView(DeleteView):
-    try:
+# class AttendanceDeleteView(DeleteView):
+#     try:
             
-        model = Attendance
-        success_url = reverse_lazy('employee:attendance_list')
+#         model = Attendance
+#         success_url = reverse_lazy('employee:attendance_list')
 
-        def delete(self, request, *args, **kwargs):
-            """
-            Handle the deletion of an attendance record via Ajax.
-            """
-            self.object = self.get_object()
-            try:
-                self.object.delete()
-                return JsonResponse({'message': 'Attendance record deleted successfully'}, status=200)
-            except Exception as e:
-                return JsonResponse({'error': str(e)}, status=500)
-    except Exception as e:
-         render("error.html")
+#         def delete(self, request, *args, **kwargs):
+#             """
+#             Handle the deletion of an attendance record via Ajax.
+#             """
+#             self.object = self.get_object()
+#             try:
+#                 self.object.delete()
+#                 return JsonResponse({'message': 'Attendance record deleted successfully'}, status=200)
+#             except Exception as e:
+#                 return JsonResponse({'error': str(e)}, status=500)
+#     except Exception as e:
+#          render("error.html")
 
-# Overtime Views
-class OvertimeCreateView(LoginRequiredMixin, View):
-    try:
-        def get(self, request):
-            department_form = DepartmentForm()
-            overtime_form = OvertimeForm()
-            return render(request, 'emp/ot_add.html', {
-                'department_form': department_form,
-                'overtime_form': overtime_form,
-                'employees': Employee.objects.none()
-            })
+# # Overtime Views
+# class OvertimeCreateView(LoginRequiredMixin, View):
+#     try:
+#         def get(self, request):
+#             department_form = DepartmentForm()
+#             overtime_form = OvertimeForm()
+#             return render(request, 'emp/ot_add.html', {
+#                 'department_form': department_form,
+#                 'overtime_form': overtime_form,
+#                 'employees': Employee.objects.none()
+#             })
 
-        def post(self, request):
-            department_form = DepartmentForm(request.POST)
-            overtime_form = OvertimeForm(request.POST)
-            if 'filter' in request.POST and department_form.is_valid():
-                department = department_form.cleaned_data['department']
-                employees = Employee.objects.filter(Department=department)
-                return render(request, 'emp/ot_add.html', {
-                    'department_form': department_form,
-                    'overtime_form': overtime_form,
-                    'employees': employees
-                })
-            if 'save' in request.POST and overtime_form.is_valid():
-                overtime = overtime_form.save(commit=False)
-                employee_id = request.POST.get('Employee')
-                if employee_id:
-                    overtime.Employee = Employee.objects.get(pk=employee_id)
-                    if overtime.Overtime_hours > 8:
-                        overtime.Overtime_hours = 8
-                        overtime.Overtime_minutes = 0
-                    overtime.save()
-                    return redirect('employee:overtim_list')
-            employees = Employee.objects.filter(Department=department_form.cleaned_data['department']) if department_form.is_valid() else Employee.objects.none()
-            return render(request, 'emp/ot_add.html', {
-                'department_form': department_form,
-                'overtime_form': overtime_form,
-                'employees': employees
-            })
-    except Exception as e:
-         render("error.html")
+#         def post(self, request):
+#             department_form = DepartmentForm(request.POST)
+#             overtime_form = OvertimeForm(request.POST)
+#             if 'filter' in request.POST and department_form.is_valid():
+#                 department = department_form.cleaned_data['department']
+#                 employees = Employee.objects.filter(Department=department)
+#                 return render(request, 'emp/ot_add.html', {
+#                     'department_form': department_form,
+#                     'overtime_form': overtime_form,
+#                     'employees': employees
+#                 })
+#             if 'save' in request.POST and overtime_form.is_valid():
+#                 overtime = overtime_form.save(commit=False)
+#                 employee_id = request.POST.get('Employee')
+#                 if employee_id:
+#                     overtime.Employee = Employee.objects.get(pk=employee_id)
+#                     if overtime.Overtime_hours > 8:
+#                         overtime.Overtime_hours = 8
+#                         overtime.Overtime_minutes = 0
+#                     overtime.save()
+#                     return redirect('employee:overtim_list')
+#             employees = Employee.objects.filter(Department=department_form.cleaned_data['department']) if department_form.is_valid() else Employee.objects.none()
+#             return render(request, 'emp/ot_add.html', {
+#                 'department_form': department_form,
+#                 'overtime_form': overtime_form,
+#                 'employees': employees
+#             })
+#     except Exception as e:
+#          render("error.html")
     
-class OvertimeListView(LoginRequiredMixin, View):
-    try:
+# class OvertimeListView(LoginRequiredMixin, View):
+#     try:
             
-        def get(self, request):
-            filter_form = OvertimeFilterForm()
-            return render(request, 'emp/overtime_list.html', {
-                'filter_form': filter_form,
-                'overtimes': [],
-                'department': None,
-                'month': None,
-                'year': None,
-            })
+#         def get(self, request):
+#             filter_form = OvertimeFilterForm()
+#             return render(request, 'emp/overtime_list.html', {
+#                 'filter_form': filter_form,
+#                 'overtimes': [],
+#                 'department': None,
+#                 'month': None,
+#                 'year': None,
+#             })
 
-        def post(self, request):
-            filter_form = OvertimeFilterForm(request.POST)
-            if filter_form.is_valid():
-                department = filter_form.cleaned_data['department']
-                month = filter_form.cleaned_data['month']
-                year = filter_form.cleaned_data['year']
-                overtimes = Overtime.objects.filter(
-                    Employee__Department=department,
-                    Date__month=month,
-                    Date__year=year
-                ).values(
-                    'Employee__Name'
-                ).annotate(
-                    total_minutes=Sum(F('Overtime_hours') * 60 + F('Overtime_minutes'))
-                ).order_by('Employee__Name')
-                for overtime in overtimes:
-                    overtime['total_hours'] = overtime['total_minutes'] // 60
-                    overtime['remaining_minutes'] = overtime['total_minutes'] % 60
-                return render(request, 'emp/overtime_list.html', {
-                    'filter_form': filter_form,
-                    'overtimes': overtimes,
-                    'department': department,
-                    'month': month,
-                    'year': year,
-                })
-            return render(request, 'emp/overtime_list.html', {
-                'filter_form': filter_form,
-                'overtimes': [],
-                'department': None,
-                'month': None,
-                'year': None,
-            })
-    except Exception as e:
-         render("error.html")
+#         def post(self, request):
+#             filter_form = OvertimeFilterForm(request.POST)
+#             if filter_form.is_valid():
+#                 department = filter_form.cleaned_data['department']
+#                 month = filter_form.cleaned_data['month']
+#                 year = filter_form.cleaned_data['year']
+#                 overtimes = Overtime.objects.filter(
+#                     Employee__Department=department,
+#                     Date__month=month,
+#                     Date__year=year
+#                 ).values(
+#                     'Employee__Name'
+#                 ).annotate(
+#                     total_minutes=Sum(F('Overtime_hours') * 60 + F('Overtime_minutes'))
+#                 ).order_by('Employee__Name')
+#                 for overtime in overtimes:
+#                     overtime['total_hours'] = overtime['total_minutes'] // 60
+#                     overtime['remaining_minutes'] = overtime['total_minutes'] % 60
+#                 return render(request, 'emp/overtime_list.html', {
+#                     'filter_form': filter_form,
+#                     'overtimes': overtimes,
+#                     'department': department,
+#                     'month': month,
+#                     'year': year,
+#                 })
+#             return render(request, 'emp/overtime_list.html', {
+#                 'filter_form': filter_form,
+#                 'overtimes': [],
+#                 'department': None,
+#                 'month': None,
+#                 'year': None,
+#             })
+#     except Exception as e:
+#          render("error.html")
 
 
-class OvertimeView(FilterView):
-    """
-    Displays a list of Overtime entries with filtering and pagination.
-    """
-    try:
-        model = Overtime
-        template_name = 'emp/ot_detaillist.html'
-        context_object_name = 'overtimes'
-        filterset_class = OvertimeFilter
-        paginate_by = 10  # Number of items per page
+# class OvertimeView(FilterView):
+#     """
+#     Displays a list of Overtime entries with filtering and pagination.
+#     """
+#     try:
+#         model = Overtime
+#         template_name = 'emp/ot_detaillist.html'
+#         context_object_name = 'overtimes'
+#         filterset_class = OvertimeFilter
+#         paginate_by = 10  # Number of items per page
 
-        def get_context_data(self, **kwargs):
-            """
-            Adds pagination to the filtered queryset.
-            """
-            context = super().get_context_data(**kwargs)
-            filter = context['filter']
-            paginator = Paginator(filter.qs, self.paginate_by)
-            page_number = self.request.GET.get('page')
-            page_obj = paginator.get_page(page_number)
-            context['overtimes'] = page_obj
-            return context
-    except Exception as e:
-         render("error.html")
+#         def get_context_data(self, **kwargs):
+#             """
+#             Adds pagination to the filtered queryset.
+#             """
+#             context = super().get_context_data(**kwargs)
+#             filter = context['filter']
+#             paginator = Paginator(filter.qs, self.paginate_by)
+#             page_number = self.request.GET.get('page')
+#             page_obj = paginator.get_page(page_number)
+#             context['overtimes'] = page_obj
+#             return context
+#     except Exception as e:
+#          render("error.html")
     
-class OvertimeDeleteView(View):
-    """
-    Handles the deletion of an overtime record via an Ajax request.
-    """
-    try:
+# class OvertimeDeleteView(View):
+#     """
+#     Handles the deletion of an overtime record via an Ajax request.
+#     """
+#     try:
             
-        def delete(self, request, overtime_id):
-            """
-            Deletes an overtime record.
-            """
-            overtime = get_object_or_404(Overtime, pk=overtime_id)
+#         def delete(self, request, overtime_id):
+#             """
+#             Deletes an overtime record.
+#             """
+#             overtime = get_object_or_404(Overtime, pk=overtime_id)
 
-            try:
-                overtime.delete()
-                return JsonResponse({'message': 'Overtime record deleted successfully.'}, status=204)
-            except Exception as e:
-                return JsonResponse({'error': str(e)}, status=500)
-    except Exception as e:
-         render("error.html")
+#             try:
+#                 overtime.delete()
+#                 return JsonResponse({'message': 'Overtime record deleted successfully.'}, status=204)
+#             except Exception as e:
+#                 return JsonResponse({'error': str(e)}, status=500)
+#     except Exception as e:
+#          render("error.html")

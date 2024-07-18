@@ -3,243 +3,190 @@
 {% block title %}Stock Distribution Details{% endblock %}
 
 {% block content %}
-{% load static %}
-
-
 <style>
-    /* Reset default margin and padding */
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    /* Body and container styles */
-    body {
-        font-family: Arial, sans-serif;
-        
-        padding-top: 50px; /* Adjust for the fixed navigation bar */
-    }
-
-    /* Top Navigation Bar styles */
-    .top-nav {
-        width: 100%;
-        background-color: #333;
-        display: flex;
-        justify-content: flex-end;
-        padding: 10px 20px;
-        box-sizing: border-box;
-        position: fixed;
-        top: 0;
-        right: 0;
-        z-index: 1;
-        height: 70px; /* Fixed height for navigation bar */
-    }
-
-    .top-nav a {
-        display: inline-block;
-        color: white;
-        text-align: center;
-        padding: 10px 20px;
-        text-decoration: none;
-        line-height: 30px; /* Adjust line height for vertical alignment */
-    }
-
-    .top-nav a:hover {
-        background-color: #ddd;
-        color: black;
-    }
-
-    /* Container for page content */
+    /* Custom styles */
     .container {
-        max-width: 1200px;
-        margin: 70px auto 20px; /* Adjusted margin to move it down */
-        padding: 20px;
-        
-        
-        border-radius: 5px;
+        margin: 20px auto;
+        max-width: 800px;
+        padding-top: 60px; /* Adjust as needed */
     }
-    .hey{
-        padding:100px;
-        border: 2px solid black;
-    }
-    /* Styles for the main heading */
+
     h1 {
-        text-align: center;
+        color: #333;
+        font-size: 2.5rem;
         margin-bottom: 20px;
     }
 
-    /* Form styles */
     form {
-        display: flex;
         margin-bottom: 20px;
     }
 
-    form input[type="text"] {
-        width: calc(100% - 20px);
-        padding: 10px;
-        font-size: 14px;
-        border: 1px solid #ddd;
-        border-radius: 3px;
-        margin-bottom: 10px;
-    }
-
-    button form button {
-        padding: 10px 20px;
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 16px;
-        margin-left: 10px;
-    }
-    button{
-        padding:5px;
-    }
-
-    form button:hover {
-        background-color: #45a049;
-    }
-
-    /* Table styles */
     table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 20px;
+        margin-bottom: 20px;
     }
 
-    table th, table td {
-        border: 1px solid #ddd;
+    th, td {
+        border: 1px solid #ccc;
         padding: 8px;
         text-align: left;
     }
 
-    table th {
-        background-color: #f2f2f2;
+    th {
+        background-color: #f0f0f0;
     }
 
-    /* Edit and delete link styles */
-    .edit-link, .delete-btn {
-        padding: 5px 10px;
-        text-decoration: none;
-        color: #007bff;
+    tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 8px 12px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
         cursor: pointer;
+        text-decoration: none;
+        border-radius: 4px;
+        margin-right: 5px;
     }
 
-    .edit-link:hover, .delete-btn:hover {
-        text-decoration: underline;
+    .btn-primary {
+        background-color: #007bff;
     }
 
-    /* Responsive styles */
-    @media (max-width: 768px) {
-        .top-nav {
-            justify-content: center;
-        }
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
 
-        .container {
-            margin: 10px;
-            padding: 10px;
-        }
+    .pagination {
+        margin-top: 20px;
+    }
 
-        form input[type="text"] {
-            width: 100%;
-        }
+    .step-links {
+        display: inline-block;
+        margin-bottom: 10px;
+    }
+
+    .step-links a {
+        padding: 5px 10px;
+        margin-right: 5px;
+        border: 1px solid #ddd;
+        color: #333;
+        text-decoration: none;
+        border-radius: 4px;
+    }
+
+    .step-links a:hover {
+        background-color: #f0f0f0;
     }
 </style>
 
-
 <div class="container">
-    <div class = "hey">
-    <h1>Stock Distribution Details</h1>
+    <div class="hey">
+        <h1>Stock Distribution Details</h1>
 
-    <!-- Form for searching stock entries -->
-    <form method="get" action="{% url 'product:stock_in_list' %}">
-        <input type="text" name="q" placeholder="Search stock entries" value="{{ request.GET.q }}">
-        <button type="submit">Search</button>
-    </form>
+        <!-- Form for filtering stock entries -->
+        <form method="get" action="{% url 'product:stock_in_list' %}">
+            {{ filter.form.as_p }}
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
 
-    <!-- Container for displaying stock entries -->
-    <div id="stockList">
-        <!-- Check if there are stock entries to display -->
-        {% if stock_entries %}
-            <!-- Table for displaying stock entry details -->
-            <table>
-                <thead>
-                    <!-- Table header with column names -->
-                    <tr>
-                        <th>Employee</th>
-                        <th>Item</th>
-                        <th>Quantity</th>
-                        <th>Issue Date</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Iterate over each stock entry -->
-                    {% for stock in stock_entries %}
-                        <!-- Table row for each stock entry -->
+        <!-- Display filtered stock entries in a table -->
+        <div id="stockList">
+            {% if object_list %}
+                <table>
+                    <thead>
                         <tr>
-                            <!-- Display stock entry details in each column -->
-                            <td>{{ stock.employee }}</td>
-                            <td>{{ stock.item }}</td>
-                            <td>{{ stock.Quantity }}</td>
-                            <td>{{ stock.issue_date }}</td>
-                            <!-- Actions column for editing and deleting stock entries -->
-                            <td>
-                                <!-- Edit button to update stock entry details -->
-                                <button onclick="location.href='{% url 'product:stock_in_edit' stock.pk %}'">Edit</button>
-                                
-                                <!-- Form for deleting the stock entry -->
-                                <form method="post" action="{% url 'product:stock_in_delete' stock.pk %}" style="display: inline;">
-                                    {% csrf_token %}
-                                    <!-- Button to delete the stock entry -->
-                                    <button type="button" onclick="confirmDelete(this)">Delete</button>
-                                </form>
-                            </td>
+                            <th>Emp Code</th>
+                            <th>Employee</th>
+                            <th>Department</th>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Issue Date</th>
+                            <th>Actions</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        <!-- If no stock entries are found, display a message -->
-        {% else %}
-            <p>No stock entries found.</p>
-        {% endif %}
+                    </thead>
+                    <tbody>
+                        {% for stock in object_list %}
+                            <tr>
+                                <td>{{ stock.employee.Emp_code }}</td>
+                                <td>{{ stock.employee }}</td>
+                                <td>{{ stock.employee.Department }}</td>
+                                <td>{{ stock.item }}</td>
+                                <td>{{ stock.Quantity }}</td>
+                                <td>{{ stock.issue_date }}</td>
+                                <td>
+                                    <!-- Edit button -->
+                                    <button onclick="location.href='{% url 'product:stock_in_edit' stock.pk %}'" class="btn btn-primary">Edit</button>
+
+                                    <!-- Delete form -->
+                                    <form method="post" action="{% url 'product:stock_in_delete' stock.pk %}" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="button" onclick="confirmDelete(this)" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                 <!-- Pagination links -->
+            <div class="pagination">
+                <span class="step-links">
+                    {% if stock_entries.has_previous %}
+                        <a href="?page=1">&laquo; first</a>
+                        <a href="?page={{ stock_entries.previous_page_number }}">previous</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ stock_entries.number }} of {{ stock_entries.paginator.num_pages }}.
+                    </span>
+
+                    {% if stock_entries.has_next %}
+                        <a href="?page={{ stock_entries.next_page_number }}">next</a>
+                        <a href="?page={{ stock_entries.paginator.num_pages }}">last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+                
+                <a href="{% url 'product:download_csv' %}" class="btn btn-primary">Download CSV</a>
+
+                
+            {% else %}
+                <p>No stock entries found.</p>
+            {% endif %}
+        </div>
+
+        <!-- Pagination links -->
+        <!-- Pagination links -->
+            
     </div>
 </div>
-</div>
 
-<!-- JavaScript function to confirm stock entry deletion -->
 <script>
     function confirmDelete(button) {
-        // Ask for confirmation before deleting
         if (confirm("Are you sure you want to delete this stock entry?")) {
-            // Get the form containing the delete button
             const form = button.parentElement;
-            // Get the CSRF token value from the form
             const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
 
-            // Send a DELETE request to delete the stock entry
             fetch(form.action, {
                 method: 'DELETE',
                 headers: {
                     'X-CSRFToken': csrfToken
                 }
             }).then(response => {
-                // Check if deletion is successful
                 if (response.ok) {
                     alert("Stock entry deleted successfully");
-                    // Remove the row from the table
                     const row = button.closest('tr');
                     row.remove();
                 } else if (response.status === 404) {
-                    // Display a specific error message for 404 Not Found
                     alert("Stock entry not found. Please refresh the page.");
                 } else if (response.status === 403) {
-                    // Display a specific error message for 403 Forbidden
                     alert("You are not authorized to delete this stock entry.");
                 } else {
-                    // Display a generic error message for other errors
                     alert("An error occurred while trying to delete the stock entry.");
                 }
             }).catch(error => {

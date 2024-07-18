@@ -27,8 +27,11 @@ class Product(models.Model):
     Item = models.ForeignKey(Item, on_delete=models.CASCADE)
     Supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
     Quantity = models.IntegerField()
-    Price = models.IntegerField()
-    Purchase_Date = models.DateField()
+    Price_per_piece = models.IntegerField()
+    SGST = models.IntegerField(default=0)
+    CGST = models.IntegerField(default=0)
+    Invoice_amount=models.IntegerField(default=0)
+    Invoice_Date = models.DateField()
     Invoice_Number = models.IntegerField()
 
     class Meta:
