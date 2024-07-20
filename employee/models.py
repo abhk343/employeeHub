@@ -61,6 +61,7 @@ class Employee(models.Model):
     sp_convenience = models.IntegerField(default = 0)
     Gross1 = models.IntegerField(validators=[MinValueValidator(1)])
     Remarks = models.TextField(null=True,blank=True)
+    Photo = models.ImageField(upload_to='employee_photos/', null=True, blank=True)
     
     def save(self, *args, **kwargs):
         self.Gross1 = self.basic + self.HRA + self.VDA + self.convenience + self.sp_convenience

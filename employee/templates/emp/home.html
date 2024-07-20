@@ -157,7 +157,7 @@ Dashboard - My Application
                     <!-- Superuser links -->
                     <a href="{% url 'employee:depemp_home' %}">
                         <img class="icon" src="{% static 'images/depemp1.jpg' %}" alt="Department Icon">
-                        <span class="caption">Department And Employees</span>
+                        <span class="caption">Human Resource</span>
                     </a>
 
                     <a href="{% url 'product:prod_home' %}">
@@ -169,9 +169,11 @@ Dashboard - My Application
                     <!-- HR links -->
                     <a href="{% url 'employee:depemp_home' %}">
                         <img class="icon" src="{% static 'images/depemp1.jpg' %}" alt="Department Icon">
-                        <span class="caption">Department And Employees</span>
+                        <span class="caption">Human Resource</span>
                     </a>
 
+                    
+                {% elif user|has_group:"Supervisor" %}
                     <a href="{% url 'product:prod_home' %}">
                         <img class="icon" src="{% static 'images/product.jpg' %}" alt="Product Icon">
                         <span class="caption">Product</span>

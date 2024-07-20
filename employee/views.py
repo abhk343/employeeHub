@@ -179,7 +179,7 @@ class EmployeeCreateView(LoginRequiredMixin, View):
             return render(request, 'emp/emp_create.html', {'title': 'Create Employee', 'form': form})
 
         def post(self, request, *args, **kwargs):
-            form = EmployeeCreateForm(request.POST)
+            form = EmployeeCreateForm(request.POST,request.FILES)
             if form.is_valid():
                 try:
                     form.save()
@@ -206,7 +206,7 @@ class EmployeeUpdateView(LoginRequiredMixin, View):
         def post(self, request, pk, *args, **kwargs):
 
             employee = get_object_or_404(Employee, pk=pk)
-            form = EmployeeCreateForm(request.POST, instance=employee)
+            form = EmployeeCreateForm(request.POST, request.FILES,instance=employee)
             if form.is_valid():
                 try:
                     # Check if Punch_Card_NO or UAN_Number has changed

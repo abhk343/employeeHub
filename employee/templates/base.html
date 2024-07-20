@@ -34,7 +34,7 @@
             {% if user.is_superuser %}
                 Admin Dashboard
             {% elif user|has_group:"Supervisor" %}
-                Supervisor Dashboard
+                Stock Manager Dashboard
             {% elif user|has_group:"HR" %}
                 HR Dashboard
             {% endif %}
@@ -110,6 +110,9 @@
                                 <a class="dropdown-item" href="{% url 'employee:employee_create' %}">Add Employee</a>
                             </div>
                         </li>
+                        
+                        {% elif  user|has_group:"Supervisor" %}
+                        
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="overtimeDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Item And Supplier

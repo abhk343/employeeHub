@@ -127,11 +127,10 @@
 <h1>Add Employee</h1>
 {% endif %}
 
+
+
 <!-- Main content -->
 <div class="content">
-    <!-- Page title -->
-    
-
     <!-- Display success and error messages -->
     {% if messages %}
         <ul class="messages">
@@ -140,23 +139,12 @@
             {% endfor %}
         </ul>
     {% endif %}
-    {% if edit %}
-    <form method="post" action="">
+    
+    <form method="post"  enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Save</button>
+        <button type="submit">Upload</button>
     </form>
-{% else %}
-
-<form method="post" action="{% url 'employee:employee_create' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-
-    <!-- Button to submit the form data -->
-    <button type="submit">Save</button>
-</form>
-
-{% endif %}
 
     <!-- Display form errors if there are any -->
     {% if form.errors %}

@@ -25,6 +25,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-top: 200px;
             border-radius: 8px;
+            text-align: center;
             overflow: hidden;
         }
 
@@ -135,6 +136,17 @@
 
     <!-- Table for displaying employee details -->
     <table>
+        <tr>
+            <th data-label="Photo">Photo</th>
+            <td data-label="Photo">
+                {% if employee.Photo %}
+                    <img src="{{ employee.Photo.url }}" alt="{{ employee.Name }}" style="max-width: 250px; max-height: 250px;">
+                {% else %}
+                    No photo available
+                {% endif %}
+            </td>
+        </tr>
+        
         <tr>
             <th data-label="Emp_code">Employee Code</th>
             <td data-label="Emp_code">{{ employee.Emp_code }}</td>
