@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Add Attendance{% endblock %}
+{% block title %}Details of Employee{% endblock %}
 
 {% block content %}
     <style>
@@ -25,6 +25,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-top: 200px;
             border-radius: 8px;
+            text-align: center;
             overflow: hidden;
         }
 
@@ -136,6 +137,25 @@
     <!-- Table for displaying employee details -->
     <table>
         <tr>
+            <th data-label="Photo">Photo</th>
+            <td data-label="Photo">
+                {% if employee.Photo %}
+                    <img src="{{ employee.Photo.url }}" alt="{{ employee.Name }}" style="max-width: 250px; max-height: 250px;">
+                {% else %}
+                    No photo available
+                {% endif %}
+            </td>
+        </tr>
+        
+        <tr>
+            <th data-label="Emp_code">Employee Code</th>
+            <td data-label="Emp_code">{{ employee.Emp_code }}</td>
+        </tr>
+        <tr>
+            <th data-label="Esi_no">Esi no</th>
+            <td data-label="Esi_no">{{ employee.Esic_no }}</td>
+        </tr>
+        <tr>
             <th data-label="Name">Name</th>
             <td data-label="Name">{{ employee.Name }}</td>
         </tr>
@@ -151,6 +171,7 @@
             <th data-label="Location">Location</th>
             <td data-label="Location">{{ employee.Location }}</td>
         </tr>
+
         <tr>
             <th data-label="Date of Birth">Date of Birth</th>
             <td data-label="Date of Birth">{{ employee.DOB }}</td>
@@ -188,8 +209,8 @@
             <td data-label="UAN Number">{{ employee.UAN_Number }}</td>
         </tr>
         <tr>
-            <th data-label="PF PW">PF PW</th>
-            <td data-label="PF PW">{{ employee.PF_PW }}</td>
+            <th data-label="PF Member Id">PF Member Id</th>
+            <td data-label="PF Member Id">{{ employee.PF_Member_Id }}</td>
         </tr>
         <tr>
             <th data-label="ESI Number">ESI Number</th>
@@ -228,12 +249,12 @@
             <td data-label="Emergency Contact Number">{{ employee.Emergency_Contact_No }}</td>
         </tr>
         <tr>
-            <th data-label="Contact Number">Contact Number</th>
-            <td data-label="Contact Number">{{ employee.Contact_No }}</td>
+            <th data-label="Contact Name">Contact Name</th>
+            <td data-label="Contact Name">{{ employee.Contact_Name }}</td>
         </tr>
         <tr>
-            <th data-label="Surname">Surname</th>
-            <td data-label="Surname">{{ employee.Sur_name }}</td>
+            <th data-label="Relation">Relation</th>
+            <td data-label="Relation">{{ employee.Relation }}</td>
         </tr>
         <tr>
             <th data-label="Qualification">Qualification</th>
@@ -244,12 +265,33 @@
             <td data-label="Experience">{{ employee.Experience }}</td>
         </tr>
         <tr>
-            <th data-label="Remarks">Remarks</th>
-            <td data-label="Remarks">{{ employee.Remarks }}</td>
+            <th data-label="basic">Basic</th>
+            <td data-label="basic">{{ employee.basic }}</td>
         </tr>
         <tr>
-            <th data-label="Salary">Salary</th>
-            <td data-label="Salary">{{ employee.Salary }}</td>
+            <th data-label="VDA">VDA</th>
+            <td data-label="VDA">{{ employee.VDA }}</td>
+        </tr>
+        <tr>
+            <th data-label="HRA">HRA</th>
+            <td data-label="HRA">{{ employee.HRA }}</td>
+        </tr>
+        <tr>
+            <th data-label="convenience">Convenience</th>
+            <td data-label="convenience">{{ employee.convenience }}</td>
+        </tr>
+        
+        <tr>
+            <th data-label="sp_convenience">Special Convenience</th>
+            <td data-label="sp_convenience">{{ employee.sp_convenience }}</td>
+        </tr>
+        <tr>
+            <th data-label="Gross1">Gross1</th>
+            <td data-label="Gross1">{{ employee.Gross1 }}</td>
+        </tr>
+        <tr>
+            <th data-label="Remarks">Remarks</th>
+            <td data-label="Remarks">{{ employee.Remarks }}</td>
         </tr>
     </table>
 
@@ -262,7 +304,6 @@
             <button type="button" onclick="confirmDelete(this)">Delete</button>
         </form>
     </div>
-
     <!-- Back to list link -->
     <div>
         <a href="{% url 'employee:employee_list' %}" class="back-link">Back to Employee List</a>
