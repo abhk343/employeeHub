@@ -5,7 +5,6 @@
 {% block content %}
 {% load static %}
 
-
 <style>
     /* Reset default margin and padding */
     * {
@@ -17,7 +16,6 @@
     /* Body and container styles */
     body {
         font-family: Arial, sans-serif;
-        
         padding-top: 50px; /* Adjust for the fixed navigation bar */
     }
 
@@ -55,15 +53,9 @@
         max-width: 1200px;
         margin: 70px auto 20px; /* Adjusted margin to move it down */
         padding: 20px;
-        
-        
         border-radius: 5px;
     }
-    .hey{
-        padding:100px;
-        border: 2px solid black;
 
-    }
     /* Styles for the main heading */
     h1 {
         text-align: center;
@@ -86,7 +78,7 @@
         margin-bottom: 10px;
     }
 
-    button form button {
+    form button {
         padding: 10px 20px;
         background-color: #4CAF50;
         color: white;
@@ -105,6 +97,7 @@
     table {
         width: 100%;
         border-collapse: collapse;
+        margin-top: 20px;
     }
 
     table th, table td {
@@ -126,6 +119,42 @@
     }
 
     button:hover {
+        background-color: #ddd;
+    }
+
+    /* Pagination styles */
+    .pagination {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .pagination-list {
+        display: inline-block;
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .pagination-list li {
+        display: inline;
+        margin: 0 5px;
+    }
+
+    .pagination-list li.active span {
+        background-color: #4CAF50;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+
+    .pagination-list li a {
+        text-decoration: none;
+        color: #333;
+        padding: 5px 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    .pagination-list li a:hover {
         background-color: #ddd;
     }
 
@@ -152,12 +181,11 @@
 </div>
 
 <div class="container">
-    <div class="hey">
     <h1>Purchased Items Details</h1>
 
     <!-- Form for searching products -->
     <form method="get" action="{% url 'product:prd_list' %}">
-        <input type="text" name="q" placeholder="Search products" value="{{ request.GET.q }}">
+        {{ filter.form.as_p }}
         <button type="submit">Search</button>
     </form>
 
@@ -175,7 +203,10 @@
                         <th>Quantity</th>
                         <th>Price per Piece</th>
                         <th>Total Price</th>
-                        <th>Purchase Date</th>
+                        <th>CGST(in %)</th>
+                        <th>SGST(in %)</th>
+                        <th>Invoice Amount</th>
+                        <th>Invoice Date</th>
                         <th>Invoice Number</th>
                         <th>Actions</th>
                     </tr>
@@ -189,15 +220,17 @@
                             <td>{{ product.Item.Item_Name }}</td>
                             <td>{{ product.Supplier.Supplier_Name }}</td>
                             <td>{{ product.Quantity }}</td>
-                            <td>{{ product.price_per_piece|floatformat:2 }}</td>
-                            <td>{{ product.Price }}</td>
-                            <td>{{ product.Purchase_Date }}</td>
+                            <td>{{ product.Price_per_piece }}</td>
+                            <td>{{ product.total_price }}</td> <!-- Ensure to display total_price here -->
+                            <td>{{ product.CGST }}%</td>
+                            <td>{{ product.SGST }}%</td>
+                            <td>{{ product.Invoice_amount }}</td>
+                            <td>{{ product.Invoice_Date }}</td>
                             <td>{{ product.Invoice_Number }}</td>
                             <!-- Actions column for editing and deleting products -->
                             <td>
                                 <!-- Edit button to update product details -->
-                                <button onclick="location.href='{% url "product:prd_edit" product.pk %}'">Edit</button>
-                                
+                                <button onclick="location.href='{% url 'product:prd_edit' product.pk %}'">Edit</button>
                                 <!-- Form for deleting the product -->
                                 <form method="post" action="{% url 'product:prd_delete' product.pk %}" style="display: inline;">
                                     {% csrf_token %}
@@ -206,15 +239,37 @@
                                 </form>
                             </td>
                         </tr>
+                    {% empty %}
+                        <!-- If no products are found, display a message -->
+                        <tr><td colspan="11" class="text-center">No products found.</td></tr>
                     {% endfor %}
                 </tbody>
             </table>
-        <!-- If no products are found, display a message -->
         {% else %}
+            <!-- If no products are found, display a message -->
             <p>No products found.</p>
         {% endif %}
     </div>
-    </div>
+<!-- Pagination -->
+<div class="pagination">
+    
+    <!-- Pagination Links -->
+    {% if products.has_previous %}
+        <a href="?page=1">&laquo; First</a>
+        <a href="?page={{ products.previous_page_number }}">Previous</a>
+    {% endif %}
+
+    <span>Page {{ products.number }} of {{ products.paginator.num_pages }}</span>
+
+    {% if products.has_next %}
+        <a href="?page={{ products.next_page_number }}">Next</a>
+        <a href="?page={{ products.paginator.num_pages }}">Last &raquo;</a>
+    {% endif %}
+
+    </ul>
+</div>
+
+
 </div>
 
 <!-- JavaScript function to confirm product deletion -->

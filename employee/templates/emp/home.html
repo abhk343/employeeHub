@@ -72,7 +72,7 @@ Dashboard - My Application
         }
 
         .nav-container a {
-            background-color:lightgreen;
+            background-color: lightgreen;
             text-align: center;
             padding: 20px;
             text-decoration: none;
@@ -117,16 +117,14 @@ Dashboard - My Application
                 background-color: lightblue;
                 color: white;
             }
-    
+
             .nav-container a:hover img {
                 transform: scale(1.1); /* Increase size on hover */
             }
 
             .caption {
-                
                 font-size: 16px; /* Adjusted for smaller screens */
             }
-            
         }
 
         @media (max-width: 480px) {
@@ -152,10 +150,6 @@ Dashboard - My Application
     </style>
 
     {% if user.is_authenticated %}
-        
-
-        
-
         <div class="container">
             <div class="nav-container">
                 <!-- Conditional navigation links based on user role -->
@@ -163,41 +157,31 @@ Dashboard - My Application
                     <!-- Superuser links -->
                     <a href="{% url 'employee:depemp_home' %}">
                         <img class="icon" src="{% static 'images/depemp1.jpg' %}" alt="Department Icon">
-                        <span class="caption">Department And Employees</span>
-                    </a>
-                    <a href="{% url 'employee:attendance_home' %}">
-                        <img class="icon" src="{% static 'images/attendance.jpg' %}" alt="Attendance Icon">
-                        <span class="caption">Attendance</span>
-                    </a>
-                    <a href="{% url 'product:prod_home' %}">
-                        <img class="icon" src="{% static 'images/product.jpg' %}" alt="Product Icon">
-                        <span class="caption">Product</span>
-                    </a>
-                {% elif user|has_group:"HR" %}
-                    <!-- Supervisor links -->
-                    <a href="{% url 'employee:depemp_home' %}">
-                        <img class="icon" src="{% static 'images/depemp1.jpg' %}" alt="Department Icon">
-                        <span class="caption">Department And Employees</span>
+                        <span class="caption">Human Resource</span>
                     </a>
 
                     <a href="{% url 'product:prod_home' %}">
                         <img class="icon" src="{% static 'images/product.jpg' %}" alt="Product Icon">
                         <span class="caption">Product</span>
                     </a>
-                   
-                {% elif user|has_group:"Supervisor" %}
+
+                {% elif user|has_group:"HR" %}
                     <!-- HR links -->
-                    <a href="{% url 'employee:attendance_home' %}">
-                        <img class="icon" src="{% static 'images/attendance.jpg' %}" alt="Attendance Icon">
-                        <span class="caption">Attendance</span>
+                    <a href="{% url 'employee:depemp_home' %}">
+                        <img class="icon" src="{% static 'images/depemp1.jpg' %}" alt="Department Icon">
+                        <span class="caption">Human Resource</span>
                     </a>
+
                     
-                    
+                {% elif user|has_group:"Supervisor" %}
+                    <a href="{% url 'product:prod_home' %}">
+                        <img class="icon" src="{% static 'images/product.jpg' %}" alt="Product Icon">
+                        <span class="caption">Product</span>
+                    </a>
                 {% endif %}
             </div>
         </div>
-
     {% else %}
-        <a href="{% url 'login' %}">Log in</a>
+        <a href="{% url 'employee:login' %}">Log in</a>
     {% endif %}
 {% endblock %}
