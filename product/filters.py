@@ -36,25 +36,14 @@ class StockFilter(django_filters.FilterSet):
 
 # filters.py
 # filters.py
+# employee/filters.py
+import django_filters
+from .models import Employee
 
 class EmployeeFilter(django_filters.FilterSet):
-    department = django_filters.ChoiceFilter(
-        field_name='Department__Department_Name',
-        choices=lambda: [(dept.Department_Name, dept.Department_Name) for dept in Department.objects.all().order_by('Department_Name')],
-        empty_label='Select Department',
-        label='Department'
-    )
-    name = django_filters.CharFilter(
-        field_name='Name',
-        lookup_expr='icontains',
-        label='Name'
-    )
-    designation = django_filters.ChoiceFilter(
-        field_name='Designation',
-        choices=lambda: [(desig, desig) for desig in Employee.objects.values_list('Designation', flat=True).distinct().order_by('Designation')],
-        empty_label='Select Designation',
-        label='Designation'
-    )
+    name = django_filters.CharFilter(lookup_expr='icontains')
+    department = django_filters.CharFilter(lookup_expr='icontains')
+    designation = django_filters.CharFilter(lookup_expr='icontains')
 
     class Meta:
         model = Employee
