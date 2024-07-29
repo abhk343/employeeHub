@@ -1,137 +1,187 @@
-<!-- employee_list.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee List</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        table, th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .empty-data {
-            text-align: center;
-            padding: 10px;
-        }
-    </style>
-</head>
-<body>
-    <h1>Employee List</h1>
+<!-- prod/templates/employee_stock_list.html -->
+{% extends 'base.html' %}
 
-    <!-- Filter form for EmployeeStockFilter -->
-    <form method="get">
-        {{filter.form.as_p}}
-        <button type="submit">Filter</button>
-    </form>
+{% block title %}Employee List{% endblock %}
 
-    <!-- Table for displaying employee details -->
-    <h2>Employee Details</h2>
-    <table>
-        <thead>
+{% block content %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .content {
+        margin-top: 150px; /* Adjusted to 90px to bring the content 10px more downward */
+        width: 100%;
+        max-width: 1200px;
+        padding: 0 20px;
+        box-sizing: border-box;
+    }
+
+    h1, h2 {
+        color: #333;
+        margin: 20px 0;
+        text-align: center;
+    }
+
+    form {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    button {
+        padding: 10px 20px;
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    table, th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    th {
+        background-color: #f2f2f2;
+        text-align: left;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .empty-data {
+        text-align: center;
+        padding: 10px;
+    }
+
+    td a {
+        color: #007BFF;
+        text-decoration: none;
+    }
+
+    td a:hover {
+        text-decoration: underline;
+    }
+</style>
+<div class="content">
+<h1>Employee List</h1>
+
+<!-- Filter form for EmployeeStockFilter -->
+<form method="get">
+    {{ filterset.form.as_p }}
+    <button type="submit">Filter</button>
+</form>
+
+<!-- Table for displaying employee details -->
+<h2>Employee Details</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Employee Code</th>
+            <th>Name</th>
+            <th>Department</th>
+            <th>ESIC Number</th>
+            <th>Punch Card Number</th>
+            <th>Designation</th>
+            <th>Location</th>
+            <th>Date of Birth</th>
+            <th>Date of Joining</th>
+            <th>Date of Leaving</th>
+            <th>Parents Name</th>
+            <th>Martial Status</th>
+            <th>Permanent Address</th>
+            <th>Present Address</th>
+            <th>Blood Group</th>
+            <th>UAN Number</th>
+            <th>PF Member ID</th>
+            <th>ESI Number</th>
+            <th>Mobile Number</th>
+            <th>Email</th>
+            <th>Aadhar Number</th>
+            <th>PAN</th>
+            <th>Bank Account Number</th>
+            <th>IFSC Code</th>
+            <th>Bank Name</th>
+            <th>Emergency Contact Number</th>
+            <th>Emergency Contact Name</th>
+            <th>Emergency Contact Relation</th>
+            <th>Qualification</th>
+            <th>Experience</th>
+            <th>Basic Salary</th>
+            <th>VDA</th>
+            <th>HRA</th>
+            <th>Convenience Allowance</th>
+            <th>Special Allowance</th>
+            <th>Gross Salary</th>
+            <th>Remarks</th>
+            <th>Stock</th> <!-- Add a header for the stock link -->
+        </tr>
+    </thead>
+    <tbody>
+        {% for employee in employees %}
             <tr>
-                <th>Employee ID</th>
-                <th>Employee Code</th>
-                <th>Name</th>
-                <th>Department</th>
-                <th>ESIC Number</th>
-                <th>Punch Card Number</th>
-                <th>Designation</th>
-                <th>Location</th>
-                <th>Date of Birth</th>
-                <th>Date of Joining</th>
-                <th>Date of Leaving</th>
-                <th>Parents Name</th>
-                <th>Martial Status</th>
-                <th>Permanent Address</th>
-                <th>Present Address</th>
-                <th>Blood Group</th>
-                <th>UAN Number</th>
-                <th>PF Member ID</th>
-                <th>ESI Number</th>
-                <th>Mobile Number</th>
-                <th>Email</th>
-                <th>Aadhar Number</th>
-                <th>PAN</th>
-                <th>Bank Account Number</th>
-                <th>IFSC Code</th>
-                <th>Bank Name</th>
-                <th>Emergency Contact Number</th>
-                <th>Emergency Contact Name</th>
-                <th>Emergency Contact Relation</th>
-                <th>Qualification</th>
-                <th>Experience</th>
-                <th>Basic Salary</th>
-                <th>VDA</th>
-                <th>HRA</th>
-                <th>Convenience Allowance</th>
-                <th>Special Allowance</th>
-                <th>Gross Salary</th>
-                <th>Remarks</th>
+                <td>{{ employee.Emp_code }}</td>
+                <td>{{ employee.Name }}</td>
+                <td>{{ employee.Department }}</td>
+                <td>{{ employee.Esic_no }}</td>
+                <td>{{ employee.Punch_Card_NO }}</td>
+                <td>{{ employee.Designation }}</td>
+                <td>{{ employee.Location }}</td>
+                <td>{{ employee.DOB }}</td>
+                <td>{{ employee.DOJ }}</td>
+                <td>{{ employee.DOL }}</td>
+                <td>{{ employee.Parents_Name }}</td>
+                <td>{{ employee.get_Martial_Status_display }}</td>
+                <td>{{ employee.Permanent_Address }}</td>
+                <td>{{ employee.Present_Address }}</td>
+                <td>{{ employee.Blood_Group }}</td>
+                <td>{{ employee.UAN_Number }}</td>
+                <td>{{ employee.PF_Member_Id }}</td>
+                <td>{{ employee.ESI_Number }}</td>
+                <td>{{ employee.Mobile_No }}</td>
+                <td>{{ employee.Email }}</td>
+                <td>{{ employee.Aadhar_No }}</td>
+                <td>{{ employee.PAN }}</td>
+                <td>{{ employee.Bank_Acc_NO }}</td>
+                <td>{{ employee.IFSC_Code }}</td>
+                <td>{{ employee.Bank_Name }}</td>
+                <td>{{ employee.Emergency_Contact_No }}</td>
+                <td>{{ employee.Contact_Name }}</td>
+                <td>{{ employee.Relation }}</td>
+                <td>{{ employee.Qualification }}</td>
+                <td>{{ employee.Experience }}</td>
+                <td>{{ employee.basic }}</td>
+                <td>{{ employee.VDA }}</td>
+                <td>{{ employee.HRA }}</td>
+                <td>{{ employee.convenience }}</td>
+                <td>{{ employee.sp_convenience }}</td>
+                <td>{{ employee.Gross1 }}</td>
+                <td>{{ employee.Remarks }}</td>
+                <td><a href="{% url 'product:employee_stock_detail' employee.pk %}">View Stock</a></td>
             </tr>
-        </thead>
-        <tbody>
-            {% for employee in employees %}
-                <tr>
-                    <td>{{ employee.Employee_id }}</td>
-                    <td>{{ employee.Emp_code }}</td>
-                    <td>{{ employee.Name }}</td>
-                    <td>{{ employee.Department }}</td>
-                    <td>{{ employee.Esic_no }}</td>
-                    <td>{{ employee.Punch_Card_NO }}</td>
-                    <td>{{ employee.Designation }}</td>
-                    <td>{{ employee.Location }}</td>
-                    <td>{{ employee.DOB }}</td>
-                    <td>{{ employee.DOJ }}</td>
-                    <td>{{ employee.DOL }}</td>
-                    <td>{{ employee.Parents_Name }}</td>
-                    <td>{{ employee.get_Martial_Status_display }}</td>
-                    <td>{{ employee.Permanent_Address }}</td>
-                    <td>{{ employee.Present_Address }}</td>
-                    <td>{{ employee.Blood_Group }}</td>
-                    <td>{{ employee.UAN_Number }}</td>
-                    <td>{{ employee.PF_Member_Id }}</td>
-                    <td>{{ employee.ESI_Number }}</td>
-                    <td>{{ employee.Mobile_No }}</td>
-                    <td>{{ employee.Email }}</td>
-                    <td>{{ employee.Aadhar_No }}</td>
-                    <td>{{ employee.PAN }}</td>
-                    <td>{{ employee.Bank_Acc_NO }}</td>
-                    <td>{{ employee.IFSC_Code }}</td>
-                    <td>{{ employee.Bank_Name }}</td>
-                    <td>{{ employee.Emergency_Contact_No }}</td>
-                    <td>{{ employee.Contact_Name }}</td>
-                    <td>{{ employee.Relation }}</td>
-                    <td>{{ employee.Qualification }}</td>
-                    <td>{{ employee.Experience }}</td>
-                    <td>{{ employee.basic }}</td>
-                    <td>{{ employee.VDA }}</td>
-                    <td>{{ employee.HRA }}</td>
-                    <td>{{ employee.convenience }}</td>
-                    <td>{{ employee.sp_convenience }}</td>
-                    <td>{{ employee.Gross1 }}</td>
-                    <td>{{ employee.Remarks }}</td>
-<!-- employee_stock_list.html -->
-                    <td><a href="{% url 'product:employee_stock_detail' employee.pk %}">View Stock</a></td>
-
-                {% empty %}
-                <tr>
-                    <td colspan="37" class="empty-data">No employees found.</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <!-- Table for displaying filtered Stock_in entries -->
-    
-</body>
-</html>
+        {% empty %}
+            <tr>
+                <td colspan="37" class="empty-data">No employees found.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}

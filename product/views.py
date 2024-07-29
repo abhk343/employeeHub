@@ -291,10 +291,10 @@ class RemainingStockView(TemplateView):
         context['item_data'] = item_data
         return context
 
-# views.py
-# views.py
+# views.py# views.py
 from django.views.generic import ListView
 from employee.models import Employee
+from employee.filters import EmployeeFilter
 
 class EmployeeListView(ListView):
     model = Employee
